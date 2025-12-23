@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Metrics Dashboard</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <header>
+    <h1>Health Metrics Dashboard</h1>
+    <p class="subtitle">Interactive health data visualization inspired by FRED</p>
+  </header>
+
+  <main>
+    <section class="chart-container">
+      <div class="chart-header">
+        <h2>Seasonal Flu Cases (2020-2024)</h2>
+        <div class="chart-controls">
+          <button id="download-csv" class="btn-secondary">Download CSV</button>
+        </div>
+      </div>
+      <div id="chart"></div>
+    </section>
+
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <h3>Latest Value</h3>
+        <p class="metric-value" id="latest-value">--</p>
+      </div>
+      <div class="metric-card">
+        <h3>Peak Value</h3>
+        <p class="metric-value" id="peak-value">--</p>
+      </div>
+      <div class="metric-card">
+        <h3>Average</h3>
+        <p class="metric-value" id="avg-value">--</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data sources: CDC, FDA, NIH</p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
