@@ -1,0 +1,25 @@
+{
+  "name": "health-charts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-fartbagxp:fartbagxp/health-charts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "CC0-1.0",
+  "type": "module",
+  "devDependencies": {
+    "vite": "7.3.0"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}
