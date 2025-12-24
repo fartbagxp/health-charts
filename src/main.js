@@ -11,46 +11,62 @@ async function init() {
       d3.json('/data/rsv-hospitalizations.json')
     ]);
 
-    // Prepare series data for the chart
-    const series = [
-      {
-        name: 'Flu',
-        data: fluData,
-        color: '#0073e6',
-        valueKey: 'cases'
-      },
-      {
-        name: 'COVID-19',
-        data: covidData,
-        color: '#dc3545',
-        valueKey: 'hospitalizations'
-      },
-      {
-        name: 'RSV',
-        data: rsvData,
-        color: '#28a745',
-        valueKey: 'rate'
-      }
-    ];
-
-    // Create chart
-    const chart = new LineChart('chart', {
+    // Create Flu chart
+    const fluChart = new LineChart('chart-flu', {
       width: 960,
       height: 400,
       xKey: 'date',
       formatValue: d => d3.format(',')(d)
     });
+    fluChart.update([{
+      name: 'Flu',
+      data: fluData,
+      color: '#0073e6',
+      valueKey: 'cases'
+    }]);
+    updateMetrics('flu', fluData, 'cases');
 
-    // Update chart with all series
-    chart.update(series);
+    // Create COVID-19 chart
+    const covidChart = new LineChart('chart-covid', {
+      width: 960,
+      height: 400,
+      xKey: 'date',
+      formatValue: d => d3.format(',')(d)
+    });
+    covidChart.update([{
+      name: 'COVID-19',
+      data: covidData,
+      color: '#dc3545',
+      valueKey: 'hospitalizations'
+    }]);
+    updateMetrics('covid', covidData, 'hospitalizations');
 
-    // Calculate and display metrics
-    updateMetrics(series);
+    // Create RSV chart
+    const rsvChart = new LineChart('chart-rsv', {
+      width: 960,
+      height: 400,
+      xKey: 'date',
+      formatValue: d => d3.format('.1f')(d)
+    });
+    rsvChart.update([{
+      name: 'RSV',
+      data: rsvData,
+      color: '#28a745',
+      valueKey: 'rate'
+    }]);
+    updateMetrics('rsv', rsvData, 'rate');
 
-    // Setup download button
-    const downloadBtn = document.getElementById('download-csv');
-    downloadBtn.addEventListener('click', () => {
-      chart.downloadCSV('respiratory-viruses.csv');
+    // Setup download buttons
+    document.getElementById('download-flu-csv').addEventListener('click', () => {
+      fluChart.downloadCSV('flu-cases.csv');
+    });
+
+    document.getElementById('download-covid-csv').addEventListener('click', () => {
+      covidChart.downloadCSV('covid-hospitalizations.csv');
+    });
+
+    document.getElementById('download-rsv-csv').addEventListener('click', () => {
+      rsvChart.downloadCSV('rsv-rates.csv');
     });
 
     // Handle window resize
@@ -58,41 +74,45 @@ async function init() {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        // Recreate chart on resize for responsiveness
-        chart.init();
-        chart.update(series);
+        // Recreate all charts on resize
+        fluChart.init();
+        fluChart.update([{ name: 'Flu', data: fluData, color: '#0073e6', valueKey: 'cases' }]);
+
+        covidChart.init();
+        covidChart.update([{ name: 'COVID-19', data: covidData, color: '#dc3545', valueKey: 'hospitalizations' }]);
+
+        rsvChart.init();
+        rsvChart.update([{ name: 'RSV', data: rsvData, color: '#28a745', valueKey: 'rate' }]);
       }, 250);
     });
 
   } catch (error) {
     console.error('Error loading data:', error);
-    document.getElementById('chart').innerHTML = `
+    const errorMessage = `
       <div style="padding: 2rem; text-align: center; color: #666;">
         <p>Error loading chart data. Please check the console for details.</p>
       </div>
     `;
+    document.getElementById('chart-flu').innerHTML = errorMessage;
+    document.getElementById('chart-covid').innerHTML = errorMessage;
+    document.getElementById('chart-rsv').innerHTML = errorMessage;
   }
 }
 
 // Update metrics cards
-function updateMetrics(seriesArray) {
-  // Calculate metrics across all series
-  let allValues = [];
-  let latestValues = [];
+function updateMetrics(prefix, data, valueKey) {
+  const values = data.map(d => +d[valueKey]);
 
-  seriesArray.forEach(series => {
-    const values = series.data.map(d => +d[series.valueKey]);
-    allValues = allValues.concat(values);
-    latestValues.push(values[values.length - 1]);
-  });
+  const latest = values[values.length - 1];
+  const peak = Math.max(...values);
+  const average = values.reduce((a, b) => a + b, 0) / values.length;
 
-  const latest = Math.max(...latestValues);
-  const peak = Math.max(...allValues);
-  const average = Math.round(allValues.reduce((a, b) => a + b, 0) / allValues.length);
+  // Format based on the type of data
+  const formatter = valueKey === 'rate' ? d3.format('.1f') : d3.format(',');
 
-  document.getElementById('latest-value').textContent = d3.format(',')(latest);
-  document.getElementById('peak-value').textContent = d3.format(',')(peak);
-  document.getElementById('avg-value').textContent = d3.format(',')(average);
+  document.getElementById(`${prefix}-latest-value`).textContent = formatter(latest);
+  document.getElementById(`${prefix}-peak-value`).textContent = formatter(peak);
+  document.getElementById(`${prefix}-avg-value`).textContent = formatter(average);
 }
 
 // Start the app when DOM is loaded
