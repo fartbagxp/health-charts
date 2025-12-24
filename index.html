@@ -15,27 +15,74 @@
   <main>
     <section class="chart-container">
       <div class="chart-header">
-        <h2>Respiratory Viruses: Flu, COVID-19 & RSV (2020-2024)</h2>
+        <h2>Seasonal Flu Cases (2020-2024)</h2>
         <div class="chart-controls">
-          <button id="download-csv" class="btn-secondary">Download CSV</button>
+          <button id="download-flu-csv" class="btn-secondary">Download CSV</button>
         </div>
       </div>
-      <div id="chart"></div>
+      <div id="chart-flu"></div>
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <h3>Latest Value</h3>
+          <p class="metric-value" id="flu-latest-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Peak Value</h3>
+          <p class="metric-value" id="flu-peak-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Average</h3>
+          <p class="metric-value" id="flu-avg-value">--</p>
+        </div>
+      </section>
     </section>
 
-    <section class="metrics-grid">
-      <div class="metric-card">
-        <h3>Latest Value</h3>
-        <p class="metric-value" id="latest-value">--</p>
+    <section class="chart-container">
+      <div class="chart-header">
+        <h2>COVID-19 Hospitalizations (2020-2024)</h2>
+        <div class="chart-controls">
+          <button id="download-covid-csv" class="btn-secondary">Download CSV</button>
+        </div>
       </div>
-      <div class="metric-card">
-        <h3>Peak Value</h3>
-        <p class="metric-value" id="peak-value">--</p>
+      <div id="chart-covid"></div>
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <h3>Latest Value</h3>
+          <p class="metric-value" id="covid-latest-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Peak Value</h3>
+          <p class="metric-value" id="covid-peak-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Average</h3>
+          <p class="metric-value" id="covid-avg-value">--</p>
+        </div>
+      </section>
+    </section>
+
+    <section class="chart-container">
+      <div class="chart-header">
+        <h2>RSV Hospitalization Rate (2020-2024)</h2>
+        <div class="chart-controls">
+          <button id="download-rsv-csv" class="btn-secondary">Download CSV</button>
+        </div>
       </div>
-      <div class="metric-card">
-        <h3>Average</h3>
-        <p class="metric-value" id="avg-value">--</p>
-      </div>
+      <div id="chart-rsv"></div>
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <h3>Latest Value</h3>
+          <p class="metric-value" id="rsv-latest-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Peak Value</h3>
+          <p class="metric-value" id="rsv-peak-value">--</p>
+        </div>
+        <div class="metric-card">
+          <h3>Average</h3>
+          <p class="metric-value" id="rsv-avg-value">--</p>
+        </div>
+      </section>
     </section>
   </main>
 
