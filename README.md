@@ -64,11 +64,19 @@ health-charts/
 
 ## Data Sources
 
-Currently using sample data. Future integration planned with:
+Real-time CDC data integration:
 
-- [CDC API](https://data.cdc.gov/)
-- [FDA API](https://open.fda.gov/)
-- NIH data repositories
+- **COVID-19**: [CDC Weekly Hospitalization Data](https://data.cdc.gov/Public-Health-Surveillance/Weekly-United-States-COVID-19-Hospitalization-Metr/7dk4-g6vg) (2020-2024)
+- **RSV**: [CDC RSV-NET Hospitalization Data](https://data.cdc.gov/Public-Health-Surveillance/Weekly-Rates-of-Laboratory-Confirmed-RSV-Hospitali/29hc-w46k) (2020-2024)
+- **Influenza**: Sample data (2020-2024)
+
+### Fetching Latest Data
+
+```bash
+npm run fetch-data
+```
+
+This downloads the latest CDC data into `public/data/`. See [DATA_SOURCES.md](./DATA_SOURCES.md) for detailed API documentation and [API_QUICK_REFERENCE.md](./API_QUICK_REFERENCE.md) for quick examples.
 
 ## Adding New Charts
 

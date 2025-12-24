@@ -4,29 +4,53 @@ import { LineChart } from './chart.js';
 // Initialize the application
 async function init() {
   try {
-    // Load data
-    const data = await d3.json('/data/flu-cases.json');
+    // Load all three datasets
+    const [fluData, covidData, rsvData] = await Promise.all([
+      d3.json('/data/flu-cases.json'),
+      d3.json('/data/covid-hospitalizations.json'),
+      d3.json('/data/rsv-hospitalizations.json')
+    ]);
+
+    // Prepare series data for the chart
+    const series = [
+      {
+        name: 'Flu',
+        data: fluData,
+        color: '#0073e6',
+        valueKey: 'cases'
+      },
+      {
+        name: 'COVID-19',
+        data: covidData,
+        color: '#dc3545',
+        valueKey: 'hospitalizations'
+      },
+      {
+        name: 'RSV',
+        data: rsvData,
+        color: '#28a745',
+        valueKey: 'rate'
+      }
+    ];
 
     // Create chart
     const chart = new LineChart('chart', {
       width: 960,
       height: 400,
       xKey: 'date',
-      yKey: 'cases',
-      lineColor: '#0073e6',
       formatValue: d => d3.format(',')(d)
     });
 
-    // Update chart with data
-    chart.update(data);
+    // Update chart with all series
+    chart.update(series);
 
     // Calculate and display metrics
-    updateMetrics(data);
+    updateMetrics(series);
 
     // Setup download button
     const downloadBtn = document.getElementById('download-csv');
     downloadBtn.addEventListener('click', () => {
-      chart.downloadCSV('flu-cases.csv');
+      chart.downloadCSV('respiratory-viruses.csv');
     });
 
     // Handle window resize
@@ -36,7 +60,7 @@ async function init() {
       resizeTimer = setTimeout(() => {
         // Recreate chart on resize for responsiveness
         chart.init();
-        chart.update(data);
+        chart.update(series);
       }, 250);
     });
 
@@ -51,12 +75,20 @@ async function init() {
 }
 
 // Update metrics cards
-function updateMetrics(data) {
-  const values = data.map(d => d.cases);
+function updateMetrics(seriesArray) {
+  // Calculate metrics across all series
+  let allValues = [];
+  let latestValues = [];
 
-  const latest = values[values.length - 1];
-  const peak = Math.max(...values);
-  const average = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+  seriesArray.forEach(series => {
+    const values = series.data.map(d => +d[series.valueKey]);
+    allValues = allValues.concat(values);
+    latestValues.push(values[values.length - 1]);
+  });
+
+  const latest = Math.max(...latestValues);
+  const peak = Math.max(...allValues);
+  const average = Math.round(allValues.reduce((a, b) => a + b, 0) / allValues.length);
 
   document.getElementById('latest-value').textContent = d3.format(',')(latest);
   document.getElementById('peak-value').textContent = d3.format(',')(peak);
