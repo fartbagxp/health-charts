@@ -4,11 +4,12 @@ import { LineChart } from './chart.js';
 // Initialize the application
 async function init() {
   try {
-    // Load all three datasets
+    // Load all three datasets using BASE_URL for proper path resolution
+    const baseUrl = import.meta.env.BASE_URL;
     const [fluData, covidData, rsvData] = await Promise.all([
-      d3.json('/data/flu-cases.json'),
-      d3.json('/data/covid-hospitalizations.json'),
-      d3.json('/data/rsv-hospitalizations.json')
+      d3.json(`${baseUrl}data/flu-cases.json`),
+      d3.json(`${baseUrl}data/covid-hospitalizations.json`),
+      d3.json(`${baseUrl}data/rsv-hospitalizations.json`)
     ]);
 
     // Create Flu chart
