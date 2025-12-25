@@ -1,7 +1,7 @@
 {
   "name": "health-charts",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creating health data visualizations with D3.js",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -13,8 +13,13 @@
     "type": "git",
     "url": "git@github.com-fartbagxp:fartbagxp/health-charts.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "health",
+    "charts",
+    "d3",
+    "visualization"
+  ],
+  "author": "fartbagxp",
   "license": "CC0-1.0",
   "type": "module",
   "devDependencies": {
