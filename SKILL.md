@@ -109,12 +109,12 @@ Interactive charts on series detail pages are embedded Datawrapper iframes. The 
 
 ### Security model
 
-| Layer | Token present? | Purpose |
-|---|---|---|
-| `.env` | Yes (gitignored) | Stores `DATAWRAPPER_API_TOKEN` |
-| `scripts/setup-datawrapper.js` | Yes (Node only) | Calls Datawrapper API to create/publish charts |
-| `public/data/datawrapper-charts.json` | No | Stores only public chart IDs — safe to commit |
-| Browser | No | Reads chart IDs, embeds iframes |
+| Layer                                 | Token present?   | Purpose                                        |
+| ------------------------------------- | ---------------- | ---------------------------------------------- |
+| `.env`                                | Yes (gitignored) | Stores `DATAWRAPPER_API_TOKEN`                 |
+| `scripts/setup-datawrapper.js`        | Yes (Node only)  | Calls Datawrapper API to create/publish charts |
+| `public/data/datawrapper-charts.json` | No               | Stores only public chart IDs — safe to commit  |
+| Browser                               | No               | Reads chart IDs, embeds iframes                |
 
 Vite enforces this too: only `VITE_`-prefixed env vars are bundled into the client.
 
