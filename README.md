@@ -68,11 +68,11 @@ If `datawrapper-charts.json` is absent or has no entry for a series, the app aut
 
 ## Data Sources
 
-| Series | Source | Metric | Frequency |
-|---|---|---|---|
-| Flu | [CDC FluView](https://www.cdc.gov/flu/weekly/) | Case estimates | Monthly |
-| COVID-19 | [CDC COVID-NET](https://data.cdc.gov/resource/7dk4-g6vg) | Hospitalizations | Weekly |
-| RSV | [CDC RSV-NET](https://data.cdc.gov/resource/29hc-w46k) | Rate per 100k | Weekly |
+| Series   | Source                                                   | Metric           | Frequency |
+| -------- | -------------------------------------------------------- | ---------------- | --------- |
+| Flu      | [CDC FluView](https://www.cdc.gov/flu/weekly/)           | Case estimates   | Monthly   |
+| COVID-19 | [CDC COVID-NET](https://data.cdc.gov/resource/7dk4-g6vg) | Hospitalizations | Weekly    |
+| RSV      | [CDC RSV-NET](https://data.cdc.gov/resource/29hc-w46k)   | Rate per 100k    | Weekly    |
 
 ```bash
 pnpm run fetch-data   # pull latest CDC data into public/data/
@@ -80,7 +80,7 @@ pnpm run fetch-data   # pull latest CDC data into public/data/
 
 ## Project Structure
 
-```
+```bash
 health-charts/
 ├── src/
 │   ├── main.js                 # Hash router
