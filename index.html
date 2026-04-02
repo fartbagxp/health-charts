@@ -3,91 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Health Metrics Dashboard</title>
+  <title>Health Charts</title>
   <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
-  <header>
-    <h1>Health Metrics Dashboard</h1>
-    <p class="subtitle">Interactive health data visualization inspired by FRED</p>
-  </header>
-
-  <main>
-    <section class="chart-container">
-      <div class="chart-header">
-        <h2>Seasonal Flu Cases (2020-2024)</h2>
-        <div class="chart-controls">
-          <button id="download-flu-csv" class="btn-secondary">Download CSV</button>
-        </div>
+  <nav id="top-nav">
+    <div class="nav-inner">
+      <a href="#/" class="nav-logo">
+        <span class="nav-logo-accent">Health</span>Charts
+      </a>
+      <div class="nav-search-wrap">
+        <input type="text" id="nav-search-input" placeholder="Search data series..." autocomplete="off">
       </div>
-      <div id="chart-flu"></div>
-      <section class="metrics-grid">
-        <div class="metric-card">
-          <h3>Latest Value</h3>
-          <p class="metric-value" id="flu-latest-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Peak Value</h3>
-          <p class="metric-value" id="flu-peak-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Average</h3>
-          <p class="metric-value" id="flu-avg-value">--</p>
-        </div>
-      </section>
-    </section>
-
-    <section class="chart-container">
-      <div class="chart-header">
-        <h2>COVID-19 Hospitalizations (2020-2024)</h2>
-        <div class="chart-controls">
-          <button id="download-covid-csv" class="btn-secondary">Download CSV</button>
-        </div>
+      <div class="nav-links">
+        <a href="#/" class="nav-link">Browse Data</a>
+        <a href="#/" class="nav-link">About</a>
       </div>
-      <div id="chart-covid"></div>
-      <section class="metrics-grid">
-        <div class="metric-card">
-          <h3>Latest Value</h3>
-          <p class="metric-value" id="covid-latest-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Peak Value</h3>
-          <p class="metric-value" id="covid-peak-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Average</h3>
-          <p class="metric-value" id="covid-avg-value">--</p>
-        </div>
-      </section>
-    </section>
+    </div>
+  </nav>
 
-    <section class="chart-container">
-      <div class="chart-header">
-        <h2>RSV Hospitalization Rate (2020-2024)</h2>
-        <div class="chart-controls">
-          <button id="download-rsv-csv" class="btn-secondary">Download CSV</button>
-        </div>
-      </div>
-      <div id="chart-rsv"></div>
-      <section class="metrics-grid">
-        <div class="metric-card">
-          <h3>Latest Value</h3>
-          <p class="metric-value" id="rsv-latest-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Peak Value</h3>
-          <p class="metric-value" id="rsv-peak-value">--</p>
-        </div>
-        <div class="metric-card">
-          <h3>Average</h3>
-          <p class="metric-value" id="rsv-avg-value">--</p>
-        </div>
-      </section>
-    </section>
-  </main>
+  <div id="app"></div>
 
-  <footer>
-    <p>Data sources: CDC, FDA, NIH</p>
+  <footer id="site-footer">
+    <div class="footer-inner">
+      <p>
+        Data sources:
+        <a href="https://www.cdc.gov/flu/weekly/" target="_blank" rel="noopener">CDC FluView</a>,
+        <a href="https://www.cdc.gov/covid/data-research/" target="_blank" rel="noopener">CDC COVID-NET</a>,
+        <a href="https://www.cdc.gov/rsv/php/surveillance/" target="_blank" rel="noopener">CDC RSV-NET</a>
+      </p>
+      <p class="footer-note">Health Charts is a personal project inspired by <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a></p>
+    </div>
   </footer>
 
   <script type="module" src="/src/main.js"></script>
