@@ -1,0 +1,977 @@
+[
+  {
+    "date": "2020-08-08",
+    "hospitalizations": 31623,
+    "avgDaily": "4517.57"
+  },
+  {
+    "date": "2020-08-15",
+    "hospitalizations": 29869,
+    "avgDaily": "4267.00"
+  },
+  {
+    "date": "2020-08-22",
+    "hospitalizations": 29424,
+    "avgDaily": "4203.43"
+  },
+  {
+    "date": "2020-08-29",
+    "hospitalizations": 28194,
+    "avgDaily": "4027.71"
+  },
+  {
+    "date": "2020-09-05",
+    "hospitalizations": 26462,
+    "avgDaily": "3780.29"
+  },
+  {
+    "date": "2020-09-12",
+    "hospitalizations": 24499,
+    "avgDaily": "3499.86"
+  },
+  {
+    "date": "2020-09-19",
+    "hospitalizations": 22976,
+    "avgDaily": "3282.29"
+  },
+  {
+    "date": "2020-09-26",
+    "hospitalizations": 23595,
+    "avgDaily": "3370.71"
+  },
+  {
+    "date": "2020-10-03",
+    "hospitalizations": 26089,
+    "avgDaily": "3727.00"
+  },
+  {
+    "date": "2020-10-10",
+    "hospitalizations": 31291,
+    "avgDaily": "4470.14"
+  },
+  {
+    "date": "2020-10-17",
+    "hospitalizations": 34852,
+    "avgDaily": "4978.86"
+  },
+  {
+    "date": "2020-10-24",
+    "hospitalizations": 39774,
+    "avgDaily": "5682.00"
+  },
+  {
+    "date": "2020-10-31",
+    "hospitalizations": 44654,
+    "avgDaily": "6379.14"
+  },
+  {
+    "date": "2020-11-07",
+    "hospitalizations": 53533,
+    "avgDaily": "7647.57"
+  },
+  {
+    "date": "2020-11-14",
+    "hospitalizations": 67969,
+    "avgDaily": "9709.86"
+  },
+  {
+    "date": "2020-11-21",
+    "hospitalizations": 79796,
+    "avgDaily": "11399.43"
+  },
+  {
+    "date": "2020-11-28",
+    "hospitalizations": 84036,
+    "avgDaily": "12005.14"
+  },
+  {
+    "date": "2020-12-05",
+    "hospitalizations": 93076,
+    "avgDaily": "13296.57"
+  },
+  {
+    "date": "2020-12-12",
+    "hospitalizations": 98704,
+    "avgDaily": "14100.57"
+  },
+  {
+    "date": "2020-12-19",
+    "hospitalizations": 102149,
+    "avgDaily": "14592.71"
+  },
+  {
+    "date": "2020-12-26",
+    "hospitalizations": 102549,
+    "avgDaily": "14649.86"
+  },
+  {
+    "date": "2021-01-02",
+    "hospitalizations": 109152,
+    "avgDaily": "15593.14"
+  },
+  {
+    "date": "2021-01-09",
+    "hospitalizations": 115455,
+    "avgDaily": "16493.57"
+  },
+  {
+    "date": "2021-01-16",
+    "hospitalizations": 107526,
+    "avgDaily": "15360.86"
+  },
+  {
+    "date": "2021-01-23",
+    "hospitalizations": 94690,
+    "avgDaily": "13527.14"
+  },
+  {
+    "date": "2021-01-30",
+    "hospitalizations": 81204,
+    "avgDaily": "11600.57"
+  },
+  {
+    "date": "2021-02-06",
+    "hospitalizations": 69642,
+    "avgDaily": "9948.86"
+  },
+  {
+    "date": "2021-02-13",
+    "hospitalizations": 56530,
+    "avgDaily": "8075.71"
+  },
+  {
+    "date": "2021-02-20",
+    "hospitalizations": 45870,
+    "avgDaily": "6552.86"
+  },
+  {
+    "date": "2021-02-27",
+    "hospitalizations": 41535,
+    "avgDaily": "5933.57"
+  },
+  {
+    "date": "2021-03-06",
+    "hospitalizations": 35577,
+    "avgDaily": "5082.43"
+  },
+  {
+    "date": "2021-03-13",
+    "hospitalizations": 33354,
+    "avgDaily": "4764.86"
+  },
+  {
+    "date": "2021-03-20",
+    "hospitalizations": 32477,
+    "avgDaily": "4639.57"
+  },
+  {
+    "date": "2021-03-27",
+    "hospitalizations": 33916,
+    "avgDaily": "4845.14"
+  },
+  {
+    "date": "2021-04-03",
+    "hospitalizations": 35535,
+    "avgDaily": "5076.43"
+  },
+  {
+    "date": "2021-04-10",
+    "hospitalizations": 38301,
+    "avgDaily": "5471.57"
+  },
+  {
+    "date": "2021-04-17",
+    "hospitalizations": 39377,
+    "avgDaily": "5625.29"
+  },
+  {
+    "date": "2021-04-24",
+    "hospitalizations": 37253,
+    "avgDaily": "5321.86"
+  },
+  {
+    "date": "2021-05-01",
+    "hospitalizations": 33638,
+    "avgDaily": "4805.43"
+  },
+  {
+    "date": "2021-05-08",
+    "hospitalizations": 30257,
+    "avgDaily": "4322.43"
+  },
+  {
+    "date": "2021-05-15",
+    "hospitalizations": 25867,
+    "avgDaily": "3695.29"
+  },
+  {
+    "date": "2021-05-22",
+    "hospitalizations": 22649,
+    "avgDaily": "3235.57"
+  },
+  {
+    "date": "2021-05-29",
+    "hospitalizations": 20061,
+    "avgDaily": "2865.86"
+  },
+  {
+    "date": "2021-06-05",
+    "hospitalizations": 16351,
+    "avgDaily": "2335.86"
+  },
+  {
+    "date": "2021-06-12",
+    "hospitalizations": 14599,
+    "avgDaily": "2085.57"
+  },
+  {
+    "date": "2021-06-19",
+    "hospitalizations": 13221,
+    "avgDaily": "1888.71"
+  },
+  {
+    "date": "2021-06-26",
+    "hospitalizations": 12821,
+    "avgDaily": "1831.57"
+  },
+  {
+    "date": "2021-07-03",
+    "hospitalizations": 14071,
+    "avgDaily": "2010.14"
+  },
+  {
+    "date": "2021-07-10",
+    "hospitalizations": 16796,
+    "avgDaily": "2399.43"
+  },
+  {
+    "date": "2021-07-17",
+    "hospitalizations": 22686,
+    "avgDaily": "3240.86"
+  },
+  {
+    "date": "2021-07-24",
+    "hospitalizations": 32844,
+    "avgDaily": "4692.00"
+  },
+  {
+    "date": "2021-07-31",
+    "hospitalizations": 47712,
+    "avgDaily": "6816.00"
+  },
+  {
+    "date": "2021-08-07",
+    "hospitalizations": 63471,
+    "avgDaily": "9067.29"
+  },
+  {
+    "date": "2021-08-14",
+    "hospitalizations": 77614,
+    "avgDaily": "11087.71"
+  },
+  {
+    "date": "2021-08-21",
+    "hospitalizations": 84027,
+    "avgDaily": "12003.86"
+  },
+  {
+    "date": "2021-08-28",
+    "hospitalizations": 85775,
+    "avgDaily": "12253.57"
+  },
+  {
+    "date": "2021-09-04",
+    "hospitalizations": 84220,
+    "avgDaily": "12031.43"
+  },
+  {
+    "date": "2021-09-11",
+    "hospitalizations": 80157,
+    "avgDaily": "11451.00"
+  },
+  {
+    "date": "2021-09-18",
+    "hospitalizations": 72610,
+    "avgDaily": "10372.86"
+  },
+  {
+    "date": "2021-09-25",
+    "hospitalizations": 62563,
+    "avgDaily": "8937.57"
+  },
+  {
+    "date": "2021-10-02",
+    "hospitalizations": 53933,
+    "avgDaily": "7704.71"
+  },
+  {
+    "date": "2021-10-09",
+    "hospitalizations": 48686,
+    "avgDaily": "6955.14"
+  },
+  {
+    "date": "2021-10-16",
+    "hospitalizations": 44258,
+    "avgDaily": "6322.57"
+  },
+  {
+    "date": "2021-10-23",
+    "hospitalizations": 39602,
+    "avgDaily": "5657.43"
+  },
+  {
+    "date": "2021-10-30",
+    "hospitalizations": 36645,
+    "avgDaily": "5235.00"
+  },
+  {
+    "date": "2021-11-06",
+    "hospitalizations": 35247,
+    "avgDaily": "5035.29"
+  },
+  {
+    "date": "2021-11-13",
+    "hospitalizations": 37474,
+    "avgDaily": "5353.43"
+  },
+  {
+    "date": "2021-11-20",
+    "hospitalizations": 40897,
+    "avgDaily": "5842.43"
+  },
+  {
+    "date": "2021-11-27",
+    "hospitalizations": 43270,
+    "avgDaily": "6181.43"
+  },
+  {
+    "date": "2021-12-04",
+    "hospitalizations": 49838,
+    "avgDaily": "7119.71"
+  },
+  {
+    "date": "2021-12-11",
+    "hospitalizations": 54922,
+    "avgDaily": "7846.00"
+  },
+  {
+    "date": "2021-12-18",
+    "hospitalizations": 54528,
+    "avgDaily": "7789.71"
+  },
+  {
+    "date": "2021-12-25",
+    "hospitalizations": 60925,
+    "avgDaily": "8703.57"
+  },
+  {
+    "date": "2022-01-01",
+    "hospitalizations": 97667,
+    "avgDaily": "13952.43"
+  },
+  {
+    "date": "2022-01-08",
+    "hospitalizations": 136096,
+    "avgDaily": "19442.29"
+  },
+  {
+    "date": "2022-01-15",
+    "hospitalizations": 150650,
+    "avgDaily": "21521.43"
+  },
+  {
+    "date": "2022-01-22",
+    "hospitalizations": 140530,
+    "avgDaily": "20075.71"
+  },
+  {
+    "date": "2022-01-29",
+    "hospitalizations": 123524,
+    "avgDaily": "17646.29"
+  },
+  {
+    "date": "2022-02-05",
+    "hospitalizations": 95080,
+    "avgDaily": "13582.86"
+  },
+  {
+    "date": "2022-02-12",
+    "hospitalizations": 69796,
+    "avgDaily": "9970.86"
+  },
+  {
+    "date": "2022-02-19",
+    "hospitalizations": 48873,
+    "avgDaily": "6981.86"
+  },
+  {
+    "date": "2022-02-26",
+    "hospitalizations": 34543,
+    "avgDaily": "4934.71"
+  },
+  {
+    "date": "2022-03-05",
+    "hospitalizations": 25201,
+    "avgDaily": "3600.14"
+  },
+  {
+    "date": "2022-03-12",
+    "hospitalizations": 18284,
+    "avgDaily": "2612.00"
+  },
+  {
+    "date": "2022-03-19",
+    "hospitalizations": 14068,
+    "avgDaily": "2009.71"
+  },
+  {
+    "date": "2022-03-26",
+    "hospitalizations": 11656,
+    "avgDaily": "1665.14"
+  },
+  {
+    "date": "2022-04-02",
+    "hospitalizations": 10206,
+    "avgDaily": "1458.00"
+  },
+  {
+    "date": "2022-04-09",
+    "hospitalizations": 9998,
+    "avgDaily": "1428.29"
+  },
+  {
+    "date": "2022-04-16",
+    "hospitalizations": 10740,
+    "avgDaily": "1534.29"
+  },
+  {
+    "date": "2022-04-23",
+    "hospitalizations": 12314,
+    "avgDaily": "1759.14"
+  },
+  {
+    "date": "2022-04-30",
+    "hospitalizations": 14460,
+    "avgDaily": "2065.71"
+  },
+  {
+    "date": "2022-05-07",
+    "hospitalizations": 17451,
+    "avgDaily": "2493.00"
+  },
+  {
+    "date": "2022-05-14",
+    "hospitalizations": 20706,
+    "avgDaily": "2958.00"
+  },
+  {
+    "date": "2022-05-21",
+    "hospitalizations": 24511,
+    "avgDaily": "3501.57"
+  },
+  {
+    "date": "2022-05-28",
+    "hospitalizations": 26471,
+    "avgDaily": "3781.57"
+  },
+  {
+    "date": "2022-06-04",
+    "hospitalizations": 28200,
+    "avgDaily": "4028.57"
+  },
+  {
+    "date": "2022-06-11",
+    "hospitalizations": 29495,
+    "avgDaily": "4213.57"
+  },
+  {
+    "date": "2022-06-18",
+    "hospitalizations": 30421,
+    "avgDaily": "4345.86"
+  },
+  {
+    "date": "2022-06-25",
+    "hospitalizations": 32756,
+    "avgDaily": "4679.43"
+  },
+  {
+    "date": "2022-07-02",
+    "hospitalizations": 35755,
+    "avgDaily": "5107.86"
+  },
+  {
+    "date": "2022-07-09",
+    "hospitalizations": 38874,
+    "avgDaily": "5553.43"
+  },
+  {
+    "date": "2022-07-16",
+    "hospitalizations": 42574,
+    "avgDaily": "6082.00"
+  },
+  {
+    "date": "2022-07-23",
+    "hospitalizations": 44730,
+    "avgDaily": "6390.00"
+  },
+  {
+    "date": "2022-07-30",
+    "hospitalizations": 44032,
+    "avgDaily": "6290.29"
+  },
+  {
+    "date": "2022-08-06",
+    "hospitalizations": 42819,
+    "avgDaily": "6117.00"
+  },
+  {
+    "date": "2022-08-13",
+    "hospitalizations": 41116,
+    "avgDaily": "5873.71"
+  },
+  {
+    "date": "2022-08-20",
+    "hospitalizations": 38158,
+    "avgDaily": "5451.14"
+  },
+  {
+    "date": "2022-08-27",
+    "hospitalizations": 36922,
+    "avgDaily": "5274.57"
+  },
+  {
+    "date": "2022-09-03",
+    "hospitalizations": 34549,
+    "avgDaily": "4935.57"
+  },
+  {
+    "date": "2022-09-10",
+    "hospitalizations": 31571,
+    "avgDaily": "4510.14"
+  },
+  {
+    "date": "2022-09-17",
+    "hospitalizations": 28918,
+    "avgDaily": "4131.14"
+  },
+  {
+    "date": "2022-09-24",
+    "hospitalizations": 26852,
+    "avgDaily": "3836.00"
+  },
+  {
+    "date": "2022-10-01",
+    "hospitalizations": 24295,
+    "avgDaily": "3470.71"
+  },
+  {
+    "date": "2022-10-08",
+    "hospitalizations": 23578,
+    "avgDaily": "3368.29"
+  },
+  {
+    "date": "2022-10-15",
+    "hospitalizations": 22887,
+    "avgDaily": "3269.57"
+  },
+  {
+    "date": "2022-10-22",
+    "hospitalizations": 22776,
+    "avgDaily": "3253.71"
+  },
+  {
+    "date": "2022-10-29",
+    "hospitalizations": 23311,
+    "avgDaily": "3330.14"
+  },
+  {
+    "date": "2022-11-05",
+    "hospitalizations": 23593,
+    "avgDaily": "3370.43"
+  },
+  {
+    "date": "2022-11-12",
+    "hospitalizations": 23803,
+    "avgDaily": "3400.43"
+  },
+  {
+    "date": "2022-11-19",
+    "hospitalizations": 24132,
+    "avgDaily": "3447.43"
+  },
+  {
+    "date": "2022-11-26",
+    "hospitalizations": 26461,
+    "avgDaily": "3780.14"
+  },
+  {
+    "date": "2022-12-03",
+    "hospitalizations": 33904,
+    "avgDaily": "4843.43"
+  },
+  {
+    "date": "2022-12-10",
+    "hospitalizations": 34932,
+    "avgDaily": "4990.29"
+  },
+  {
+    "date": "2022-12-17",
+    "hospitalizations": 36662,
+    "avgDaily": "5237.43"
+  },
+  {
+    "date": "2022-12-24",
+    "hospitalizations": 39025,
+    "avgDaily": "5575.00"
+  },
+  {
+    "date": "2022-12-31",
+    "hospitalizations": 44529,
+    "avgDaily": "6361.29"
+  },
+  {
+    "date": "2023-01-07",
+    "hospitalizations": 44386,
+    "avgDaily": "6340.86"
+  },
+  {
+    "date": "2023-01-14",
+    "hospitalizations": 37600,
+    "avgDaily": "5371.43"
+  },
+  {
+    "date": "2023-01-21",
+    "hospitalizations": 31679,
+    "avgDaily": "4525.57"
+  },
+  {
+    "date": "2023-01-28",
+    "hospitalizations": 28327,
+    "avgDaily": "4046.71"
+  },
+  {
+    "date": "2023-02-04",
+    "hospitalizations": 26499,
+    "avgDaily": "3785.57"
+  },
+  {
+    "date": "2023-02-11",
+    "hospitalizations": 26418,
+    "avgDaily": "3774.00"
+  },
+  {
+    "date": "2023-02-18",
+    "hospitalizations": 25491,
+    "avgDaily": "3641.57"
+  },
+  {
+    "date": "2023-02-25",
+    "hospitalizations": 24076,
+    "avgDaily": "3439.43"
+  },
+  {
+    "date": "2023-03-04",
+    "hospitalizations": 22395,
+    "avgDaily": "3199.29"
+  },
+  {
+    "date": "2023-03-11",
+    "hospitalizations": 20217,
+    "avgDaily": "2888.14"
+  },
+  {
+    "date": "2023-03-18",
+    "hospitalizations": 18174,
+    "avgDaily": "2596.29"
+  },
+  {
+    "date": "2023-03-25",
+    "hospitalizations": 17219,
+    "avgDaily": "2459.86"
+  },
+  {
+    "date": "2023-04-01",
+    "hospitalizations": 15815,
+    "avgDaily": "2259.29"
+  },
+  {
+    "date": "2023-04-08",
+    "hospitalizations": 14443,
+    "avgDaily": "2063.29"
+  },
+  {
+    "date": "2023-04-15",
+    "hospitalizations": 13276,
+    "avgDaily": "1896.57"
+  },
+  {
+    "date": "2023-04-22",
+    "hospitalizations": 11844,
+    "avgDaily": "1692.00"
+  },
+  {
+    "date": "2023-04-29",
+    "hospitalizations": 10205,
+    "avgDaily": "1457.86"
+  },
+  {
+    "date": "2023-05-06",
+    "hospitalizations": 9730,
+    "avgDaily": "1390.00"
+  },
+  {
+    "date": "2023-05-13",
+    "hospitalizations": 9344,
+    "avgDaily": "1334.86"
+  },
+  {
+    "date": "2023-05-20",
+    "hospitalizations": 8452,
+    "avgDaily": "1207.43"
+  },
+  {
+    "date": "2023-05-27",
+    "hospitalizations": 7847,
+    "avgDaily": "1121.00"
+  },
+  {
+    "date": "2023-06-03",
+    "hospitalizations": 7449,
+    "avgDaily": "1064.14"
+  },
+  {
+    "date": "2023-06-10",
+    "hospitalizations": 6974,
+    "avgDaily": "996.29"
+  },
+  {
+    "date": "2023-06-17",
+    "hospitalizations": 6690,
+    "avgDaily": "955.71"
+  },
+  {
+    "date": "2023-06-24",
+    "hospitalizations": 6325,
+    "avgDaily": "903.57"
+  },
+  {
+    "date": "2023-07-01",
+    "hospitalizations": 6483,
+    "avgDaily": "926.14"
+  },
+  {
+    "date": "2023-07-08",
+    "hospitalizations": 6448,
+    "avgDaily": "921.14"
+  },
+  {
+    "date": "2023-07-15",
+    "hospitalizations": 7203,
+    "avgDaily": "1029.00"
+  },
+  {
+    "date": "2023-07-22",
+    "hospitalizations": 8089,
+    "avgDaily": "1155.57"
+  },
+  {
+    "date": "2023-07-29",
+    "hospitalizations": 9088,
+    "avgDaily": "1298.29"
+  },
+  {
+    "date": "2023-08-05",
+    "hospitalizations": 10520,
+    "avgDaily": "1502.86"
+  },
+  {
+    "date": "2023-08-12",
+    "hospitalizations": 12744,
+    "avgDaily": "1820.57"
+  },
+  {
+    "date": "2023-08-19",
+    "hospitalizations": 15092,
+    "avgDaily": "2156.00"
+  },
+  {
+    "date": "2023-08-26",
+    "hospitalizations": 17448,
+    "avgDaily": "2492.57"
+  },
+  {
+    "date": "2023-09-02",
+    "hospitalizations": 19149,
+    "avgDaily": "2735.57"
+  },
+  {
+    "date": "2023-09-09",
+    "hospitalizations": 20700,
+    "avgDaily": "2957.14"
+  },
+  {
+    "date": "2023-09-16",
+    "hospitalizations": 19894,
+    "avgDaily": "2842.00"
+  },
+  {
+    "date": "2023-09-23",
+    "hospitalizations": 19442,
+    "avgDaily": "2777.43"
+  },
+  {
+    "date": "2023-09-30",
+    "hospitalizations": 18342,
+    "avgDaily": "2620.29"
+  },
+  {
+    "date": "2023-10-07",
+    "hospitalizations": 17169,
+    "avgDaily": "2452.71"
+  },
+  {
+    "date": "2023-10-14",
+    "hospitalizations": 16108,
+    "avgDaily": "2301.14"
+  },
+  {
+    "date": "2023-10-21",
+    "hospitalizations": 15919,
+    "avgDaily": "2274.14"
+  },
+  {
+    "date": "2023-10-28",
+    "hospitalizations": 16223,
+    "avgDaily": "2317.57"
+  },
+  {
+    "date": "2023-11-04",
+    "hospitalizations": 15088,
+    "avgDaily": "2155.43"
+  },
+  {
+    "date": "2023-11-11",
+    "hospitalizations": 16661,
+    "avgDaily": "2380.14"
+  },
+  {
+    "date": "2023-11-18",
+    "hospitalizations": 17828,
+    "avgDaily": "2546.86"
+  },
+  {
+    "date": "2023-11-25",
+    "hospitalizations": 19244,
+    "avgDaily": "2749.14"
+  },
+  {
+    "date": "2023-12-02",
+    "hospitalizations": 22911,
+    "avgDaily": "3273.00"
+  },
+  {
+    "date": "2023-12-09",
+    "hospitalizations": 23324,
+    "avgDaily": "3332.00"
+  },
+  {
+    "date": "2023-12-16",
+    "hospitalizations": 25212,
+    "avgDaily": "3601.71"
+  },
+  {
+    "date": "2023-12-23",
+    "hospitalizations": 29430,
+    "avgDaily": "4204.29"
+  },
+  {
+    "date": "2023-12-30",
+    "hospitalizations": 34928,
+    "avgDaily": "4989.71"
+  },
+  {
+    "date": "2024-01-06",
+    "hospitalizations": 35139,
+    "avgDaily": "5019.86"
+  },
+  {
+    "date": "2024-01-13",
+    "hospitalizations": 31193,
+    "avgDaily": "4456.14"
+  },
+  {
+    "date": "2024-01-20",
+    "hospitalizations": 25994,
+    "avgDaily": "3713.43"
+  },
+  {
+    "date": "2024-01-27",
+    "hospitalizations": 23328,
+    "avgDaily": "3332.57"
+  },
+  {
+    "date": "2024-02-03",
+    "hospitalizations": 21358,
+    "avgDaily": "3051.14"
+  },
+  {
+    "date": "2024-02-10",
+    "hospitalizations": 20248,
+    "avgDaily": "2892.57"
+  },
+  {
+    "date": "2024-02-17",
+    "hospitalizations": 19395,
+    "avgDaily": "2770.71"
+  },
+  {
+    "date": "2024-02-24",
+    "hospitalizations": 17664,
+    "avgDaily": "2523.43"
+  },
+  {
+    "date": "2024-03-02",
+    "hospitalizations": 15625,
+    "avgDaily": "2232.14"
+  },
+  {
+    "date": "2024-03-09",
+    "hospitalizations": 13679,
+    "avgDaily": "1954.14"
+  },
+  {
+    "date": "2024-03-16",
+    "hospitalizations": 10925,
+    "avgDaily": "1560.71"
+  },
+  {
+    "date": "2024-03-23",
+    "hospitalizations": 9492,
+    "avgDaily": "1356.00"
+  },
+  {
+    "date": "2024-03-30",
+    "hospitalizations": 8143,
+    "avgDaily": "1163.29"
+  },
+  {
+    "date": "2024-04-06",
+    "hospitalizations": 7478,
+    "avgDaily": "1068.29"
+  },
+  {
+    "date": "2024-04-13",
+    "hospitalizations": 6586,
+    "avgDaily": "940.86"
+  },
+  {
+    "date": "2024-04-20",
+    "hospitalizations": 5746,
+    "avgDaily": "820.86"
+  },
+  {
+    "date": "2024-04-27",
+    "hospitalizations": 5151,
+    "avgDaily": "735.86"
+  }
+]
