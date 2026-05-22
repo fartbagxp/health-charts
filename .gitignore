@@ -188,6 +188,7 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+build
 
 ### Windows ###
 # Windows thumbnail cache files
