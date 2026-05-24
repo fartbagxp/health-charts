@@ -9,9 +9,15 @@
   const dataMap = $derived(Object.fromEntries(data.datasets.map(d => [d.id, d.data])));
 
   function yMax(seriesId) {
+    const config = SERIES_CONFIG[seriesId];
+    if (config.yDomain) return config.yDomain[1];
     const rows = dataMap[seriesId] ?? [];
-    const max = Math.max(...rows.map(d => +d[SERIES_CONFIG[seriesId].valueKey]));
-    return Math.ceil((max || 1) / 10000) * 10000;
+    const max = Math.max(...rows.map(d => +d[config.valueKey]));
+    if (!max || max <= 0) return 1;
+    if (max <= 5) return Math.ceil(max) + 1;
+    if (max <= 100) return Math.ceil(max / 10) * 10 + 10;
+    if (max <= 1000) return Math.ceil(max / 100) * 100;
+    return Math.ceil(max / 10000) * 10000;
   }
 
   function yTickFormat(d) {
