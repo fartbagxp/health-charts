@@ -12,6 +12,10 @@ function parseDate(str, format) {
     const m = str.match(/(\d{4})\s+Q(\d)/);
     if (m) return new Date(+m[1], (+m[2] - 1) * 3, 1);
   }
+  if (format === 'year') {
+    const y = parseInt(str);
+    if (!isNaN(y)) return new Date(y, 0, 1);
+  }
   return new Date(str);
 }
 
@@ -35,9 +39,11 @@ function parseCSV(text) {
 export async function load({ fetch, params }) {
   const config = SERIES_CONFIG[params.id];
   if (!config) error(404, 'Series not found');
-  const text = await fetch(config.csvUrl).then(r => r.text());
+  const urls = config.csvUrls ?? [config.csvUrl];
   const dateKey = config.dateKey || 'date';
-  const data = parseCSV(text)
+  const texts = await Promise.all(urls.map(url => fetch(url).then(r => r.text())));
+  const data = texts
+    .flatMap(text => parseCSV(text))
     .filter(d => {
       if (!d[dateKey]) return false;
       if (d[config.valueKey] === '') return false;

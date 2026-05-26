@@ -1,4 +1,5 @@
 const RAW_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/resp';
+const WONDER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wonder';
 const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
 
 export const SERIES_CONFIG = {
@@ -157,6 +158,27 @@ export const SERIES_CONFIG = {
     yDomain: [0, 100]
   },
 
+  // U.S. annual births (CDC WONDER, 1995–2024)
+  'births-annual': {
+    id: 'births-annual',
+    title: 'U.S. Annual Births',
+    description: 'Total U.S. live births per year, 1995–2024 (CDC WONDER natality data)',
+    color: '#fd7e14',
+    csvUrls: [
+      `${WONDER_BASE}/births-by-year-1995-2002.csv`,
+      `${WONDER_BASE}/births-by-year-2003-2006.csv`,
+      `${WONDER_BASE}/births-by-year-2007-2024.csv`
+    ],
+    dateKey: 'Year',
+    dateFormat: 'year',
+    valueKey: 'Births',
+    unit: 'births',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+
   // Overall U.S. mortality rate (CDC, quarterly rolling 12-month, 2023–present)
   'mortality-all': {
     id: 'mortality-all',
@@ -254,12 +276,12 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'mortality-all', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'births-annual', 'mortality-all', 'birth-rate'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
-  { name: 'Birth & Mortality', series: ['birth-rate', 'mortality-all'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'mortality-all'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv'] }
