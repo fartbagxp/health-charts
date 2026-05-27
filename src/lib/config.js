@@ -224,6 +224,73 @@ export const SERIES_CONFIG = {
     category: 'Birth & Mortality'
   },
 
+  // U.S. total deaths per year (CDC WONDER, 1979–2024)
+  'deaths-annual': {
+    id: 'deaths-annual',
+    title: 'U.S. Annual Deaths',
+    description: 'Total U.S. deaths per year, 1979–2024 (CDC WONDER)',
+    color: '#6f42c1',
+    csvUrl: `${WONDER_BASE}/mortality-total-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'total_deaths',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+
+  // Leading causes of death (CDC WONDER, 1979–2024)
+  'deaths-circulatory': {
+    id: 'deaths-circulatory',
+    title: 'Deaths — Circulatory Disease',
+    description: 'Annual U.S. deaths from diseases of the circulatory system (the #1 cause every year), 1979–2024',
+    color: '#dc3545',
+    csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'deaths',
+    filters: { cause: 'Diseases of the circulatory system' },
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+  'deaths-cancer': {
+    id: 'deaths-cancer',
+    title: 'Deaths — Cancer',
+    description: 'Annual U.S. deaths from neoplasms (cancer, the #2 cause every year), 1979–2024',
+    color: '#e83e8c',
+    csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'deaths',
+    filters: { cause: 'Neoplasms' },
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+  'deaths-respiratory': {
+    id: 'deaths-respiratory',
+    title: 'Deaths — Respiratory Disease',
+    description: 'Annual U.S. deaths from diseases of the respiratory system, 1979–2024',
+    color: '#20c997',
+    csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'deaths',
+    filters: { cause: 'Diseases of the respiratory system' },
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+
   // Nursing home respiratory vaccination rates (CDC, weekly, Oct 2024–Oct 2025, national)
   'nursing-covid': {
     id: 'nursing-covid',
@@ -276,12 +343,12 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'births-annual', 'mortality-all', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'birth-rate'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'mortality-all'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv'] }
