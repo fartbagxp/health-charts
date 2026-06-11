@@ -357,6 +357,14 @@ main { flex: 1; }
 }
 
 .source-item strong { color: var(--navy); font-size: 0.9rem; }
+.source-item a {
+  color: var(--blue);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  width: fit-content;
+}
+.source-item a:hover { text-decoration: underline; }
 .source-item span { color: var(--gray-mid); font-size: 0.8125rem; }
 
 /* series detail */

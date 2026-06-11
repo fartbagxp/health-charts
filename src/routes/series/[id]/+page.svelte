@@ -83,7 +83,7 @@
       <GridY strokeOpacity={0.2} />
       <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
       <AxisY />
-      <Line data={normRows} x="date" y="value" stroke="black" strokeWidth={2} />
+      <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
       {#snippet overlay()}
         {#if hoveredDatum}
           <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">

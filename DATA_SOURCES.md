@@ -19,6 +19,10 @@ Dataset catalog for finding and adding new health data. The app fetches CSVs fro
 | Annual births 1995–2024            | CDC WONDER natality (3 files)      | Annual                     |
 | Annual deaths 1979–2024            | CDC WONDER mortality               | Annual                     |
 | Deaths by cause 1979–2024          | CDC WONDER top-cause breakdown     | Annual                     |
+| Measles weekly cases               | CDC `measles_weekly_cases.csv`     | Weekly, 2022–present       |
+| Measles annual cases               | CDC `measles_annual_history.csv`   | Annual, 1962–present       |
+| Life expectancy at birth           | CDC NCHS `life_expectancy.csv`     | Annual, 1900–present       |
+| Lyme disease annual cases          | CDC WONDER `tick-borne-...csv`     | Annual, 2016–present       |
 
 ---
 
