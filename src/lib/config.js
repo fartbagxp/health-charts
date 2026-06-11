@@ -339,16 +339,87 @@ export const SERIES_CONFIG = {
     frequency: 'Weekly',
     category: 'Respiratory Syncytial Virus',
     yDomain: [0, 100]
+  },
+
+  // Measles — weekly confirmed U.S. cases (CDC, 2022–present)
+  'measles-weekly': {
+    id: 'measles-weekly',
+    title: 'Measles Weekly Cases',
+    description: 'Weekly confirmed measles cases in the U.S. (2022–present)',
+    color: '#9c36b5',
+    csvUrl: `${CDC_OPEN_BASE}/measles_weekly_cases.csv`,
+    dateKey: 'week_end',
+    valueKey: 'cases',
+    unit: 'cases',
+    format: ',',
+    source: 'CDC',
+    frequency: 'Weekly',
+    category: 'Measles'
+  },
+
+  // Measles — annual U.S. cases, long historical run (CDC, 1962–present)
+  'measles-annual': {
+    id: 'measles-annual',
+    title: 'U.S. Annual Measles Cases',
+    description: 'Reported measles cases per year in the U.S., showing the collapse after the 1963 vaccine and 2000 elimination (1962–present)',
+    color: '#862e9c',
+    csvUrl: `${CDC_OPEN_BASE}/measles_annual_history.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'cases',
+    unit: 'cases',
+    format: ',.0f',
+    source: 'CDC',
+    frequency: 'Annual',
+    category: 'Measles'
+  },
+
+  // U.S. life expectancy at birth (CDC NCHS, 1900–present)
+  'life-expectancy': {
+    id: 'life-expectancy',
+    title: 'U.S. Life Expectancy',
+    description: 'Average life expectancy at birth, all races, both sexes, U.S. (1900–present)',
+    color: '#0c8599',
+    csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'average_life_expectancy',
+    filters: { race: 'All Races', sex: 'Both Sexes' },
+    unit: 'years',
+    format: '.1f',
+    source: 'CDC NCHS',
+    frequency: 'Annual',
+    category: 'Mortality'
+  },
+
+  // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
+  'lyme-disease': {
+    id: 'lyme-disease',
+    title: 'Lyme Disease Cases',
+    description: 'Total reported Lyme disease cases per year in the U.S. (2016–present)',
+    color: '#66a80f',
+    csvUrl: `${WONDER_BASE}/tick-borne-diseases-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'cases',
+    filters: { disease: 'Lyme disease, Total' },
+    unit: 'cases',
+    format: ',.0f',
+    source: 'CDC NNDSS',
+    frequency: 'Annual',
+    category: 'Tick-borne Disease'
   }
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy', 'birth-rate'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all'] },
+  { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
+  { name: 'Tick-borne Disease', series: ['lyme-disease'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv'] }
