@@ -392,6 +392,42 @@ export const SERIES_CONFIG = {
     category: 'Mortality'
   },
 
+  // U.S. life expectancy at birth — male, all races (CDC NCHS, 1900–present)
+  'life-expectancy-male': {
+    id: 'life-expectancy-male',
+    title: 'U.S. Life Expectancy — Male',
+    description: 'Average life expectancy at birth for males, all races, U.S. (1900–present)',
+    color: '#1971c2',
+    csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'average_life_expectancy',
+    filters: { race: 'All Races', sex: 'Male' },
+    unit: 'years',
+    format: '.1f',
+    source: 'CDC NCHS',
+    frequency: 'Annual',
+    category: 'Mortality'
+  },
+
+  // U.S. life expectancy at birth — female, all races (CDC NCHS, 1900–present)
+  'life-expectancy-female': {
+    id: 'life-expectancy-female',
+    title: 'U.S. Life Expectancy — Female',
+    description: 'Average life expectancy at birth for females, all races, U.S. (1900–present)',
+    color: '#e64980',
+    csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'average_life_expectancy',
+    filters: { race: 'All Races', sex: 'Female' },
+    unit: 'years',
+    format: '.1f',
+    source: 'CDC NCHS',
+    frequency: 'Annual',
+    category: 'Mortality'
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -412,14 +448,15 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy', 'life-expectancy-male', 'life-expectancy-female', 'birth-rate'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy', 'life-expectancy-male', 'life-expectancy-female'] },
+  { name: 'Life Expectancy', series: ['life-expectancy', 'life-expectancy-male', 'life-expectancy-female'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv'] }
