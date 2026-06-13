@@ -51,10 +51,30 @@ async function fetchRows(fetch, config) {
 
 export async function load({ fetch }) {
   const datasets = await Promise.all(
-    Object.values(SERIES_CONFIG).map(async (config) => ({
-      id: config.id,
-      data: await fetchRows(fetch, config)
-    }))
+    Object.values(SERIES_CONFIG)
+      .filter(config => !config.hidden)
+      .map(async (config) => {
+        if (config.subSeries) {
+          const urls = config.csvUrls ?? [config.csvUrl];
+          const dateKey = config.dateKey || 'date';
+          const texts = await Promise.all(urls.map(url => fetch(url).then(r => r.text())));
+          const allRows = texts
+            .flatMap(text => parseCSV(text))
+            .filter(d => d[dateKey] && d[config.valueKey] !== '')
+            .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
+            .sort((a, b) => a.date - b.date);
+          return {
+            id: config.id,
+            subData: config.subSeries.map(sub => ({
+              key: sub.key,
+              label: sub.label,
+              color: sub.color,
+              rows: allRows.filter(d => Object.entries(sub.filters).every(([k, v]) => d[k] === v))
+            }))
+          };
+        }
+        return { id: config.id, data: await fetchRows(fetch, config) };
+      })
   );
   return { datasets };
 }
