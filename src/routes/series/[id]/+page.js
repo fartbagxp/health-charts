@@ -42,6 +42,22 @@ export async function load({ fetch, params }) {
   const urls = config.csvUrls ?? [config.csvUrl];
   const dateKey = config.dateKey || 'date';
   const texts = await Promise.all(urls.map(url => fetch(url).then(r => r.text())));
+
+  if (config.subSeries) {
+    const allRows = texts
+      .flatMap(text => parseCSV(text))
+      .filter(d => d[dateKey] && d[config.valueKey] !== '')
+      .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
+      .sort((a, b) => a.date - b.date);
+    const subData = config.subSeries.map(sub => ({
+      key: sub.key,
+      label: sub.label,
+      color: sub.color,
+      rows: allRows.filter(d => Object.entries(sub.filters).every(([k, v]) => d[k] === v))
+    }));
+    return { config, subData };
+  }
+
   const data = texts
     .flatMap(text => parseCSV(text))
     .filter(d => {
