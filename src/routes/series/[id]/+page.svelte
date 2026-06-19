@@ -131,7 +131,7 @@
       <p class="series-desc">{config.description}</p>
       <div class="meta-pills">
         <span class="meta-pill">{config.frequency}</span>
-        <span class="meta-pill">Source: {config.source}</span>
+        <span class="meta-pill"><a href="{config.sourceUrl}" target="_blank" rel="noopener">Source: {config.source}</a></span>
         <span class="meta-pill">{config.category}</span>
       </div>
     </div>
@@ -205,6 +205,7 @@
       </Plot>
     </div>
   {/if}
+  <p class="chart-source">Source: <a href="{config.sourceUrl}" target="_blank" rel="noopener">{config.source}</a></p>
 
   <div class="metrics-grid">
     <div class="metric-card">

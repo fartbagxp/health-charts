@@ -414,6 +414,14 @@ main { flex: 1; }
   font-size: 0.8125rem;
 }
 
+.meta-pill a {
+  color: var(--fg-mid);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.meta-pill a:hover { color: var(--fg); }
+
 .btn-download {
   background: #333;
   color: var(--white);
@@ -810,6 +818,35 @@ main { flex: 1; }
 }
 
 .panel-link:hover { text-decoration: underline; }
+
+.panel-source {
+  padding: 0.1rem 1.25rem 0.875rem;
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+}
+
+.panel-source a {
+  color: var(--fg-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.panel-source a:hover { color: var(--fg-mid); }
+
+.chart-source {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+}
+
+.chart-source a {
+  color: var(--fg-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chart-source a:hover { color: var(--fg-mid); }
 
 /* home-columns: browse + sources */
 .home-columns {

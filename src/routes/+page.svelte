@@ -196,6 +196,7 @@
             {/snippet}
           </Plot>
         </div>
+        <div class="panel-source">Source: <a href="{s.sourceUrl}" target="_blank" rel="noopener">{s.source}</a></div>
       </section>
     {:else}
       {@const rows = dataMap[s.id] ?? []}
@@ -242,6 +243,7 @@
             {/snippet}
           </Plot>
         </div>
+        <div class="panel-source">Source: <a href="{s.sourceUrl}" target="_blank" rel="noopener">{s.source}</a></div>
       </section>
     {/if}
   {/each}
