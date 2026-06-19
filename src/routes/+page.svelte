@@ -39,7 +39,9 @@
 
   function yTickFormat(d) {
     if (d === 0) return '0';
-    if (d >= 1000) return `${d / 1000}k`;
+    if (d >= 1e9) return `${+(d / 1e9).toPrecision(3)}B`;
+    if (d >= 1e6) return `${+(d / 1e6).toPrecision(3)}M`;
+    if (d >= 1000) return `${+(d / 1000).toPrecision(3)}k`;
     return String(d);
   }
 

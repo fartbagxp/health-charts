@@ -477,6 +477,88 @@ export const SERIES_CONFIG = {
     hidden: true
   },
 
+  // Wastewater surveillance (CDC NWSS, site-level weekly samples aggregated to national median)
+  'wastewater-covid': {
+    id: 'wastewater-covid',
+    title: 'COVID-19 Wastewater Signal',
+    description: 'National median flow-normalized SARS-CoV-2 RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
+    color: '#e63946',
+    csvUrl: `${CDC_OPEN_BASE}/wastewater_covid.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    aggregate: 'weekly_median',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/j9g8-acpt',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+  'wastewater-flu': {
+    id: 'wastewater-flu',
+    title: 'Influenza A Wastewater Signal',
+    description: 'National median flow-normalized Influenza A RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
+    color: '#1a6faf',
+    csvUrl: `${CDC_OPEN_BASE}/wastewater_flu.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    aggregate: 'weekly_median',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/ymmh-divb',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+  'wastewater-rsv': {
+    id: 'wastewater-rsv',
+    title: 'RSV Wastewater Signal',
+    description: 'National median flow-normalized RSV RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
+    color: '#2a9d8f',
+    csvUrl: `${CDC_OPEN_BASE}/wastewater_rsv.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    aggregate: 'weekly_median',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/45cq-cw4i',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+  'wastewater-measles': {
+    id: 'wastewater-measles',
+    title: 'Measles Wastewater Signal',
+    description: 'National median flow-normalized measles RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
+    color: '#6a4c93',
+    csvUrl: `${CDC_OPEN_BASE}/wastewater_measles.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    aggregate: 'weekly_median',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/akvg-8vrb',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+  'wastewater-h5': {
+    id: 'wastewater-h5',
+    title: 'Avian Flu H5 Wastewater Signal',
+    description: 'National median flow-normalized Influenza A (H5) RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
+    color: '#f4a261',
+    csvUrl: `${CDC_OPEN_BASE}/wastewater_h5.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    aggregate: 'weekly_median',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/mtpu-urpp',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -498,16 +580,17 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
+  { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
   { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
-  { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu'] },
-  { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid'] },
-  { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv'] }
+  { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
+  { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
+  { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
 ];

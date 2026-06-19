@@ -31,11 +31,34 @@ function parseCSV(text) {
   });
 }
 
+function weeklyMedian(rows, valueKey) {
+  const byWeek = new Map();
+  for (const row of rows) {
+    const d = row.date;
+    const day = d.getDay();
+    const monday = new Date(d);
+    monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+    monday.setHours(0, 0, 0, 0);
+    const key = monday.getTime();
+    if (!byWeek.has(key)) byWeek.set(key, { date: monday, values: [] });
+    const v = parseFloat(row[valueKey]);
+    if (!isNaN(v) && v >= 0) byWeek.get(key).values.push(v);
+  }
+  return [...byWeek.values()]
+    .map(({ date, values }) => {
+      if (!values.length) return null;
+      const sorted = [...values].sort((a, b) => a - b);
+      return { date, [valueKey]: sorted[Math.floor(sorted.length / 2)] };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.date - b.date);
+}
+
 async function fetchRows(fetch, config) {
   const urls = config.csvUrls ?? [config.csvUrl];
   const dateKey = config.dateKey || 'date';
   const texts = await Promise.all(urls.map(url => fetch(url).then(r => r.text())));
-  return texts
+  const rows = texts
     .flatMap(text => parseCSV(text))
     .filter(d => {
       if (!d[dateKey]) return false;
@@ -47,6 +70,8 @@ async function fetchRows(fetch, config) {
     })
     .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
     .sort((a, b) => a.date - b.date);
+  if (config.aggregate === 'weekly_median') return weeklyMedian(rows, config.valueKey);
+  return rows;
 }
 
 export async function load({ fetch }) {
