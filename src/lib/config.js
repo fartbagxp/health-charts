@@ -13,6 +13,7 @@ export const SERIES_CONFIG = {
     unit: 'admissions',
     format: ',',
     source: 'CDC NSSP',
+    sourceUrl: 'https://www.cdc.gov/respiratory-viruses/data/index.html',
     frequency: 'Weekly',
     category: 'Influenza'
   },
@@ -26,6 +27,7 @@ export const SERIES_CONFIG = {
     unit: 'hospitalizations',
     format: ',',
     source: 'CDC COVID-NET',
+    sourceUrl: 'https://www.cdc.gov/covid/php/covid-net/index.html',
     frequency: 'Weekly',
     category: 'COVID-19'
   },
@@ -39,6 +41,7 @@ export const SERIES_CONFIG = {
     unit: 'per 100,000',
     format: '.1f',
     source: 'CDC RSV-NET',
+    sourceUrl: 'https://www.cdc.gov/rsv/php/surveillance/rsv-net.html',
     frequency: 'Weekly',
     category: 'Respiratory Syncytial Virus'
   },
@@ -55,7 +58,8 @@ export const SERIES_CONFIG = {
     filters: { pathogen: 'Influenza' },
     unit: '% of deaths',
     format: '.2f',
-    source: 'CDC',
+    source: 'CDC Open Data Portal',
+    sourceUrl: 'https://data.cdc.gov/NCHS/Provisional-Death-Counts-for-Influenza-COVID-19-an/ynw2-4viq',
     frequency: 'Weekly',
     category: 'Influenza'
   },
@@ -70,7 +74,8 @@ export const SERIES_CONFIG = {
     filters: { pathogen: 'COVID-19' },
     unit: '% of deaths',
     format: '.2f',
-    source: 'CDC',
+    source: 'CDC Open Data Portal',
+    sourceUrl: 'https://data.cdc.gov/NCHS/Provisional-Death-Counts-for-Influenza-COVID-19-an/ynw2-4viq',
     frequency: 'Weekly',
     category: 'COVID-19'
   },
@@ -85,7 +90,8 @@ export const SERIES_CONFIG = {
     filters: { pathogen: 'RSV' },
     unit: '% of deaths',
     format: '.2f',
-    source: 'CDC',
+    source: 'CDC Open Data Portal',
+    sourceUrl: 'https://data.cdc.gov/NCHS/Provisional-Death-Counts-for-Influenza-COVID-19-an/ynw2-4viq',
     frequency: 'Weekly',
     category: 'Respiratory Syncytial Virus'
   },
@@ -109,6 +115,7 @@ export const SERIES_CONFIG = {
     unit: '% vaccinated',
     format: '.1f',
     source: 'CDC NIS-ACM',
+    sourceUrl: 'https://www.cdc.gov/vaccines/imz-managers/nis/index.html',
     frequency: 'Weekly',
     category: 'Influenza',
     yDomain: [0, 100]
@@ -131,6 +138,7 @@ export const SERIES_CONFIG = {
     unit: '% vaccinated',
     format: '.1f',
     source: 'CDC NIS-ACM',
+    sourceUrl: 'https://www.cdc.gov/vaccines/imz-managers/nis/index.html',
     frequency: 'Weekly',
     category: 'COVID-19',
     yDomain: [0, 100]
@@ -153,6 +161,7 @@ export const SERIES_CONFIG = {
     unit: '% vaccinated',
     format: '.1f',
     source: 'CDC NIS-ACM',
+    sourceUrl: 'https://www.cdc.gov/vaccines/imz-managers/nis/index.html',
     frequency: 'Weekly',
     category: 'Respiratory Syncytial Virus',
     yDomain: [0, 100]
@@ -175,6 +184,7 @@ export const SERIES_CONFIG = {
     unit: 'births',
     format: ',.0f',
     source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/natality.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
@@ -197,6 +207,7 @@ export const SERIES_CONFIG = {
     unit: 'deaths per 100,000',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/nvss/vsrr/mortality-dashboard.htm',
     frequency: 'Quarterly',
     category: 'Mortality'
   },
@@ -220,6 +231,7 @@ export const SERIES_CONFIG = {
     unit: 'per 1,000 women',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/nvss/births.htm',
     frequency: 'Quarterly',
     category: 'Birth & Mortality'
   },
@@ -237,6 +249,7 @@ export const SERIES_CONFIG = {
     unit: 'deaths',
     format: ',.0f',
     source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
@@ -255,6 +268,7 @@ export const SERIES_CONFIG = {
     unit: 'deaths',
     format: ',.0f',
     source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
@@ -271,6 +285,7 @@ export const SERIES_CONFIG = {
     unit: 'deaths',
     format: ',.0f',
     source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
@@ -287,6 +302,7 @@ export const SERIES_CONFIG = {
     unit: 'deaths',
     format: ',.0f',
     source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
@@ -304,6 +320,7 @@ export const SERIES_CONFIG = {
     unit: '% up-to-date',
     format: '.1f',
     source: 'CDC NHSN',
+    sourceUrl: 'https://www.cdc.gov/nhsn/index.html',
     frequency: 'Weekly',
     category: 'COVID-19',
     yDomain: [0, 100]
@@ -320,6 +337,7 @@ export const SERIES_CONFIG = {
     unit: '% vaccinated',
     format: '.1f',
     source: 'CDC NHSN',
+    sourceUrl: 'https://www.cdc.gov/nhsn/index.html',
     frequency: 'Weekly',
     category: 'Influenza',
     yDomain: [0, 100]
@@ -336,6 +354,7 @@ export const SERIES_CONFIG = {
     unit: '% vaccinated',
     format: '.1f',
     source: 'CDC NHSN',
+    sourceUrl: 'https://www.cdc.gov/nhsn/index.html',
     frequency: 'Weekly',
     category: 'Respiratory Syncytial Virus',
     yDomain: [0, 100]
@@ -352,7 +371,8 @@ export const SERIES_CONFIG = {
     valueKey: 'cases',
     unit: 'cases',
     format: ',',
-    source: 'CDC',
+    source: 'CDC Measles Surveillance',
+    sourceUrl: 'https://www.cdc.gov/measles/data-research/index.html',
     frequency: 'Weekly',
     category: 'Measles'
   },
@@ -369,7 +389,8 @@ export const SERIES_CONFIG = {
     valueKey: 'cases',
     unit: 'cases',
     format: ',.0f',
-    source: 'CDC',
+    source: 'CDC Measles Surveillance',
+    sourceUrl: 'https://www.cdc.gov/measles/data-research/index.html',
     frequency: 'Annual',
     category: 'Measles'
   },
@@ -386,6 +407,7 @@ export const SERIES_CONFIG = {
     unit: 'years',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/products/life_tables.htm',
     frequency: 'Annual',
     category: 'Mortality',
     subSeries: [
@@ -409,6 +431,7 @@ export const SERIES_CONFIG = {
     unit: 'years',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/products/life_tables.htm',
     frequency: 'Annual',
     category: 'Mortality',
     hidden: true
@@ -428,6 +451,7 @@ export const SERIES_CONFIG = {
     unit: 'years',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/products/life_tables.htm',
     frequency: 'Annual',
     category: 'Mortality',
     hidden: true
@@ -447,6 +471,7 @@ export const SERIES_CONFIG = {
     unit: 'years',
     format: '.1f',
     source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/products/life_tables.htm',
     frequency: 'Annual',
     category: 'Mortality',
     hidden: true
@@ -465,7 +490,8 @@ export const SERIES_CONFIG = {
     filters: { disease: 'Lyme disease, Total' },
     unit: 'cases',
     format: ',.0f',
-    source: 'CDC NNDSS',
+    source: 'CDC NNDSS via WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/',
     frequency: 'Annual',
     category: 'Tick-borne Disease'
   }
