@@ -1,6 +1,7 @@
 const RAW_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/resp';
 const WONDER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wonder';
 const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
+const WISQARS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wisqars';
 
 export const SERIES_CONFIG = {
   flu: {
@@ -559,6 +560,114 @@ export const SERIES_CONFIG = {
     category: 'Wastewater'
   },
 
+  // Maternal mortality — annual U.S. deaths (CDC WONDER, 1999–present)
+  'maternal-mortality': {
+    id: 'maternal-mortality',
+    title: 'U.S. Maternal Mortality',
+    description: 'Total maternal deaths per year in the U.S. (1999–present)',
+    color: '#e07a5f',
+    csvUrl: `${WONDER_BASE}/maternal-mortality-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'deaths',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality'
+  },
+
+  // Historical leading cause death rates (CDC NCHS, 1900–present)
+  'death-rates-historical': {
+    id: 'death-rates-historical',
+    title: 'U.S. Leading Cause Death Rates',
+    description: 'Age-adjusted death rates per 100,000 for leading causes of U.S. death (1900–present)',
+    csvUrl: `${CDC_OPEN_BASE}/death_rates_historical.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'age_adjusted_death_rate',
+    unit: 'deaths per 100,000',
+    format: '.1f',
+    source: 'CDC NCHS',
+    sourceUrl: 'https://www.cdc.gov/nchs/',
+    frequency: 'Annual',
+    category: 'Mortality',
+    subSeries: [
+      { key: 'heart', label: 'Heart Disease', color: '#e63946', filters: { leading_causes: 'Heart Disease' } },
+      { key: 'cancer', label: 'Cancer', color: '#e07a5f', filters: { leading_causes: 'Cancer' } },
+      { key: 'stroke', label: 'Stroke', color: '#6a4c93', filters: { leading_causes: 'Stroke' } },
+      { key: 'accidents', label: 'Accidents', color: '#f4a261', filters: { leading_causes: 'Accidents' } },
+      { key: 'flu-pneumonia', label: 'Flu & Pneumonia', color: '#1a6faf', filters: { leading_causes: 'Influenza and Pneumonia' } }
+    ]
+  },
+
+  // Injury & overdose — monthly rates (CDC WISQARS, 2019–present)
+  'injury-drug-od': {
+    id: 'injury-drug-od',
+    title: 'Drug Overdose Death Rate',
+    description: 'Annualized monthly drug overdose death rate per 100,000, U.S. national (2019–present)',
+    color: '#6a4c93',
+    csvUrl: `${WISQARS_BASE}/injury_national.csv`,
+    dateKey: 'period',
+    valueKey: 'rate',
+    filters: { intent: 'Drug_OD', type: 'month' },
+    unit: 'deaths per 100,000 (annualized)',
+    format: '.1f',
+    source: 'CDC WISQARS',
+    sourceUrl: 'https://wisqars.cdc.gov/',
+    frequency: 'Monthly',
+    category: 'Injury & Overdose'
+  },
+  'injury-suicide': {
+    id: 'injury-suicide',
+    title: 'Suicide Death Rate',
+    description: 'Annualized monthly suicide death rate per 100,000, U.S. national (2019–present)',
+    color: '#457b9d',
+    csvUrl: `${WISQARS_BASE}/injury_national.csv`,
+    dateKey: 'period',
+    valueKey: 'rate',
+    filters: { intent: 'All_Suicide', type: 'month' },
+    unit: 'deaths per 100,000 (annualized)',
+    format: '.1f',
+    source: 'CDC WISQARS',
+    sourceUrl: 'https://wisqars.cdc.gov/',
+    frequency: 'Monthly',
+    category: 'Injury & Overdose'
+  },
+  'injury-homicide': {
+    id: 'injury-homicide',
+    title: 'Homicide Death Rate',
+    description: 'Annualized monthly homicide death rate per 100,000, U.S. national (2019–present)',
+    color: '#e63946',
+    csvUrl: `${WISQARS_BASE}/injury_national.csv`,
+    dateKey: 'period',
+    valueKey: 'rate',
+    filters: { intent: 'All_Homicide', type: 'month' },
+    unit: 'deaths per 100,000 (annualized)',
+    format: '.1f',
+    source: 'CDC WISQARS',
+    sourceUrl: 'https://wisqars.cdc.gov/',
+    frequency: 'Monthly',
+    category: 'Injury & Overdose'
+  },
+  'injury-firearm': {
+    id: 'injury-firearm',
+    title: 'Firearm Death Rate',
+    description: 'Annualized monthly firearm death rate per 100,000 (all intents), U.S. national (2019–present)',
+    color: '#f4a261',
+    csvUrl: `${WISQARS_BASE}/injury_national.csv`,
+    dateKey: 'period',
+    valueKey: 'rate',
+    filters: { intent: 'FA_Deaths', type: 'month' },
+    unit: 'deaths per 100,000 (annualized)',
+    format: '.1f',
+    source: 'CDC WISQARS',
+    sourceUrl: 'https://wisqars.cdc.gov/',
+    frequency: 'Monthly',
+    category: 'Injury & Overdose'
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -580,7 +689,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -588,8 +697,10 @@ export const CATEGORIES = [
   { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
+  { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory'] },
+  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
