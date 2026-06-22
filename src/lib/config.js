@@ -668,6 +668,29 @@ export const SERIES_CONFIG = {
     category: 'Injury & Overdose'
   },
 
+  // Foodborne pathogens — BEAM monthly human isolates (CDC, 2018–present)
+  'beam-foodborne': {
+    id: 'beam-foodborne',
+    title: 'Foodborne Pathogen Isolates',
+    description: 'Monthly human isolate counts for five enteric pathogens from CDC BEAM surveillance (2018–present)',
+    csvUrl: `${CDC_OPEN_BASE}/beam_foodborne.csv`,
+    dateKey: 'date',
+    valueKey: 'isolates',
+    unit: 'isolates',
+    format: ',',
+    source: 'CDC BEAM',
+    sourceUrl: 'https://www.cdc.gov/beam/dashboard/index.html',
+    frequency: 'Monthly',
+    category: 'Foodborne Disease',
+    subSeries: [
+      { key: 'salmonella', label: 'Salmonella', color: '#e63946', filters: { pathogen: 'Salmonella' } },
+      { key: 'stec', label: 'STEC (E. coli)', color: '#f4a261', filters: { pathogen: 'STEC' } },
+      { key: 'campylobacter', label: 'Campylobacter', color: '#2a9d8f', filters: { pathogen: 'Campylobacter' } },
+      { key: 'shigella', label: 'Shigella', color: '#6a4c93', filters: { pathogen: 'Shigella' } },
+      { key: 'vibrio', label: 'Vibrio', color: '#457b9d', filters: { pathogen: 'Vibrio' } }
+    ]
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -689,7 +712,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'beam-foodborne'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -701,6 +724,7 @@ export const CATEGORIES = [
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
   { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory'] },
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm'] },
+  { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }

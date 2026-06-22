@@ -23,6 +23,7 @@ Dataset catalog for finding and adding new health data. The app fetches CSVs fro
 | Measles annual cases               | CDC `measles_annual_history.csv`   | Annual, 1962–present       |
 | Life expectancy at birth           | CDC NCHS `life_expectancy.csv`     | Annual, 1900–present       |
 | Lyme disease annual cases          | CDC WONDER `tick-borne-...csv`     | Annual, 2016–present       |
+| Foodborne pathogen isolates        | CDC BEAM `beam_foodborne.csv`      | Monthly, 2018–present      |
 
 ---
 
