@@ -68,11 +68,20 @@ If `datawrapper-charts.json` is absent or has no entry for a series, the app aut
 
 ## Data Sources
 
-| Series   | Source                                                   | Metric           | Frequency |
-| -------- | -------------------------------------------------------- | ---------------- | --------- |
-| Flu      | [CDC FluView](https://www.cdc.gov/flu/weekly/)           | Case estimates   | Monthly   |
-| COVID-19 | [CDC COVID-NET](https://data.cdc.gov/resource/7dk4-g6vg) | Hospitalizations | Weekly    |
-| RSV      | [CDC RSV-NET](https://data.cdc.gov/resource/29hc-w46k)   | Rate per 100k    | Weekly    |
+| Category              | Source                                                                                           | Metric                           | Frequency        |
+| --------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------- | ---------------- |
+| Hospitalizations      | [CDC NHSN](https://data.cdc.gov/d/ua7e-t2fy)                                                    | New admissions (flu/COVID/RSV)   | Weekly           |
+| Respiratory mortality | [CDC Open Data](https://data.cdc.gov/d/4bc2-bbpq)                                               | % of all deaths                  | Weekly           |
+| Vaccination coverage  | [CDC NIS-ACM](https://data.cdc.gov/d/5c6r-xi2t)                                                 | % adults up-to-date              | Weekly           |
+| Nursing home vacc.    | [CDC NHSN](https://data.cdc.gov/d/tscn-ryh9)                                                    | % residents vaccinated           | Weekly           |
+| Wastewater            | [CDC NWSS](https://data.cdc.gov/d/j9g8-acpt)                                                    | RNA copies/person/day (national) | Weekly           |
+| Measles               | [CDC Measles Surveillance](https://www.cdc.gov/measles/data-research/index.html)                 | Cases                            | Weekly / Annual  |
+| Lyme disease          | [CDC NNDSS via WONDER](https://wonder.cdc.gov/)                                                  | Cases                            | Annual           |
+| Births & fertility    | [CDC WONDER Natality](https://wonder.cdc.gov/natality.html) / [CDC NCHS](https://data.cdc.gov/d/76vv-a7x8) | Births / fertility rate | Annual / Quarterly |
+| Mortality             | [CDC WONDER](https://wonder.cdc.gov/) / [CDC NCHS](https://data.cdc.gov/d/489q-934x)            | Deaths / age-adjusted rates      | Annual / Quarterly |
+| Life expectancy       | [CDC NCHS](https://data.cdc.gov/d/w9j2-ggv5)                                                    | Years at birth                   | Annual           |
+| Injury & overdose     | [CDC WISQARS](https://wisqars.cdc.gov/)                                                          | Death rate per 100k (annualized) | Monthly          |
+| Foodborne disease     | [CDC BEAM Dashboard](https://www.cdc.gov/beam/dashboard/index.html)                              | Human isolates (5 pathogens)     | Monthly          |
 
 ```bash
 pnpm run fetch-data   # pull latest CDC data into public/data/
