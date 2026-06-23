@@ -691,6 +691,28 @@ export const SERIES_CONFIG = {
     ]
   },
 
+  // Suicide rate by sex — annual (CDC WISQARS + WONDER, 1999–2024)
+  'suicide-by-sex': {
+    id: 'suicide-by-sex',
+    title: 'U.S. Suicide Rate by Sex',
+    description: 'Annual U.S. suicide death rate per 100,000 by sex, 1999–2024. Male rates are consistently 3.5–4× female rates. Source: CDC WISQARS 1999–2016; CDC WONDER D77/D176 2017–2024.',
+    csvUrl: `${WISQARS_BASE}/suicide_by_sex.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'crude_rate',
+    unit: 'deaths per 100,000',
+    format: '.1f',
+    source: 'CDC WISQARS / CDC WONDER',
+    sourceUrl: 'https://wisqars.cdc.gov/',
+    frequency: 'Annual',
+    category: 'Injury & Overdose',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { sex: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { sex: 'Female' } },
+      { key: 'both', label: 'Both Sexes', color: '#a0a0a0', filters: { sex: 'Both sexes' } }
+    ]
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -712,7 +734,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'beam-foodborne'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -723,7 +745,7 @@ export const CATEGORIES = [
   { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
   { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory'] },
-  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm'] },
+  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
