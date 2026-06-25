@@ -25,16 +25,18 @@
     return Math.ceil(max / 10000) * 10000;
   }
 
-  function yMaxMulti(seriesId) {
+  function yDomainMulti(seriesId) {
     const config = SERIES_CONFIG[seriesId];
+    if (config.yDomain) return config.yDomain;
     const subData = subDataMap[seriesId] ?? [];
     const allValues = subData.flatMap(sub => sub.rows.map(d => +d[config.valueKey])).filter(v => !isNaN(v));
     const max = allValues.length ? Math.max(...allValues) : 0;
-    if (!max || max <= 0) return 1;
-    if (max <= 5) return Math.ceil(max) + 1;
-    if (max <= 100) return Math.ceil(max / 10) * 10 + 10;
-    if (max <= 1000) return Math.ceil(max / 100) * 100;
-    return Math.ceil(max / 10000) * 10000;
+    let top = 1;
+    if (max <= 5) top = Math.ceil(max) + 1;
+    else if (max <= 100) top = Math.ceil(max / 10) * 10 + 10;
+    else if (max <= 1000) top = Math.ceil(max / 100) * 100;
+    else top = Math.ceil(max / 10000) * 10000;
+    return [0, top];
   }
 
   function yTickFormat(d) {
@@ -172,10 +174,10 @@
             height={220}
             marginTop={24} marginBottom={36} marginLeft={48} marginRight={16}
             x={{ type: 'time' }}
-            y={{ domain: [0, yMaxMulti(s.id)] }}
+            y={{ domain: yDomainMulti(s.id) }}
             style="width:100%"
           >
-            <RuleY y={0} />
+            <RuleY y={yDomainMulti(s.id)[0]} />
             <GridY strokeOpacity={0.2} />
             <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
             <AxisY tickFormat={yTickFormat} />

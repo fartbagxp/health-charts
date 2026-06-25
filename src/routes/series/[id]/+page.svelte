@@ -72,12 +72,12 @@
       return;
     }
 
-    const t0 = firstRows[0].date.getTime();
-    const t1 = firstRows[firstRows.length - 1].date.getTime();
+    const t0 = firstRows[0].date;
+    const t1 = firstRows[firstRows.length - 1].date;
     const targetTime = t0 + fraction * (t1 - t0);
 
     const closest = firstRows.reduce((best, d) =>
-      Math.abs(d.date.getTime() - targetTime) < Math.abs(best.date.getTime() - targetTime) ? d : best
+      Math.abs(d.date - targetTime) < Math.abs(best.date - targetTime) ? d : best
     );
 
     hoveredDatum = closest;
@@ -85,7 +85,7 @@
       key: sub.key,
       label: sub.label,
       color: sub.color,
-      datum: sub.rows.find(d => d.date.getTime() === closest.date.getTime()) ?? closest
+      datum: sub.rows.find(d => d.date === closest.date) ?? closest
     }));
     clientX = evt.clientX;
     clientY = evt.clientY;
@@ -100,10 +100,10 @@
         headers.join(','),
         ...firstRows.map(d => {
           const vals = subData.map(sub => {
-            const match = sub.rows.find(r => r.date.getTime() === d.date.getTime());
+            const match = sub.rows.find(r => r.date === d.date);
             return match ? match[config.valueKey] : '';
           });
-          return [d.date.toISOString().slice(0, 10), ...vals].join(',');
+          return [new Date(d.date).toISOString().slice(0, 10), ...vals].join(',');
         })
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
@@ -155,8 +155,8 @@
       onpointermove={onChartMoveMulti}
       onpointerleave={() => { hoveredDatum = null; multiDatum = null; }}
     >
-      <Plot height={420} x={{ type: 'time' }} style="width:100%">
-        <RuleY y={0} />
+      <Plot height={420} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
+        <RuleY y={config.yDomain ? config.yDomain[0] : 0} />
         <GridY strokeOpacity={0.2} />
         <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />
@@ -166,7 +166,7 @@
         {#snippet overlay()}
           {#if hoveredDatum && multiDatum}
             <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
-              <div class="tip-date">{hoveredDatum.date.toLocaleDateString('en-US', { year: 'numeric' })}</div>
+              <div class="tip-date">{new Date(hoveredDatum.date).toLocaleDateString('en-US', { year: 'numeric' })}</div>
               {#each multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>

@@ -11,6 +11,10 @@ function parseDate(str, format) {
     const y = parseInt(str);
     if (!isNaN(y)) return new Date(y, 0, 1);
   }
+  if (format === 'schoolyear') {
+    const m = str.match(/^(\d{4})-\d{2}$/);
+    if (m) return new Date(+m[1], 6, 1);
+  }
   return new Date(str);
 }
 
@@ -85,7 +89,7 @@ export async function load({ fetch }) {
           const texts = await Promise.all(urls.map(url => fetch(url).then(r => r.text())));
           const allRows = texts
             .flatMap(text => parseCSV(text))
-            .filter(d => d[dateKey] && d[config.valueKey] !== '')
+            .filter(d => d[dateKey] && d[config.valueKey] !== '' && !isNaN(+d[config.valueKey]))
             .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
             .sort((a, b) => a.date - b.date);
           return {

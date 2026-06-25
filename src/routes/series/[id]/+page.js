@@ -50,8 +50,8 @@ export async function load({ fetch, params }) {
   if (config.subSeries) {
     const allRows = texts
       .flatMap(text => parseCSV(text))
-      .filter(d => d[dateKey] && d[config.valueKey] !== '')
-      .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
+      .filter(d => d[dateKey] && d[config.valueKey] !== '' && !isNaN(+d[config.valueKey]))
+      .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat).getTime() }))
       .sort((a, b) => a.date - b.date);
     const subData = config.subSeries.map(sub => ({
       key: sub.key,
