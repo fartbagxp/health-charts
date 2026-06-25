@@ -713,6 +713,32 @@ export const SERIES_CONFIG = {
     ]
   },
 
+  // Kindergarten vaccination coverage — SchoolVaxView (CDC, 2009–present)
+  'schoolvax': {
+    id: 'schoolvax',
+    title: 'Kindergarten Vaccination Coverage',
+    description: 'Annual vaccination coverage rates for U.S. kindergartners by vaccine, national, 2009–present (CDC SchoolVaxView)',
+    csvUrl: `${CDC_OPEN_BASE}/schoolvaxview.csv`,
+    dateKey: 'year_season',
+    dateFormat: 'schoolyear',
+    valueKey: 'coverage_estimate',
+    unit: '% vaccinated',
+    format: '.1f',
+    source: 'CDC SchoolVaxView',
+    sourceUrl: 'https://data.cdc.gov/d/ijqb-a7ye',
+    frequency: 'Annual',
+    category: 'Vaccination Coverage',
+    yDomain: [80, 100],
+    subSeries: [
+      { key: 'dtap',    label: 'DTaP/DTP',    color: '#1a6faf', filters: { vaccine: 'DTP, DTaP, or DT', geography_type: 'National' } },
+      { key: 'mmr',     label: 'MMR',          color: '#6a4c93', filters: { vaccine: 'MMR',          geography_type: 'National' } },
+      { key: 'polio',   label: 'Polio',        color: '#2a9d8f', filters: { vaccine: 'Polio',        geography_type: 'National' } },
+      { key: 'hepb',    label: 'Hepatitis B',  color: '#e07a5f', filters: { vaccine: 'Hepatitis B',  geography_type: 'National' } },
+      { key: 'varicella', label: 'Varicella',  color: '#f4a261', filters: { vaccine: 'Varicella', dose: '1 Dose (unknown disease history)', geography_type: 'National' } },
+      { key: 'exempt',  label: 'Any Exemption', color: '#e63946', filters: { vaccine: 'Exemption', dose: 'Any Exemption', geography_type: 'National' } }
+    ]
+  },
+
   // Lyme disease — annual U.S. cases (CDC NNDSS via WONDER, 2016–present)
   'lyme-disease': {
     id: 'lyme-disease',
@@ -734,9 +760,9 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
-  { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv'] },
+  { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
   { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
