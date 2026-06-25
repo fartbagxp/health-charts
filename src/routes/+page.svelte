@@ -108,19 +108,19 @@
       return;
     }
 
-    const t0 = firstRows[0].date.getTime();
-    const t1 = firstRows[firstRows.length - 1].date.getTime();
+    const t0 = firstRows[0].ts;
+    const t1 = firstRows[firstRows.length - 1].ts;
     const targetTime = t0 + fraction * (t1 - t0);
 
     const closest = firstRows.reduce((best, d) =>
-      Math.abs(d.date.getTime() - targetTime) < Math.abs(best.date.getTime() - targetTime) ? d : best
+      Math.abs(d.ts - targetTime) < Math.abs(best.ts - targetTime) ? d : best
     );
 
     const multiDatum = subData.map(sub => ({
       key: sub.key,
       label: sub.label,
       color: sub.color,
-      datum: sub.rows.find(d => d.date.getTime() === closest.date.getTime()) ?? closest
+      datum: sub.rows.find(d => d.ts === closest.ts) ?? closest
     }));
 
     hovered = {
@@ -187,7 +187,7 @@
             {#snippet overlay()}
               {#if hovered.seriesId === s.id && hovered.multiDatum}
                 <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none">
-                  <div class="tip-date">{hovered.datum.date.toLocaleDateString('en-US', { year: 'numeric' })}</div>
+                  <div class="tip-date">{new Date(hovered.datum.ts).toLocaleDateString('en-US', { year: 'numeric' })}</div>
                   {#each hovered.multiDatum as sub}
                     <div class="tip-row">
                       <span class="tip-swatch" style="background:{sub.color}"></span>

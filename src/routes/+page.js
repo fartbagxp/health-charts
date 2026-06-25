@@ -90,8 +90,8 @@ export async function load({ fetch }) {
           const allRows = texts
             .flatMap(text => parseCSV(text))
             .filter(d => d[dateKey] && d[config.valueKey] !== '' && !isNaN(+d[config.valueKey]))
-            .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
-            .sort((a, b) => a.date - b.date);
+            .map(d => { const dt = parseDate(d[dateKey], config.dateFormat); return { ...d, date: dt, ts: dt.getTime() }; })
+            .sort((a, b) => a.ts - b.ts);
           return {
             id: config.id,
             subData: config.subSeries.map(sub => ({
