@@ -72,12 +72,12 @@
       return;
     }
 
-    const t0 = firstRows[0].date;
-    const t1 = firstRows[firstRows.length - 1].date;
+    const t0 = firstRows[0].ts;
+    const t1 = firstRows[firstRows.length - 1].ts;
     const targetTime = t0 + fraction * (t1 - t0);
 
     const closest = firstRows.reduce((best, d) =>
-      Math.abs(d.date - targetTime) < Math.abs(best.date - targetTime) ? d : best
+      Math.abs(d.ts - targetTime) < Math.abs(best.ts - targetTime) ? d : best
     );
 
     hoveredDatum = closest;
@@ -85,7 +85,7 @@
       key: sub.key,
       label: sub.label,
       color: sub.color,
-      datum: sub.rows.find(d => d.date === closest.date) ?? closest
+      datum: sub.rows.find(d => d.ts === closest.ts) ?? closest
     }));
     clientX = evt.clientX;
     clientY = evt.clientY;
@@ -100,10 +100,10 @@
         headers.join(','),
         ...firstRows.map(d => {
           const vals = subData.map(sub => {
-            const match = sub.rows.find(r => r.date === d.date);
+            const match = sub.rows.find(r => r.ts === d.ts);
             return match ? match[config.valueKey] : '';
           });
-          return [new Date(d.date).toISOString().slice(0, 10), ...vals].join(',');
+          return [new Date(d.ts).toISOString().slice(0, 10), ...vals].join(',');
         })
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
@@ -166,7 +166,7 @@
         {#snippet overlay()}
           {#if hoveredDatum && multiDatum}
             <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
-              <div class="tip-date">{new Date(hoveredDatum.date).toLocaleDateString('en-US', { year: 'numeric' })}</div>
+              <div class="tip-date">{new Date(hoveredDatum.ts).toLocaleDateString('en-US', { year: 'numeric' })}</div>
               {#each multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>
