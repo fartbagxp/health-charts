@@ -168,6 +168,31 @@ export const SERIES_CONFIG = {
     yDomain: [0, 100]
   },
 
+  // Kindergarten vaccination coverage — SchoolVaxView (CDC, 2009–present)
+  'schoolvax': {
+    id: 'schoolvax',
+    title: 'Kindergarten Vaccination Coverage',
+    description: 'Annual vaccination coverage rates for U.S. kindergartners by vaccine, national, 2009–present (CDC SchoolVaxView)',
+    csvUrl: `${CDC_OPEN_BASE}/schoolvaxview.csv`,
+    dateKey: 'year_season',
+    dateFormat: 'schoolyear',
+    valueKey: 'coverage_estimate',
+    unit: '% vaccinated',
+    format: '.1f',
+    source: 'CDC SchoolVaxView',
+    sourceUrl: 'https://data.cdc.gov/d/ijqb-a7ye',
+    frequency: 'Annual',
+    category: 'Vaccination Coverage',
+    yDomain: [80, 100],
+    subSeries: [
+      { key: 'dtap',      label: 'DTaP/DTP',   color: '#1a6faf', filters: { vaccine: 'DTP, DTaP, or DT', geography_type: 'National' } },
+      { key: 'mmr',       label: 'MMR',         color: '#6a4c93', filters: { vaccine: 'MMR',          geography_type: 'National' } },
+      { key: 'polio',     label: 'Polio',       color: '#2a9d8f', filters: { vaccine: 'Polio',        geography_type: 'National' } },
+      { key: 'hepb',      label: 'Hepatitis B', color: '#e07a5f', filters: { vaccine: 'Hepatitis B',  geography_type: 'National' } },
+      { key: 'varicella', label: 'Varicella',   color: '#f4a261', filters: { vaccine: 'Varicella', dose: '1 Dose (unknown disease history)', geography_type: 'National' } }
+    ]
+  },
+
   // U.S. annual births (CDC WONDER, 1995–2024)
   'births-annual': {
     id: 'births-annual',
@@ -710,32 +735,6 @@ export const SERIES_CONFIG = {
       { key: 'male', label: 'Male', color: '#1a6faf', filters: { sex: 'Male' } },
       { key: 'female', label: 'Female', color: '#e07a5f', filters: { sex: 'Female' } },
       { key: 'both', label: 'Both Sexes', color: '#a0a0a0', filters: { sex: 'Both sexes' } }
-    ]
-  },
-
-  // Kindergarten vaccination coverage — SchoolVaxView (CDC, 2009–present)
-  'schoolvax': {
-    id: 'schoolvax',
-    title: 'Kindergarten Vaccination Coverage',
-    description: 'Annual vaccination coverage rates for U.S. kindergartners by vaccine, national, 2009–present (CDC SchoolVaxView)',
-    csvUrl: `${CDC_OPEN_BASE}/schoolvaxview.csv`,
-    dateKey: 'year_season',
-    dateFormat: 'schoolyear',
-    valueKey: 'coverage_estimate',
-    unit: '% vaccinated',
-    format: '.1f',
-    source: 'CDC SchoolVaxView',
-    sourceUrl: 'https://data.cdc.gov/d/ijqb-a7ye',
-    frequency: 'Annual',
-    category: 'Vaccination Coverage',
-    yDomain: [80, 100],
-    subSeries: [
-      { key: 'dtap',    label: 'DTaP/DTP',    color: '#1a6faf', filters: { vaccine: 'DTP, DTaP, or DT', geography_type: 'National' } },
-      { key: 'mmr',     label: 'MMR',          color: '#6a4c93', filters: { vaccine: 'MMR',          geography_type: 'National' } },
-      { key: 'polio',   label: 'Polio',        color: '#2a9d8f', filters: { vaccine: 'Polio',        geography_type: 'National' } },
-      { key: 'hepb',    label: 'Hepatitis B',  color: '#e07a5f', filters: { vaccine: 'Hepatitis B',  geography_type: 'National' } },
-      { key: 'varicella', label: 'Varicella',  color: '#f4a261', filters: { vaccine: 'Varicella', dose: '1 Dose (unknown disease history)', geography_type: 'National' } },
-      { key: 'exempt',  label: 'Any Exemption', color: '#e63946', filters: { vaccine: 'Exemption', dose: 'Any Exemption', geography_type: 'National' } }
     ]
   },
 
