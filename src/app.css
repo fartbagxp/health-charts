@@ -619,6 +619,21 @@ main { flex: 1; }
   padding: 1.25rem 1.5rem;
 }
 
+.panel-anchor {
+  margin-left: 0.4em;
+  font-size: 0.75em;
+  font-weight: 400;
+  color: transparent;
+  text-decoration: none;
+  vertical-align: middle;
+  transition: color 0.15s;
+}
+
+.panel-title:hover .panel-anchor,
+.panel-anchor:focus {
+  color: var(--fg-muted, #999);
+}
+
 .home-header-inner {
   max-width: 1200px;
   margin: 0 auto;

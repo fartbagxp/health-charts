@@ -150,11 +150,11 @@
   {#each allSeries as s}
     {#if s.subSeries}
       {@const subData = subDataMap[s.id] ?? []}
-      <section class="chart-panel">
+      <section id={s.id} class="chart-panel">
         <div class="panel-header">
           <div class="panel-title-group">
             <span class="panel-badge">{s.category}</span>
-            <h2 class="panel-title">{s.title}</h2>
+            <h2 class="panel-title">{s.title}<a class="panel-anchor" href="#{s.id}" aria-label="Link to {s.title}">#</a></h2>
             <span class="panel-meta">{s.frequency} · {s.source}</span>
           </div>
           <div class="panel-stat">
@@ -204,11 +204,11 @@
       </section>
     {:else}
       {@const rows = dataMap[s.id] ?? []}
-      <section class="chart-panel">
+      <section id={s.id} class="chart-panel">
         <div class="panel-header">
           <div class="panel-title-group">
             <span class="panel-badge">{s.category}</span>
-            <h2 class="panel-title">{s.title}</h2>
+            <h2 class="panel-title">{s.title}<a class="panel-anchor" href="#{s.id}" aria-label="Link to {s.title}">#</a></h2>
             <span class="panel-meta">{s.frequency} · {s.source}</span>
           </div>
           <div class="panel-stat">
