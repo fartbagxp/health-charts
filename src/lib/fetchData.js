@@ -54,14 +54,23 @@ function weeklyMedian(rows, valueKey) {
     .sort((a, b) => a.date - b.date);
 }
 
+import { base } from '$app/paths';
+
+// Resolve root-relative paths against the SvelteKit base path.
+function resolveUrl(url) {
+  if (url.startsWith('/') && !url.startsWith('//')) return `${base}${url}`;
+  return url;
+}
+
 // Deduplicate concurrent fetches for the same URL
 const csvCache = new Map();
 
 function fetchCSV(url) {
-  if (!csvCache.has(url)) {
-    csvCache.set(url, fetch(url).then(r => r.text()));
+  const resolved = resolveUrl(url);
+  if (!csvCache.has(resolved)) {
+    csvCache.set(resolved, fetch(resolved).then(r => r.text()));
   }
-  return csvCache.get(url);
+  return csvCache.get(resolved);
 }
 
 export async function loadSeries(config) {
