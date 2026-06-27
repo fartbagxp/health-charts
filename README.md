@@ -1,6 +1,6 @@
 # Health Charts
 
-A U.S. public health data dashboard built on CDC surveillance. 37 series covering hospitalizations, wastewater signals, vaccination coverage, mortality, injury, and more.
+A U.S. public health data dashboard built on CDC surveillance and other US based health statistics. 37 series covering hospitalizations, wastewater signals, vaccination coverage, mortality, injury, and more.
 
 ## Features
 
@@ -46,26 +46,26 @@ pnpm run fetch-data             # pull hospitalization data from CDC Socrata API
 
 ## Data Sources
 
-| Category | Source | Metric | Frequency |
-|---|---|---|---|
-| Hospitalizations | [CDC NHSN](https://data.cdc.gov/d/ua7e-t2fy) | New admissions (flu/COVID/RSV) | Weekly |
-| Respiratory mortality | [CDC Open Data](https://data.cdc.gov/d/4bc2-bbpq) | % of all deaths | Weekly |
-| Vaccination coverage | [CDC NIS-ACM](https://data.cdc.gov/d/5c6r-xi2t) | % adults up-to-date | Weekly |
-| Nursing home vacc. | [CDC NHSN](https://data.cdc.gov/d/tscn-ryh9) | % residents vaccinated | Weekly |
-| Wastewater | [CDC NWSS](https://data.cdc.gov/d/j9g8-acpt) | RNA copies/person/day (national median) | Weekly |
-| Kindergarten vacc. | [CDC SchoolVaxView](https://data.cdc.gov/d/ijqb-a7ye) | % coverage by vaccine | Annual |
-| Measles | [CDC Measles Surveillance](https://www.cdc.gov/measles/data-research/index.html) | Cases | Weekly / Annual |
-| Lyme disease | [CDC NNDSS via WONDER](https://wonder.cdc.gov/) | Cases | Annual |
-| Births & fertility | [CDC WONDER Natality](https://wonder.cdc.gov/natality.html) / [CDC NCHS](https://data.cdc.gov/d/76vv-a7x8) | Births / fertility rate | Annual / Quarterly |
-| Mortality | [CDC WONDER](https://wonder.cdc.gov/) / [CDC NCHS](https://data.cdc.gov/d/489q-934x) | Deaths / age-adjusted rates | Annual / Quarterly |
-| Life expectancy | [CDC NCHS](https://data.cdc.gov/d/w9j2-ggv5) | Years at birth by sex | Annual |
-| Injury & overdose | [CDC WISQARS](https://wisqars.cdc.gov/) | Death rate per 100k (annualized) | Monthly |
-| Foodborne disease | [CDC BEAM Dashboard](https://www.cdc.gov/beam/dashboard/index.html) | Human isolates (5 pathogens) | Monthly |
-| Suicide by sex | [CDC WISQARS / WONDER](https://wisqars.cdc.gov/) | Death rate per 100k | Annual |
+| Category              | Source                                                                                                     | Metric                                  | Frequency          |
+| --------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------- | ------------------ |
+| Hospitalizations      | [CDC NHSN](https://data.cdc.gov/d/ua7e-t2fy)                                                               | New admissions (flu/COVID/RSV)          | Weekly             |
+| Respiratory mortality | [CDC Open Data](https://data.cdc.gov/d/4bc2-bbpq)                                                          | % of all deaths                         | Weekly             |
+| Vaccination coverage  | [CDC NIS-ACM](https://data.cdc.gov/d/5c6r-xi2t)                                                            | % adults up-to-date                     | Weekly             |
+| Nursing home vacc.    | [CDC NHSN](https://data.cdc.gov/d/tscn-ryh9)                                                               | % residents vaccinated                  | Weekly             |
+| Wastewater            | [CDC NWSS](https://data.cdc.gov/d/j9g8-acpt)                                                               | RNA copies/person/day (national median) | Weekly             |
+| Kindergarten vacc.    | [CDC SchoolVaxView](https://data.cdc.gov/d/ijqb-a7ye)                                                      | % coverage by vaccine                   | Annual             |
+| Measles               | [CDC Measles Surveillance](https://www.cdc.gov/measles/data-research/index.html)                           | Cases                                   | Weekly / Annual    |
+| Lyme disease          | [CDC NNDSS via WONDER](https://wonder.cdc.gov/)                                                            | Cases                                   | Annual             |
+| Births & fertility    | [CDC WONDER Natality](https://wonder.cdc.gov/natality.html) / [CDC NCHS](https://data.cdc.gov/d/76vv-a7x8) | Births / fertility rate                 | Annual / Quarterly |
+| Mortality             | [CDC WONDER](https://wonder.cdc.gov/) / [CDC NCHS](https://data.cdc.gov/d/489q-934x)                       | Deaths / age-adjusted rates             | Annual / Quarterly |
+| Life expectancy       | [CDC NCHS](https://data.cdc.gov/d/w9j2-ggv5)                                                               | Years at birth by sex                   | Annual             |
+| Injury & overdose     | [CDC WISQARS](https://wisqars.cdc.gov/)                                                                    | Death rate per 100k (annualized)        | Monthly            |
+| Foodborne disease     | [CDC BEAM Dashboard](https://www.cdc.gov/beam/dashboard/index.html)                                        | Human isolates (5 pathogens)            | Monthly            |
+| Suicide by sex        | [CDC WISQARS / WONDER](https://wisqars.cdc.gov/)                                                           | Death rate per 100k                     | Annual             |
 
 ## Project Structure
 
-```
+```bash
 health-charts/
 ├── src/
 │   ├── app.html                     # HTML shell
