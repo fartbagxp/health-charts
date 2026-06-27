@@ -1,6 +1,19 @@
 # Health Charts
 
-A U.S. public health data dashboard built on CDC surveillance and other US based health statistics. 37 series covering hospitalizations, wastewater signals, vaccination coverage, mortality, injury, and more.
+[![Deploy to GitHub Pages](https://github.com/fartbagxp/health-charts/actions/workflows/deploy.yml/badge.svg)](https://github.com/fartbagxp/health-charts/actions/workflows/deploy.yml)
+[![Live Demo](https://img.shields.io/badge/live%20demo-health--charts-blue?logo=github&logoColor=white)](https://fartbagxp.github.io/health-charts)
+[![Last Commit](https://img.shields.io/github/last-commit/fartbagxp/health-charts?logo=git&logoColor=white&label=last%20commit)](https://github.com/fartbagxp/health-charts/commits/main)
+[![View Dashboard](https://img.shields.io/badge/view-dashboard-0057A8?logo=googlechrome&logoColor=white)](https://fartbagxp.github.io/health-charts)
+[![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
+[![Data Series](https://img.shields.io/badge/data%20series-37-4CAF50?logo=databricks&logoColor=white)](https://fartbagxp.github.io/health-charts)
+[![SvelteKit](https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white)](https://kit.svelte.dev)
+[![Svelte](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![pnpm](https://img.shields.io/badge/pnpm-10-F69220?logo=pnpm&logoColor=white)](https://pnpm.io)
+
+A U.S. public health data dashboard built on CDC surveillance and federal health data. 37 series spanning hospitalizations, wastewater signals, vaccination rates, mortality, injury, births, and foodborne illness.
+
+**[View the live dashboard →](https://fartbagxp.github.io/health-charts)**
 
 ## Features
 
