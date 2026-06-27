@@ -8,7 +8,7 @@
 
 A U.S. public health data dashboard built on CDC surveillance and federal health data. 37 series spanning hospitalizations, wastewater signals, vaccination rates, mortality, injury, births, and foodborne illness.
 
-**[View the live dashboard →](https://fartbagxp.github.io/health-charts)**
+**[View the dashboard →](https://fartbagxp.github.io/health-charts)**
 
 ## Features
 
