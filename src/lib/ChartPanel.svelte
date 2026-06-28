@@ -163,14 +163,14 @@
     >
       <Plot
         height={220}
-        marginTop={24} marginBottom={36} marginLeft={48} marginRight={16}
+        marginTop={24} marginBottom={36} marginLeft={48} marginRight={40}
         x={{ type: 'time' }}
         y={{ domain: yDomainMulti() }}
         style="width:100%"
       >
         <RuleY y={yDomainMulti()[0]} />
         <GridY strokeOpacity={0.2} />
-        <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
+        <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY tickFormat={yTickFormat} />
         {#each subData as sub}
           <Line data={sub.rows} x="date" y={config.valueKey} stroke={sub.color} strokeWidth={2} />
@@ -200,14 +200,14 @@
     >
       <Plot
         height={220}
-        marginTop={24} marginBottom={36} marginLeft={48} marginRight={16}
+        marginTop={24} marginBottom={36} marginLeft={48} marginRight={40}
         x={{ type: 'time' }}
         y={{ domain: [0, yMax()] }}
         style="width:100%"
       >
         <RuleY y={0} />
         <GridY strokeOpacity={0.2} />
-        <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
+        <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY tickFormat={yTickFormat} />
         <Line data={rows} x="date" y={config.valueKey} stroke={config.color ?? 'black'} strokeWidth={2} />
         {#snippet overlay()}

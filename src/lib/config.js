@@ -639,6 +639,33 @@ export const SERIES_CONFIG = {
     frequency: 'Monthly',
     category: 'Injury & Overdose'
   },
+
+  // Drug deaths by year — annual U.S. counts by drug type (CDC WONDER, 1999–2024)
+  'drug-deaths-by-year': {
+    id: 'drug-deaths-by-year',
+    title: 'U.S. Drug Overdose Deaths by Type',
+    description: 'Annual U.S. drug overdose deaths by substance type, 1999–2024. Fentanyl surpassed all other drugs around 2016 and now dominates. Data from 2021 onward are provisional. Source: CDC WONDER.',
+    csvUrl: `${WONDER_BASE}/drug-deaths-by-year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'deaths',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER',
+    sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
+    frequency: 'Annual',
+    category: 'Injury & Overdose',
+    subSeries: [
+      { key: 'fentanyl',        label: 'Fentanyl (synthetic opioids)',       color: '#e63946', filters: { drug_code: 'T40.4' } },
+      { key: 'cocaine',         label: 'Cocaine',                            color: '#2a9d8f', filters: { drug_code: 'T40.5' } },
+      { key: 'stimulants',      label: 'Psychostimulants (meth/amphetamines)', color: '#e9c46a', filters: { drug_code: 'T43.6' } },
+      { key: 'heroin',          label: 'Heroin',                             color: '#e76f51', filters: { drug_code: 'T40.1' } },
+      { key: 'other-opioids',   label: 'Other opioids (natural/semi-synthetic)', color: '#f4a261', filters: { drug_code: 'T40.2' } },
+      { key: 'methadone',       label: 'Methadone',                          color: '#457b9d', filters: { drug_code: 'T40.3' } },
+      { key: 'cannabis',        label: 'Cannabis',                           color: '#52b788', filters: { drug_code: 'T40.7' } }
+    ]
+  },
+
   'injury-suicide': {
     id: 'injury-suicide',
     title: 'Suicide Death Rate',
@@ -754,7 +781,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -765,7 +792,7 @@ export const CATEGORIES = [
   { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
   { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory'] },
-  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex'] },
+  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },

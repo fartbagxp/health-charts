@@ -174,10 +174,10 @@
       onpointermove={onChartMoveMulti}
       onpointerleave={() => { hoveredDatum = null; multiDatum = null; }}
     >
-      <Plot height={420} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
+      <Plot height={420} marginRight={40} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
         <RuleY y={config.yDomain ? config.yDomain[0] : 0} />
         <GridY strokeOpacity={0.2} />
-        <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
+        <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />
         {#each subData as sub}
           <Line data={sub.rows} x="date" y={config.valueKey} stroke={sub.color} strokeWidth={2} />
@@ -206,10 +206,10 @@
       onpointermove={onChartMove}
       onpointerleave={() => { hoveredDatum = null; }}
     >
-      <Plot height={420} x={{ type: 'time' }} style="width:100%">
+      <Plot height={420} marginRight={40} x={{ type: 'time' }} style="width:100%">
         <RuleY y={0} />
         <GridY strokeOpacity={0.2} />
-        <AxisX tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
+        <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />
         <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
         {#snippet overlay()}
