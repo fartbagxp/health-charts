@@ -49,6 +49,10 @@
         <span>Historical natality, mortality, and notifiable diseases</span>
       </div>
       <div class="source-item">
+        <a href="https://seer.cancer.gov/statistics-network/explorer/" target="_blank" rel="noopener noreferrer">NCI SEER*Explorer</a>
+        <span>Cancer mortality statistics by type and sex</span>
+      </div>
+      <div class="source-item">
         <a href="https://data.cdc.gov/" target="_blank" rel="noopener noreferrer">CDC Open Data Portal</a>
         <span>Source datasets behind these charts</span>
       </div>
