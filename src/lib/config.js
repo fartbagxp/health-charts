@@ -2,6 +2,7 @@ const RAW_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/r
 const WONDER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wonder';
 const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
 const WISQARS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wisqars';
+const SEER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/seer';
 
 export const SERIES_CONFIG = {
   flu: {
@@ -315,6 +316,130 @@ export const SERIES_CONFIG = {
     frequency: 'Annual',
     category: 'Birth & Mortality'
   },
+  // Cancer deaths by type — top 8 cancer sites by mortality burden (NCI SEER, 2000-2024)
+  'deaths-cancer-by-type': {
+    id: 'deaths-cancer-by-type',
+    title: 'Deaths — Cancer by Type',
+    description: 'Annual U.S. cancer deaths for the 8 cancer types with the highest mortality burden, 2000–2024. Breast reflects female cases (99% of breast cancer deaths); Prostate is male-only by nature of the disease.',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'lung',       label: 'Lung and Bronchus',       color: '#1a6faf', filters: { site_label: 'Lung and Bronchus', sex_label: 'Both Sexes' } },
+      { key: 'colorectal', label: 'Colon and Rectum',        color: '#e63946', filters: { site_label: 'Colon and Rectum (including Appendix)', sex_label: 'Both Sexes' } },
+      { key: 'pancreas',   label: 'Pancreas',                 color: '#eda100', filters: { site_label: 'Pancreas', sex_label: 'Both Sexes' } },
+      { key: 'breast',     label: 'Breast (Female)',          color: '#2a9d8f', filters: { site_label: 'Breast', sex_label: 'Female' } },
+      { key: 'prostate',   label: 'Prostate',                 color: '#6a4c93', filters: { site_label: 'Prostate', sex_label: 'Male' } },
+      { key: 'liver',      label: 'Liver and Bile Duct',      color: '#e76f51', filters: { site_label: 'Liver and Intrahepatic Bile Duct', sex_label: 'Both Sexes' } },
+      { key: 'leukemia',   label: 'Leukemia',                 color: '#52b788', filters: { site_label: 'Leukemia', sex_label: 'Both Sexes' } },
+      { key: 'nhl',        label: 'Non-Hodgkin Lymphoma',     color: '#e07a5f', filters: { site_label: 'Non-Hodgkin Lymphoma', sex_label: 'Both Sexes' } }
+    ]
+  },
+
+  // Cancer deaths by sex — top 5 cancers common to both sexes (NCI SEER, 2000-2024)
+  'cancer-sex-lung': {
+    id: 'cancer-sex-lung',
+    title: 'Lung Cancer Deaths by Sex',
+    description: 'Annual U.S. lung and bronchus cancer deaths by sex, 2000–2024',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Lung and Bronchus', sex_label: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Lung and Bronchus', sex_label: 'Female' } }
+    ]
+  },
+  'cancer-sex-colorectal': {
+    id: 'cancer-sex-colorectal',
+    title: 'Colorectal Cancer Deaths by Sex',
+    description: 'Annual U.S. colon and rectum cancer deaths by sex, 2000–2024',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Colon and Rectum (including Appendix)', sex_label: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Colon and Rectum (including Appendix)', sex_label: 'Female' } }
+    ]
+  },
+  'cancer-sex-pancreas': {
+    id: 'cancer-sex-pancreas',
+    title: 'Pancreatic Cancer Deaths by Sex',
+    description: 'Annual U.S. pancreatic cancer deaths by sex, 2000–2024',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Pancreas', sex_label: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Pancreas', sex_label: 'Female' } }
+    ]
+  },
+  'cancer-sex-liver': {
+    id: 'cancer-sex-liver',
+    title: 'Liver Cancer Deaths by Sex',
+    description: 'Annual U.S. liver and intrahepatic bile duct cancer deaths by sex, 2000–2024',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Liver and Intrahepatic Bile Duct', sex_label: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Liver and Intrahepatic Bile Duct', sex_label: 'Female' } }
+    ]
+  },
+  'cancer-sex-leukemia': {
+    id: 'cancer-sex-leukemia',
+    title: 'Leukemia Deaths by Sex',
+    description: 'Annual U.S. leukemia deaths by sex, 2000–2024',
+    csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'count',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'NCI SEER*Explorer (U.S. Mortality)',
+    sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
+    frequency: 'Annual',
+    category: 'Birth & Mortality',
+    subSeries: [
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Leukemia', sex_label: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Leukemia', sex_label: 'Female' } }
+    ]
+  },
+
   'deaths-respiratory': {
     id: 'deaths-respiratory',
     title: 'Deaths — Respiratory Disease',
@@ -781,7 +906,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -789,9 +914,10 @@ export const CATEGORIES = [
   { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
-  { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-respiratory'] },
+  { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory'] },
+  { name: 'Cancer Mortality', series: ['deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia'] },
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
