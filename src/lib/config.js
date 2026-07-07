@@ -1,6 +1,7 @@
 const RAW_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/resp';
 const WONDER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wonder';
 const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
+const CDC_OPEN_PROCESSED_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/processed/cdc_open';
 const WISQARS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wisqars';
 const SEER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/seer';
 
@@ -634,7 +635,7 @@ export const SERIES_CONFIG = {
     title: 'COVID-19 Wastewater Signal',
     description: 'National median flow-normalized SARS-CoV-2 RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
     color: '#e63946',
-    csvUrl: '/data/processed/wastewater_covid.csv',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_covid.csv`,
     dateKey: 'sample_collect_date',
     valueKey: 'pcr_target_flowpop_lin',
     unit: 'copies/person/day',
@@ -649,7 +650,7 @@ export const SERIES_CONFIG = {
     title: 'Influenza A Wastewater Signal',
     description: 'National median flow-normalized Influenza A RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
     color: '#1a6faf',
-    csvUrl: '/data/processed/wastewater_flu.csv',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_flu.csv`,
     dateKey: 'sample_collect_date',
     valueKey: 'pcr_target_flowpop_lin',
     unit: 'copies/person/day',
@@ -664,7 +665,7 @@ export const SERIES_CONFIG = {
     title: 'RSV Wastewater Signal',
     description: 'National median flow-normalized RSV RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
     color: '#2a9d8f',
-    csvUrl: '/data/processed/wastewater_rsv.csv',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_rsv.csv`,
     dateKey: 'sample_collect_date',
     valueKey: 'pcr_target_flowpop_lin',
     unit: 'copies/person/day',
@@ -679,7 +680,7 @@ export const SERIES_CONFIG = {
     title: 'Measles Wastewater Signal',
     description: 'National median flow-normalized measles RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
     color: '#6a4c93',
-    csvUrl: '/data/processed/wastewater_measles.csv',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_measles.csv`,
     dateKey: 'sample_collect_date',
     valueKey: 'pcr_target_flowpop_lin',
     unit: 'copies/person/day',
@@ -694,7 +695,7 @@ export const SERIES_CONFIG = {
     title: 'Avian Flu H5 Wastewater Signal',
     description: 'National median flow-normalized Influenza A (H5) RNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly',
     color: '#f4a261',
-    csvUrl: '/data/processed/wastewater_h5.csv',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_h5.csv`,
     dateKey: 'sample_collect_date',
     valueKey: 'pcr_target_flowpop_lin',
     unit: 'copies/person/day',
