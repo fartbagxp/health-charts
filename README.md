@@ -103,3 +103,15 @@ health-charts/
 ├── svelte.config.js
 └── vite.config.js
 ```
+
+## Related projects
+
+This is the visualization end of a three-repo pipeline:
+
+```
+pulse-code  →  health  →  health-charts
+(explore)      (archive)   (visualize)
+```
+
+- **[fartbagxp/health](https://github.com/fartbagxp/health)** — the upstream data source. Every `csvUrl` in `src/lib/config.js` points at `raw.githubusercontent.com/fartbagxp/health/main/...`; nothing is copied into this repo, so a chart updates the moment `health` commits fresh data. Its README documents which CDC source and API backs each series.
+- **[fartbagxp/pulse-code](https://github.com/fartbagxp/pulse-code)** — further upstream. A CDC WONDER exploration CLI whose saved queries seed many of the WONDER-sourced series here (drug overdose, maternal mortality, suicide, births, tick-borne disease, etc.) — `health` archives their output as CSVs, which this repo then charts.
