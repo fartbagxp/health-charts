@@ -47,8 +47,6 @@ health-charts/
 │       └── series/[id]/
 │           ├── +page.js              # Detail: fetches single dataset at build time
 │           └── +page.svelte          # Detail: full chart + metrics grid + CSV export
-├── scripts/
-│   └── fetch-cdc-data.js             # Legacy Socrata API fetcher (unused in current build)
 ├── build/                            # Static output (gitignored)
 ├── svelte.config.js
 ├── vite.config.js
