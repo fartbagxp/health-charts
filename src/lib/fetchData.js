@@ -93,6 +93,43 @@ export async function loadSeries(config) {
   return rows;
 }
 
+// Loads CDC PLACES county-level chronic disease data (crude prevalence rows
+// only), keyed by 5-digit county FIPS so it can be joined against us-atlas
+// topojson. State rows are derived by population-weighting the counties,
+// since the CSV itself has no true state-level aggregate rows. The CSV is
+// already filtered/slimmed server-side (see health's
+// cdc_open.aggregate.aggregate_places_county()), so no further row filtering
+// is needed here.
+export async function loadPlacesCounty(csvUrl) {
+  const text = await fetchCSV(csvUrl);
+  const counties = parseCSV(text)
+    .map(d => ({
+      fips: d.locationid,
+      stateFips: d.locationid.slice(0, 2),
+      stateAbbr: d.stateabbr,
+      name: d.locationname,
+      measureId: d.measureid,
+      value: +d.data_value,
+      population: +d.totalpopulation || 0
+    }));
+
+  const byMeasureState = new Map();
+  for (const c of counties) {
+    const key = `${c.measureId}|${c.stateFips}`;
+    if (!byMeasureState.has(key)) {
+      byMeasureState.set(key, { fips: c.stateFips, stateAbbr: c.stateAbbr, measureId: c.measureId, totalPop: 0, weightedSum: 0 });
+    }
+    const s = byMeasureState.get(key);
+    s.totalPop += c.population;
+    s.weightedSum += c.value * c.population;
+  }
+  const states = [...byMeasureState.values()]
+    .filter(s => s.totalPop > 0)
+    .map(s => ({ fips: s.fips, stateAbbr: s.stateAbbr, measureId: s.measureId, value: s.weightedSum / s.totalPop }));
+
+  return { counties, states };
+}
+
 export async function loadSubSeries(config) {
   const urls = config.csvUrls ?? [config.csvUrl];
   const dateKey = config.dateKey || 'date';

@@ -51,6 +51,16 @@ nav {
 
 .nav-logo span { color: inherit; }
 
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg-mid);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-link:hover { color: var(--fg); }
+
 .nav-search {
   flex: 1;
   max-width: 440px;
