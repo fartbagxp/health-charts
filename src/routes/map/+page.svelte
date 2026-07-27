@@ -101,6 +101,15 @@
   // and critically, this never touches a Geo mark's props/data, so it can't
   // re-trigger svelteplot's scale recomputation across all county paths the
   // way the old hover implementation accidentally did.
+  //
+  // transform-origin is pinned at the content's top-left corner (0 0, set in
+  // <style>) rather than left at its default center. A fixed, known origin is
+  // what makes the point-under-cursor math below tractable: with origin 0 0,
+  // a content-local point (x,y) maps to screen space as
+  // `panX + x*zoomScale, panY + y*zoomScale`. Zooming "at" a point solves that
+  // equation for the new panX/panY that keeps the same content point under the
+  // cursor before and after the scale change — a "center zoom" is just this
+  // same math with the container's center as the point.
   const ZOOM_MIN = 1;
   const ZOOM_MAX = 8;
   const ZOOM_STEP = 1.4;
@@ -112,31 +121,57 @@
   let mapWrapEl = $state(null);
   let dragOrigin = { x: 0, y: 0, panX: 0, panY: 0 };
 
+  // Valid pan range with a top-left origin: the scaled content (width*scale)
+  // must fully cover the container, so its left/top edge can't move past 0
+  // and its right/bottom edge can't move short of the container's edge.
   function clampPan(x, y, scale) {
     if (!mapWrapEl) return { x, y };
     const rect = mapWrapEl.getBoundingClientRect();
-    const maxX = (rect.width * (scale - 1)) / 2;
-    const maxY = (rect.height * (scale - 1)) / 2;
-    return { x: Math.min(maxX, Math.max(-maxX, x)), y: Math.min(maxY, Math.max(-maxY, y)) };
+    const minX = rect.width * (1 - scale);
+    const minY = rect.height * (1 - scale);
+    return { x: Math.min(0, Math.max(minX, x)), y: Math.min(0, Math.max(minY, y)) };
   }
 
-  function setZoom(next) {
-    zoomScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next));
+  // (cx, cy) are container-relative coordinates (i.e. relative to mapWrapEl's
+  // own top-left, not the viewport) of the point to zoom toward.
+  function zoomAt(cx, cy, nextScale) {
+    const newScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, nextScale));
+    if (newScale === zoomScale) return;
+    const ratio = newScale / zoomScale;
+    const rawX = cx - (cx - panX) * ratio;
+    const rawY = cy - (cy - panY) * ratio;
+    zoomScale = newScale;
     if (zoomScale === ZOOM_MIN) {
       panX = 0;
       panY = 0;
     } else {
-      ({ x: panX, y: panY } = clampPan(panX, panY, zoomScale));
+      ({ x: panX, y: panY } = clampPan(rawX, rawY, zoomScale));
     }
   }
 
-  function zoomIn() { setZoom(zoomScale * ZOOM_STEP); }
-  function zoomOut() { setZoom(zoomScale / ZOOM_STEP); }
-  function resetZoom() { setZoom(ZOOM_MIN); }
+  function containerCenter() {
+    const rect = mapWrapEl?.getBoundingClientRect();
+    return rect ? { x: rect.width / 2, y: rect.height / 2 } : { x: 0, y: 0 };
+  }
+
+  function zoomIn() {
+    const { x, y } = containerCenter();
+    zoomAt(x, y, zoomScale * ZOOM_STEP);
+  }
+  function zoomOut() {
+    const { x, y } = containerCenter();
+    zoomAt(x, y, zoomScale / ZOOM_STEP);
+  }
+  function resetZoom() {
+    zoomScale = ZOOM_MIN;
+    panX = 0;
+    panY = 0;
+  }
 
   function onWheelZoom(evt) {
     evt.preventDefault();
-    setZoom(zoomScale * (evt.deltaY < 0 ? 1.15 : 1 / 1.15));
+    const rect = mapWrapEl.getBoundingClientRect();
+    zoomAt(evt.clientX - rect.left, evt.clientY - rect.top, zoomScale * (evt.deltaY < 0 ? 1.15 : 1 / 1.15));
   }
 
   function onMapPointerDown(evt) {
@@ -341,6 +376,7 @@
   }
 
   .zoom-content {
+    transform-origin: 0 0;
     transition: transform 0.12s ease-out;
   }
 
