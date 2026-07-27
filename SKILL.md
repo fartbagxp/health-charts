@@ -9,7 +9,7 @@
 
 ## Overview
 
-Static dashboard displaying U.S. health trends across 19 series: respiratory virus hospitalizations, vaccination coverage, nursing home vaccination, birth rates, mortality rates, and annual totals. Built with SvelteKit and svelteplot (Observable Plot for Svelte), deployed as a fully static site via `@sveltejs/adapter-static`. Data is fetched from raw GitHub CSVs at build time (prerendered) — no local data files, no runtime API calls.
+Static dashboard displaying U.S. health trends across 19 series: respiratory virus hospitalizations, vaccination coverage, nursing home vaccination, birth rates, mortality rates, and annual totals. Also includes a `/map` section with US choropleth maps (state/county) of CDC PLACES chronic disease prevalence. Built with SvelteKit and svelteplot (Observable Plot for Svelte), deployed as a fully static site via `@sveltejs/adapter-static`. Data is fetched from raw GitHub CSVs directly in the browser (lazily, on scroll into view for the home page / on mount for detail pages) — no local data files, no build-time embedding.
 
 ## Tech Stack
 
@@ -17,8 +17,10 @@ Static dashboard displaying U.S. health trends across 19 series: respiratory vir
 - **pnpm** — Package manager
 - **Vite** — Build tool with HMR and optimized production builds
 - **SvelteKit 2 / Svelte 5** — App framework; file-based routing, SSG via adapter-static
-- **svelteplot 0.14** — Observable Plot wrapper for Svelte (line charts, axes, grid, rules)
+- **svelteplot 0.14** — Observable Plot wrapper for Svelte (line charts, axes, grid, rules, geo/choropleth maps)
 - **d3-format** — Number formatting (`,` for counts, `.1f` for rates, `.2f` for percentages)
+- **topojson-client** — Converts TopoJSON topologies to GeoJSON (`feature`, `mesh`) for the `/map` choropleths
+- **us-atlas** — Pre-built US state/county TopoJSON boundaries (10m resolution), FIPS-keyed
 - **@sveltejs/adapter-static** — Outputs fully static site to `build/`
 
 ## Quick Start
@@ -38,12 +40,17 @@ health-charts/
 │   ├── app.html                      # HTML shell
 │   ├── app.css                       # Global styles
 │   ├── lib/
-│   │   └── config.js                 # All series definitions + CATEGORIES
+│   │   ├── config.js                 # All series definitions + CATEGORIES
+│   │   ├── mapConfig.js              # CDC PLACES measures, color scheme, PLACES CSV url
+│   │   └── fetchData.js              # CSV loaders, incl. loadPlacesCounty()
 │   └── routes/
 │       ├── +layout.js                # prerender = true
-│       ├── +layout.svelte            # Nav + footer shell
+│       ├── +layout.svelte            # Nav (incl. "Maps" link) + footer shell
 │       ├── +page.js                  # Home: fetches all datasets at build time
 │       ├── +page.svelte              # Home: sparkline grid with hover tooltips
+│       ├── map/
+│       │   ├── +page.js              # Maps: static prerendered route
+│       │   └── +page.svelte          # Maps: US choropleth (state/county), measure + level toggle
 │       └── series/[id]/
 │           ├── +page.js              # Detail: fetches single dataset at build time
 │           └── +page.svelte          # Detail: full chart + metrics grid + CSV export
@@ -116,6 +123,52 @@ All series are defined in `src/lib/config.js` as `SERIES_CONFIG`. Each entry sup
 5. Run `pnpm run build` to verify — the series detail page and home sparkline are generated automatically
 
 No local data files needed. The CSV URL is fetched at build time.
+
+## Maps (`/map`)
+
+US choropleth maps of CDC PLACES chronic disease prevalence, at county or state
+granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
+
+- **Data**: `loadPlacesCounty()` in `fetchData.js` fetches the **processed**
+  `places_county.csv` (`data/processed/cdc_open/`, not `data/raw/`) — health's
+  `cdc_open.aggregate.aggregate_places_county()` slims the raw ~12MB/22-column file
+  down to crude-prevalence rows and 6 columns (~800KB) so the map doesn't ship
+  age-adjusted rows, confidence intervals, and descriptive text the map never reads.
+  Keyed by 5-digit county FIPS (`locationid`). State values are derived client-side as
+  a population-weighted average of that state's counties — the CSV itself has no true
+  state-level rows.
+- **Boundaries**: `us-atlas`'s `counties-10m.json` / `states-10m.json`, converted to
+  GeoJSON with `topojson-client`'s `feature()`. Their feature `id` is the same
+  zero-padded FIPS string as `locationid`, so the join needs no reformatting.
+- **Measures**: 8 BRFSS chronic-disease indicators defined in `mapConfig.js`
+  (`PLACES_MEASURES`) — obesity, diabetes, high blood pressure, coronary heart disease,
+  stroke, cancer, COPD, arthritis — each with a fixed color-scale `domain` so switching
+  measures doesn't rescale the ramp.
+- **Zip/ZCTA-level maps are not implemented.** CDC PLACES does publish a ZCTA table,
+  but it isn't fetched into the `health` data repo yet, and nationwide ZCTA cartographic
+  boundaries are 100MB+ (too large to bundle the way `us-atlas` state/county boundaries
+  are). Adding it would need its own data-sourcing + boundary-size plan.
+- **Borders**: drawn as `topojson.mesh()` lines (one stitched geometry per level), not
+  as each polygon's own stroke — independently-rendered adjacent polygons can have
+  sub-pixel seams at a shared edge where one's fill slivers over its neighbor's stroke.
+  Rendered via `<Geo canvas>` rather than SVG: a national county-border mesh is ~3,141
+  line segments in one `<path>`, and browsers can show stroke-tessellation artifacts
+  (stray triangles) on sufficiently complex single SVG paths — canvas draws pixels
+  directly and doesn't hit that. Canvas-mode `Geo` marks render inside a `<foreignObject>`
+  that svelteplot sizes to the full plot area; getting `pointer-events: none` to actually
+  reach hover on the layers below needs an external CSS rule on both the `foreignObject`
+  and the `canvas` (the `style` *prop* on canvas-mode `<Geo>` gets silently overwritten by
+  `CanvasLayer.svelte`'s own inline `style`, so passing `style="pointer-events:none"`
+  directly to the mark doesn't work).
+- **Zoom/pan**: a plain CSS `transform: translate(...) scale(...)` on a wrapper div
+  around `<Plot>` (see `zoomScale`/`panX`/`panY` in `+page.svelte`), not a re-projection —
+  SVG stays crisp at any zoom this way, and it never touches a `Geo` mark's props, so it
+  can't retrigger a scale recomputation the way per-pixel `pointermove`-driven hover state
+  once did (see the `onHoverEnter` comment). One easy-to-miss side effect: a CSS
+  `transform` on an ancestor (even `scale(1)`) becomes the containing block for
+  `position: fixed` descendants, so the hover tooltip is rendered as a sibling *outside*
+  the transformed wrapper, not inside `Plot`'s `overlay` snippet, to keep it pinned to the
+  viewport instead of panning/zooming with the map.
 
 ## Troubleshooting
 

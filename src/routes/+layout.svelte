@@ -31,6 +31,7 @@
 <nav>
   <div class="nav-inner">
     <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
+    <a href="{base}/map" class="nav-link">Maps</a>
     <div class="nav-search">
       <input
         type="text"
