@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
-  import { Plot, Line, AxisX, AxisY, RuleY, GridY } from 'svelteplot';
-  import { loadSeries, loadSubSeries } from '$lib/fetchData.js';
+  import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
+  import { loadSeries, loadSubSeries, parseDate } from '$lib/fetchData.js';
 
   let { data } = $props();
   const config = $derived(data.config);
@@ -36,6 +36,14 @@
   });
 
   const normRows = $derived(rows.map(d => ({ date: d.date, value: +d[config.valueKey] })));
+
+  // Vertical reference lines + labels for series with an `annotations`
+  // config (e.g. measles-annual's vaccine/elimination dates). Dates are
+  // parsed with the series' own dateFormat so they land on the right x
+  // position.
+  const annotationRows = $derived(
+    (config.annotations ?? []).map(a => ({ date: parseDate(a.date, config.dateFormat), label: a.label }))
+  );
   const values = $derived(rows.map(d => +d[config.valueKey]));
 
   const latestVal = $derived(isMulti
@@ -211,6 +219,20 @@
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />
+        {#if annotationRows.length}
+          <RuleX data={annotationRows} x={(d) => d.date} stroke="var(--fg-muted)" strokeOpacity={0.5} strokeDasharray="3,3" />
+          <Text
+            data={annotationRows}
+            x={(d) => d.date}
+            text={(d) => d.label}
+            frameAnchor="top"
+            dy={6}
+            dx={4}
+            fontSize={11}
+            fill="var(--fg-muted)"
+            textAnchor="start"
+          />
+        {/if}
         <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
         {#snippet overlay()}
           {#if hoveredDatum}

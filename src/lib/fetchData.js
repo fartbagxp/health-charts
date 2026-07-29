@@ -1,4 +1,4 @@
-function parseDate(str, format) {
+export function parseDate(str, format) {
   if (format === 'quarter') {
     const m = str.match(/(\d{4})\s+Q(\d)/);
     if (m) return new Date(+m[1], (+m[2] - 1) * 3, 1);
@@ -128,6 +128,42 @@ export async function loadPlacesCounty(csvUrl) {
     .map(s => ({ fips: s.fips, stateAbbr: s.stateAbbr, measureId: s.measureId, value: s.weightedSum / s.totalPop }));
 
   return { counties, states };
+}
+
+// Indexes two or more differently-scaled annual series to a common base
+// (=100 at the first year every series has data), so they can share one
+// y-axis honestly. Two measures of different scale should never share a
+// dual-axis plot (the alignment of the two scales is arbitrary and invents a
+// correlation that isn't in the data) — indexing to a common base is the
+// standard alternative when the story specifically calls for one shared line
+// chart rather than small multiples.
+//
+// series: [{ rows, valueKey, label, unit, format, color }], where `rows` are
+// already-loaded/-filtered rows (from loadSeries/loadSubSeries) with a `date`
+// field. Alignment is by calendar year, since this is built for annual /
+// school-year series running on different exact-date cadences.
+export function indexToCommonBase(series) {
+  const yearsPerSeries = series.map(s => new Set(s.rows.map(r => r.date.getFullYear())));
+  const allYears = [...yearsPerSeries[0]].filter(y => yearsPerSeries.every(ys => ys.has(y)));
+  if (!allYears.length) {
+    throw new Error('No overlapping years across the given series');
+  }
+  const baseYear = Math.min(...allYears);
+
+  return series.map(s => {
+    const byYear = new Map(s.rows.map(r => [r.date.getFullYear(), r]));
+    const baseValue = +byYear.get(baseYear)[s.valueKey];
+    const indexed = [...byYear.entries()]
+      .filter(([year]) => year >= baseYear)
+      .sort(([a], [b]) => a - b)
+      .map(([year, r]) => ({
+        year,
+        date: new Date(year, 0, 1),
+        value: +r[s.valueKey],
+        index: baseValue ? (+r[s.valueKey] / baseValue) * 100 : null
+      }));
+    return { ...s, baseYear, baseValue, rows: indexed };
+  });
 }
 
 export async function loadSubSeries(config) {

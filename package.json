@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Health data visualizations",
   "scripts": {
+    "prepare-map-topology": "node scripts/prepare-map-topology.js",
+    "predev": "pnpm run prepare-map-topology",
     "dev": "vite dev",
+    "prebuild": "pnpm run prepare-map-topology",
     "build": "vite build",
     "preview": "vite preview",
     "setup-datawrapper": "node --env-file=.env scripts/setup-datawrapper.js"
@@ -13,13 +16,13 @@
     "@sveltejs/adapter-static": "3.0.10",
     "@sveltejs/kit": "2.70.1",
     "svelte": "5.56.8",
+    "us-atlas": "^3.0.1",
     "vite": "8.1.5"
   },
   "dependencies": {
     "d3-format": "3.1.2",
     "svelteplot": "0.14.2",
-    "topojson-client": "^3.1.0",
-    "us-atlas": "^3.0.1"
+    "topojson-client": "^3.1.0"
   },
   "keywords": [
     "health",

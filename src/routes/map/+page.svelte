@@ -2,8 +2,7 @@
   import { format } from 'd3-format';
   import { Plot, Geo } from 'svelteplot';
   import { feature, mesh } from 'topojson-client';
-  import countiesTopology from 'us-atlas/counties-10m.json';
-  import statesTopology from 'us-atlas/states-10m.json';
+  import { base } from '$app/paths';
   import { loadPlacesCounty } from '$lib/fetchData.js';
   import {
     PLACES_COUNTY_CSV_URL,
@@ -14,7 +13,14 @@
     STATE_FIPS_TO_ABBR
   } from '$lib/mapConfig.js';
 
-  // Static geometry — computed once, independent of any reactive state.
+  // Geometry is fetched at runtime from public/topo/ (see
+  // scripts/prepare-map-topology.js) rather than statically imported from
+  // us-atlas. A static `import ... from 'us-atlas/counties-10m.json'` bundles
+  // the full topology into this route's own JS chunk — measured at 1.3MB
+  // uncompressed (by far the largest chunk in the build) before this change.
+  // As a plain fetched JSON file it loads in parallel with the PLACES CSV
+  // below, off the JS-parse critical path, and is cacheable independently of
+  // app code.
   //
   // Borders are drawn as a single stitched mesh line, not as each polygon's own
   // stroke. Adjacent county/state polygons are rendered as independent <path>
@@ -23,10 +29,10 @@
   // shared edge mean one polygon's fill can sliver over its neighbor's stroke,
   // making that shared border vanish. topojson.mesh() dedupes shared arcs into
   // one continuous line, so there's no seam to disappear at.
-  const countyFeatures = feature(countiesTopology, countiesTopology.objects.counties).features;
-  const stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
-  const countyBorders = mesh(countiesTopology, countiesTopology.objects.counties, (a, b) => a !== b);
-  const stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
+  let countyFeatures = $state([]);
+  let stateFeatures = $state([]);
+  let countyBorders = $state(null);
+  let stateBorders = $state(null);
 
   let measureId = $state('OBESITY');
   let level = $state('county');
@@ -42,7 +48,16 @@
   $effect(() => {
     (async () => {
       try {
-        placesData = await loadPlacesCounty(PLACES_COUNTY_CSV_URL);
+        const [placesResult, countiesTopology, statesTopology] = await Promise.all([
+          loadPlacesCounty(PLACES_COUNTY_CSV_URL),
+          fetch(`${base}/topo/counties-10m.json`).then(r => r.json()),
+          fetch(`${base}/topo/states-10m.json`).then(r => r.json())
+        ]);
+        placesData = placesResult;
+        countyFeatures = feature(countiesTopology, countiesTopology.objects.counties).features;
+        stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
+        countyBorders = mesh(countiesTopology, countiesTopology.objects.counties, (a, b) => a !== b);
+        stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
       } catch (e) {
         loadError = e.message ?? 'Failed to load';
       } finally {

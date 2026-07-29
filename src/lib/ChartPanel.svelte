@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
-  import { Plot, Line, AxisX, AxisY, RuleY, GridY } from 'svelteplot';
-  import { loadSeries, loadSubSeries } from '$lib/fetchData.js';
+  import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
+  import { loadSeries, loadSubSeries, parseDate } from '$lib/fetchData.js';
 
   let { config } = $props();
 
@@ -134,6 +134,15 @@
   function onChartLeave() {
     hovered = { datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false };
   }
+
+  // Vertical reference lines for series with an `annotations` config (e.g.
+  // measles-annual's vaccine/elimination dates). Dates are parsed with the
+  // same dateFormat as the series itself so they land on the right x
+  // position. No text label here — this card is compact; the full label
+  // renders on the series detail page instead.
+  const annotationDates = $derived(
+    (config.annotations ?? []).map(a => parseDate(a.date, config.dateFormat))
+  );
 </script>
 
 <section id={config.id} class="chart-panel" bind:this={sectionEl}>
@@ -209,6 +218,9 @@
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY tickFormat={yTickFormat} />
+        {#if annotationDates.length}
+          <RuleX data={annotationDates} x={(d) => d} stroke="var(--fg-muted)" strokeOpacity={0.5} strokeDasharray="3,3" />
+        {/if}
         <Line data={rows} x="date" y={config.valueKey} stroke={config.color ?? 'black'} strokeWidth={2} />
         {#snippet overlay()}
           {#if hovered.datum}

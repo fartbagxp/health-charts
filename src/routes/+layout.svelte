@@ -32,6 +32,7 @@
   <div class="nav-inner">
     <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
     <a href="{base}/map" class="nav-link">Maps</a>
+    <a href="{base}/compare/measles-vaccination" class="nav-link">Measles vs. Vaccination</a>
     <div class="nav-search">
       <input
         type="text"
