@@ -35,10 +35,21 @@
   let stateBorders = $state(null);
 
   let measureId = $state('OBESITY');
-  let level = $state('county');
+  // State loads first and is the default view: state topology is ~114KB
+  // vs. county's ~842KB, and computing its feature()/mesh() is ~5ms vs.
+  // ~60ms (measured) — showing it first gets something on screen faster.
+  // County geometry is fetched lazily, only once the user actually asks
+  // for it via the toggle below, not eagerly in the background — loading
+  // things the user didn't ask for yet turned out to feel worse, not
+  // faster, when tried as a cross-page prefetch.
+  let level = $state('state');
   let placesData = $state({ counties: [], states: [] });
   let loading = $state(true);
   let loadError = $state(null);
+
+  let countyTopologyLoading = $state(false);
+  let countyTopologyLoaded = $state(false);
+  let countyTopologyError = $state(null);
 
   // Split low-frequency hover identity (which feature) from high-frequency
   // pointer position (tooltip placement) — see perf note near onHoverEnter.
@@ -48,15 +59,12 @@
   $effect(() => {
     (async () => {
       try {
-        const [placesResult, countiesTopology, statesTopology] = await Promise.all([
+        const [placesResult, statesTopology] = await Promise.all([
           loadPlacesCounty(PLACES_COUNTY_CSV_URL),
-          fetch(`${base}/topo/counties-10m.json`).then(r => r.json()),
           fetch(`${base}/topo/states-10m.json`).then(r => r.json())
         ]);
         placesData = placesResult;
-        countyFeatures = feature(countiesTopology, countiesTopology.objects.counties).features;
         stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
-        countyBorders = mesh(countiesTopology, countiesTopology.objects.counties, (a, b) => a !== b);
         stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
       } catch (e) {
         loadError = e.message ?? 'Failed to load';
@@ -64,6 +72,27 @@
         loading = false;
       }
     })();
+  });
+
+  async function ensureCountyTopologyLoaded() {
+    if (countyTopologyLoaded || countyTopologyLoading) return;
+    countyTopologyLoading = true;
+    try {
+      const countiesTopology = await fetch(`${base}/topo/counties-10m.json`).then(r => r.json());
+      countyFeatures = feature(countiesTopology, countiesTopology.objects.counties).features;
+      countyBorders = mesh(countiesTopology, countiesTopology.objects.counties, (a, b) => a !== b);
+      countyTopologyLoaded = true;
+    } catch (e) {
+      countyTopologyError = e.message ?? 'Failed to load county boundaries';
+    } finally {
+      countyTopologyLoading = false;
+    }
+  }
+
+  // Triggers only when the user actually switches to County — a direct
+  // result of something they clicked, not a background guess.
+  $effect(() => {
+    if (level === 'county') ensureCountyTopologyLoaded();
   });
 
   const measure = $derived(PLACES_MEASURES[measureId]);
@@ -241,8 +270,8 @@
     <div class="map-control">
       <span>Geography</span>
       <div class="level-toggle">
-        <button class:active={level === 'county'} onclick={() => (level = 'county')}>County</button>
         <button class:active={level === 'state'} onclick={() => (level = 'state')}>State</button>
+        <button class:active={level === 'county'} onclick={() => (level = 'county')}>County</button>
       </div>
     </div>
     <div class="map-control">
@@ -258,6 +287,10 @@
   {#if loadError}
     <div class="chart-error-msg">Failed to load data: {loadError}</div>
   {:else if loading}
+    <div class="chart-loading-placeholder" aria-busy="true"></div>
+  {:else if level === 'county' && countyTopologyError}
+    <div class="chart-error-msg">Failed to load county boundaries: {countyTopologyError}</div>
+  {:else if level === 'county' && !countyTopologyLoaded}
     <div class="chart-loading-placeholder" aria-busy="true"></div>
   {:else}
     <div
