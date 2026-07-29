@@ -1,8 +1,15 @@
 // Slimmed down by health's `cdc_open.aggregate.aggregate_places_county()`:
 // crude-prevalence rows only, 6 columns instead of 22 (~800KB vs ~12MB raw).
 const CDC_OPEN_PROCESSED_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/processed/cdc_open';
+const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
 
 export const PLACES_COUNTY_CSV_URL = `${CDC_OPEN_PROCESSED_BASE}/places_county.csv`;
+
+// One row per state: latest year-to-date cumulative measles case count.
+// Aggregated server-side by health's cdc_open.fetch_measles_by_state (queries
+// CDC NNDSS with a label + year filter, so only ~55 rows ever land here —
+// not a raw multi-disease, multi-year dump).
+export const MEASLES_BY_STATE_CSV_URL = `${CDC_OPEN_BASE}/measles_by_state.csv`;
 
 // Sequential blue ramp (100->700, light->dark) for magnitude encoding.
 export const SEQUENTIAL_SCHEME = [

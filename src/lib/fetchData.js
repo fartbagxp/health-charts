@@ -130,40 +130,80 @@ export async function loadPlacesCounty(csvUrl) {
   return { counties, states };
 }
 
-// Indexes two or more differently-scaled annual series to a common base
-// (=100 at the first year every series has data), so they can share one
-// y-axis honestly. Two measures of different scale should never share a
-// dual-axis plot (the alignment of the two scales is arbitrary and invents a
+function mondayOf(d) {
+  const day = d.getDay();
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+}
+
+// Bucket strategies for indexToCommonBase: `key` maps a row's date to a
+// comparable, sortable bucket id; `date` maps that id back to a
+// representative Date for plotting.
+export const ANNUAL_BUCKET = {
+  key: (d) => d.getFullYear(),
+  date: (key) => new Date(key, 0, 1)
+};
+export const WEEKLY_BUCKET = {
+  key: (d) => mondayOf(d).getTime(),
+  date: (key) => new Date(key)
+};
+
+// Indexes two or more differently-scaled series to a common base (=100 at
+// the first bucket every series has data), so they can share one y-axis
+// honestly. Two measures of different scale should never share a dual-axis
+// plot (the alignment of the two scales is arbitrary and invents a
 // correlation that isn't in the data) — indexing to a common base is the
 // standard alternative when the story specifically calls for one shared line
 // chart rather than small multiples.
 //
 // series: [{ rows, valueKey, label, unit, format, color }], where `rows` are
 // already-loaded/-filtered rows (from loadSeries/loadSubSeries) with a `date`
-// field. Alignment is by calendar year, since this is built for annual /
-// school-year series running on different exact-date cadences.
-export function indexToCommonBase(series) {
-  const yearsPerSeries = series.map(s => new Set(s.rows.map(r => r.date.getFullYear())));
-  const allYears = [...yearsPerSeries[0]].filter(y => yearsPerSeries.every(ys => ys.has(y)));
-  if (!allYears.length) {
-    throw new Error('No overlapping years across the given series');
+// field. `bucket` defaults to ANNUAL_BUCKET (calendar year) — pass
+// WEEKLY_BUCKET for weekly series running on different exact-date cadences
+// (e.g. hospitalization vs. wastewater sample-collection dates), which snaps
+// each row to the Monday of its week before comparing.
+export function indexToCommonBase(series, bucket = ANNUAL_BUCKET) {
+  const bucketsPerSeries = series.map(s => new Set(s.rows.map(r => bucket.key(r.date))));
+  const allBuckets = [...bucketsPerSeries[0]].filter(b => bucketsPerSeries.every(bs => bs.has(b)));
+  if (!allBuckets.length) {
+    throw new Error('No overlapping periods across the given series');
   }
-  const baseYear = Math.min(...allYears);
+  const baseBucket = Math.min(...allBuckets);
 
   return series.map(s => {
-    const byYear = new Map(s.rows.map(r => [r.date.getFullYear(), r]));
-    const baseValue = +byYear.get(baseYear)[s.valueKey];
-    const indexed = [...byYear.entries()]
-      .filter(([year]) => year >= baseYear)
+    const byBucket = new Map(s.rows.map(r => [bucket.key(r.date), r]));
+    const baseValue = +byBucket.get(baseBucket)[s.valueKey];
+    const indexed = [...byBucket.entries()]
+      .filter(([b]) => b >= baseBucket)
       .sort(([a], [b]) => a - b)
-      .map(([year, r]) => ({
-        year,
-        date: new Date(year, 0, 1),
+      .map(([b, r]) => ({
+        year: b,
+        date: bucket.date(b),
         value: +r[s.valueKey],
         index: baseValue ? (+r[s.valueKey] / baseValue) * 100 : null
       }));
-    return { ...s, baseYear, baseValue, rows: indexed };
+    // baseYear is the raw bucket key (a plain year integer for ANNUAL_BUCKET,
+    // a week-start timestamp for WEEKLY_BUCKET) — format it with
+    // bucket.date(baseYear) at the call site rather than displaying it
+    // directly for weekly buckets.
+    return { ...s, baseYear: baseBucket, baseValue, rows: indexed };
   });
+}
+
+// Loads the per-state measles case snapshot (one row per state, see health's
+// cdc_open.fetch_measles_by_state), keyed by 2-digit state FIPS so it can be
+// joined against us-atlas topology the same way loadPlacesCounty() is.
+export async function loadMeaslesByState(csvUrl) {
+  const text = await fetchCSV(csvUrl);
+  return parseCSV(text).map(d => ({
+    state: d.state,
+    fips: d.state_fips,
+    year: +d.year,
+    week: +d.week,
+    cases: +d.cases
+  }));
 }
 
 export async function loadSubSeries(config) {
