@@ -49,6 +49,19 @@
     return [new Date(Math.min(...allDates)), new Date(Math.max(...allDates))];
   });
 
+  // Every other chart in this app (ChartPanel, series detail) explicitly
+  // computes and passes a y domain rather than relying on the plotting
+  // library to infer one — this page was the one place that got skipped,
+  // and it's why the cases line was rendering off the top of its panel:
+  // with no explicit domain, the scale wasn't reliably fitting the actual
+  // data extent (cases spike to ~300 during the current outbreak).
+  function yMaxOf(rows, valueKey) {
+    const max = Math.max(0, ...rows.map(d => +d[valueKey]));
+    return max <= 0 ? 1 : max * 1.1;
+  }
+  const wasteYMax = $derived(yMaxOf(wasteRows, wasteConfig.valueKey));
+  const casesYMax = $derived(yMaxOf(casesRows, casesConfig.valueKey));
+
   const allWeeks = $derived.by(() => {
     const weeks = new Set();
     for (const r of casesRows) weeks.add(r.date.getTime());
@@ -138,7 +151,7 @@
       onpointermove={onChartMove}
       onpointerleave={onChartLeave}
     >
-      <Plot height={180} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time', domain: sharedDomain }} style="width:100%">
+      <Plot height={260} marginTop={16} marginBottom={32} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time', domain: sharedDomain }} y={{ domain: [0, wasteYMax] }} style="width:100%">
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={fmtWeek} />
         <AxisY label={wasteConfig.unit} tickFormat={(d) => format('.2s')(d)} />
@@ -147,7 +160,7 @@
         {#if hoveredWaste}<Dot data={[hoveredWaste]} x="date" y={wasteConfig.valueKey} fill={WASTEWATER_COLOR} r={4} />{/if}
       </Plot>
 
-      <Plot height={180} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time', domain: sharedDomain }} style="width:100%">
+      <Plot height={260} marginTop={16} marginBottom={32} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time', domain: sharedDomain }} y={{ domain: [0, casesYMax] }} style="width:100%">
         <RuleY y={0} />
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={fmtWeek} />
