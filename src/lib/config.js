@@ -544,7 +544,14 @@ export const SERIES_CONFIG = {
     source: 'CDC Measles Surveillance',
     sourceUrl: 'https://www.cdc.gov/measles/data-research/index.html',
     frequency: 'Annual',
-    category: 'Measles'
+    category: 'Measles',
+    // Vertical reference lines marking the two events that explain this
+    // series' shape. `date` is parsed with the series' own dateFormat, so it
+    // stays a plain year string here, matching dateKey's values.
+    annotations: [
+      { date: '1963', label: 'Vaccine licensed' },
+      { date: '2000', label: 'US declares elimination' }
+    ]
   },
 
   // U.S. life expectancy at birth — combined (CDC NCHS, 1900–present)

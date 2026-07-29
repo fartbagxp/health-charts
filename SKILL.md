@@ -140,6 +140,14 @@ granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
 - **Boundaries**: `us-atlas`'s `counties-10m.json` / `states-10m.json`, converted to
   GeoJSON with `topojson-client`'s `feature()`. Their feature `id` is the same
   zero-padded FIPS string as `locationid`, so the join needs no reformatting.
+  `us-atlas` is a devDependency only — `scripts/prepare-map-topology.js` copies
+  the two files into `public/topo/` (auto-run via `predev`/`prebuild`), and
+  `+page.svelte` `fetch()`s them at runtime instead of statically importing
+  them. A static `import ... from 'us-atlas/...'` bundles the ~950KB of
+  topology directly into the `/map` route's own JS chunk (measured: 1.3MB
+  uncompressed, by far the largest chunk in the build) — fetching it as a
+  plain static file instead moves it off the JS-parse critical path and lets
+  it load in parallel with the PLACES CSV.
 - **Measures**: 8 BRFSS chronic-disease indicators defined in `mapConfig.js`
   (`PLACES_MEASURES`) — obesity, diabetes, high blood pressure, coronary heart disease,
   stroke, cancer, COPD, arthritis — each with a fixed color-scale `domain` so switching
