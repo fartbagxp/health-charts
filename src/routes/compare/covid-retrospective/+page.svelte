@@ -195,7 +195,6 @@
                   <span class="tip-label">{s.label}</span>
                   <span class="tip-val">
                     {r ? format(s.format)(r.value) : 'No data'} <span style="font-size:0.72rem;opacity:0.7">{s.unit}</span>
-                    {#if r}<span style="font-size:0.72rem;opacity:0.7"> · index {r.index.toFixed(0)}</span>{/if}
                   </span>
                 </div>
               {/each}

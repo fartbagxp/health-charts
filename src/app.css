@@ -564,7 +564,12 @@ main { flex: 1; }
   .other-link { min-width: unset; }
 }
 
-/* chart tooltip */
+/* chart tooltip — a grid rather than stacked flex rows, so that with more
+   than one series, each row's swatch/label/value land in shared column
+   tracks (auto-sized to the widest cell in that column) and the numbers
+   line up like a table regardless of how long each series' label or
+   formatted value happens to be. `.tip-row` is `display: contents` so its
+   children become direct grid items instead of nesting a sub-layout. */
 .tip-box {
   background: rgba(15,15,30,0.88);
   backdrop-filter: blur(4px);
@@ -575,11 +580,19 @@ main { flex: 1; }
   box-shadow: 0 4px 14px rgba(0,0,0,0.22);
   pointer-events: none;
   white-space: nowrap;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: baseline;
+  column-gap: 0.4rem;
+  row-gap: 0.35rem;
   font-size: 0.8rem;
   z-index: 10;
+}
+
+.tip-box > .tip-date,
+.tip-box > .tip-label,
+.tip-box > .tip-val {
+  grid-column: 1 / -1;
 }
 
 .tip-label {
@@ -596,16 +609,12 @@ main { flex: 1; }
 }
 
 .tip-val {
-  margin-top: 0.1rem;
   font-size: 1.05rem;
   font-weight: 700;
 }
 
 .tip-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  margin-top: 0.25rem;
+  display: contents;
 }
 
 .tip-swatch {
@@ -618,8 +627,7 @@ main { flex: 1; }
   top: -1px;
 }
 
-.tip-row .tip-label { flex: 1; }
-.tip-row .tip-val { margin-top: 0; font-size: 0.9rem; }
+.tip-row .tip-val { font-size: 0.9rem; }
 
 /* home page — compact header */
 .home-header {
