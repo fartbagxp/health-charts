@@ -156,7 +156,7 @@
       onpointermove={onChartMove}
       onpointerleave={onChartLeave}
     >
-      <Plot height={420} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time' }} style="width:100%">
+      <Plot height={420} marginTop={20} marginRight={MARGIN_RIGHT} marginLeft={MARGIN_LEFT} x={{ type: 'time' }} style="width:100%">
         <RuleY y={100} stroke="var(--fg-muted)" strokeOpacity={0.6} strokeDasharray="3,3" />
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={fmtWeek} />
@@ -167,8 +167,8 @@
           x={(d) => d.date}
           text={(d) => d.label}
           frameAnchor="top"
-          dy={6}
-          dx={4}
+          dy={-6}
+          dx={(d) => (d.label === 'Omicron detected in US' ? 40 : 4)}
           fontSize={10}
           fill="var(--fg-muted)"
           textAnchor="start"
