@@ -145,7 +145,7 @@
   }
 </script>
 
-<svelte:head><title>{config.title} — Health Charts</title></svelte:head>
+<svelte:head><title>{config.title} · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">

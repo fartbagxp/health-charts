@@ -112,7 +112,7 @@
   }
 </script>
 
-<svelte:head><title>COVID-19: Hospitalizations vs. Wastewater Signal — Health Charts</title></svelte:head>
+<svelte:head><title>COVID-19: Hospitalizations vs. Wastewater Signal · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">
@@ -121,11 +121,11 @@
       <p class="series-desc">
         Weekly COVID-19 hospital admissions against the national wastewater RNA signal, both indexed to
         {#if baseDate}100 at the week of {fmtWeek(baseDate)}{:else}a common base week{/if} so two
-        differently-scaled measures share one axis honestly — see
+        differently-scaled measures share one axis honestly. See
         <a href="{base}/series/covid">hospitalizations</a> and
         <a href="{base}/series/wastewater-covid">the wastewater signal</a> for the real, unindexed series.
         Dashed lines mark four points in the pandemic timeline. Hospitalization reporting for this series
-        ends April 2024; the wastewater signal continues to present.
+        ends April 2024; the wastewater signal runs through the present.
       </p>
       <div class="meta-pills">
         <span class="meta-pill">Weekly</span>
@@ -213,7 +213,7 @@
               <th>Week</th>
               {#each series as s}
                 <th>{s.label} ({s.unit})</th>
-                <th>{s.label} — index</th>
+                <th>{s.label} (index)</th>
               {/each}
             </tr>
           </thead>

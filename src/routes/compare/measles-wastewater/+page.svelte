@@ -111,7 +111,7 @@
   const hoveredWaste = $derived(hoveredWeek != null ? nearestRow(wasteRows, hoveredWeek) : null);
 </script>
 
-<svelte:head><title>Measles Cases vs. Wastewater Signal — Health Charts</title></svelte:head>
+<svelte:head><title>Measles Cases vs. Wastewater Signal · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">
@@ -119,10 +119,10 @@
       <h1>Measles Cases vs. Wastewater Signal</h1>
       <p class="series-desc">
         Weekly confirmed measles cases against the national measles wastewater RNA signal, over the window
-        both are available (Dec 2024–present) — testing whether wastewater surveillance is picking up
-        measles activity the way it does for COVID/flu/RSV. Shown as two panels sharing one time axis
-        rather than one indexed line: case counts hit zero in several weeks in this window, and a
-        common-base index breaks when the base value is zero. See
+        where both are available (Dec 2024 to present). The question is whether wastewater surveillance
+        picks up measles activity the way it does for COVID/flu/RSV. These are two panels sharing one time
+        axis rather than one indexed line, because case counts hit zero in several weeks in this window and
+        a common-base index breaks when the base value is zero. See
         <a href="{base}/series/measles-weekly">the full case history</a> (back to 2022) and
         <a href="{base}/series/wastewater-measles">the full wastewater series</a>.
       </p>

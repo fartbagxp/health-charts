@@ -240,7 +240,7 @@
   }
 </script>
 
-<svelte:head><title>Maps — Health Charts</title></svelte:head>
+<svelte:head><title>Maps · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">
@@ -314,7 +314,7 @@
             domain: measure.domain,
             unknown: NO_DATA_FILL,
             legend: true,
-            label: `${measure.label} — crude prevalence (${measure.unit})`
+            label: `${measure.label}, crude prevalence (${measure.unit})`
           }}
           style="width:100%"
         >
