@@ -9,19 +9,19 @@
 
 ## Overview
 
-Static dashboard displaying U.S. health trends across 19 series: respiratory virus hospitalizations, vaccination coverage, nursing home vaccination, birth rates, mortality rates, and annual totals. Also includes a `/map` section with US choropleth maps (state/county) of CDC PLACES chronic disease prevalence. Built with SvelteKit and svelteplot (Observable Plot for Svelte), deployed as a fully static site via `@sveltejs/adapter-static`. Data is fetched from raw GitHub CSVs directly in the browser (lazily, on scroll into view for the home page / on mount for detail pages) — no local data files, no build-time embedding.
+Static dashboard displaying U.S. health trends across 19 series: respiratory virus hospitalizations, vaccination coverage, nursing home vaccination, birth rates, mortality rates, and annual totals. Also includes a `/map` section with US choropleth maps (state/county) of CDC PLACES chronic disease prevalence. Built with SvelteKit and svelteplot (Observable Plot for Svelte), deployed as a fully static site via `@sveltejs/adapter-static`. Data is fetched from raw GitHub CSVs directly in the browser (lazily, on scroll into view for the home page / on mount for detail pages). There are no local data files and no build-time embedding.
 
 ## Tech Stack
 
-- **Node.js** (v18+) — JavaScript runtime
-- **pnpm** — Package manager
-- **Vite** — Build tool with HMR and optimized production builds
-- **SvelteKit 2 / Svelte 5** — App framework; file-based routing, SSG via adapter-static
-- **svelteplot 0.14** — Observable Plot wrapper for Svelte (line charts, axes, grid, rules, geo/choropleth maps)
-- **d3-format** — Number formatting (`,` for counts, `.1f` for rates, `.2f` for percentages)
-- **topojson-client** — Converts TopoJSON topologies to GeoJSON (`feature`, `mesh`) for the `/map` choropleths
-- **us-atlas** — Pre-built US state/county TopoJSON boundaries (10m resolution), FIPS-keyed
-- **@sveltejs/adapter-static** — Outputs fully static site to `build/`
+- **Node.js** (v18+) - JavaScript runtime
+- **pnpm** - Package manager
+- **Vite** - Build tool with HMR and optimized production builds
+- **SvelteKit 2 / Svelte 5** - App framework; file-based routing, SSG via adapter-static
+- **svelteplot 0.14** - Observable Plot wrapper for Svelte (line charts, axes, grid, rules, geo/choropleth maps)
+- **d3-format** - Number formatting (`,` for counts, `.1f` for rates, `.2f` for percentages)
+- **topojson-client** - Converts TopoJSON topologies to GeoJSON (`feature`, `mesh`) for the `/map` choropleths
+- **us-atlas** - Pre-built US state/county TopoJSON boundaries (10m resolution), FIPS-keyed
+- **@sveltejs/adapter-static** - Outputs fully static site to `build/`
 
 ## Quick Start
 
@@ -62,7 +62,7 @@ health-charts/
 
 ## Data Pipeline
 
-All data lives in a separate repo (`fartbagxp/health`). The app fetches CSVs directly from `raw.githubusercontent.com` at build time — SvelteKit prerendering embeds the responses in the static HTML output. No `public/data/` directory, no runtime fetches.
+All data lives in a separate repo (`fartbagxp/health`). The app fetches CSVs directly from `raw.githubusercontent.com` at build time, and SvelteKit prerendering embeds the responses in the static HTML output. There is no `public/data/` directory and there are no runtime fetches.
 
 Three base URL constants in `config.js`:
 ```js
@@ -120,9 +120,9 @@ All series are defined in `src/lib/config.js` as `SERIES_CONFIG`. Each entry sup
 2. Inspect the CSV headers and a sample row to identify `dateKey`, `valueKey`, and any `filters` needed
 3. Add an entry to `SERIES_CONFIG` in `src/lib/config.js`
 4. Add the series `id` to one or more entries in the `CATEGORIES` array at the bottom of `config.js`
-5. Run `pnpm run build` to verify — the series detail page and home sparkline are generated automatically
+5. Run `pnpm run build` to verify. The series detail page and home sparkline are generated automatically.
 
-No local data files needed. The CSV URL is fetched at build time.
+You don't need any local data files; the app fetches the CSV URL at build time.
 
 ## Maps (`/map`)
 
@@ -130,38 +130,38 @@ US choropleth maps of CDC PLACES chronic disease prevalence, at county or state
 granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
 
 - **Data**: `loadPlacesCounty()` in `fetchData.js` fetches the **processed**
-  `places_county.csv` (`data/processed/cdc_open/`, not `data/raw/`) — health's
+  `places_county.csv` (`data/processed/cdc_open/`, not `data/raw/`). The `health` repo's
   `cdc_open.aggregate.aggregate_places_county()` slims the raw ~12MB/22-column file
   down to crude-prevalence rows and 6 columns (~800KB) so the map doesn't ship
   age-adjusted rows, confidence intervals, and descriptive text the map never reads.
   Keyed by 5-digit county FIPS (`locationid`). State values are derived client-side as
-  a population-weighted average of that state's counties — the CSV itself has no true
+  a population-weighted average of that state's counties; the CSV itself has no true
   state-level rows.
 - **Boundaries**: `us-atlas`'s `counties-10m.json` / `states-10m.json`, converted to
   GeoJSON with `topojson-client`'s `feature()`. Their feature `id` is the same
   zero-padded FIPS string as `locationid`, so the join needs no reformatting.
-  `us-atlas` is a devDependency only — `scripts/prepare-map-topology.js` copies
+  `us-atlas` is a devDependency only: `scripts/prepare-map-topology.js` copies
   the two files into `public/topo/` (auto-run via `predev`/`prebuild`), and
   `+page.svelte` `fetch()`s them at runtime instead of statically importing
   them. A static `import ... from 'us-atlas/...'` bundles the ~950KB of
   topology directly into the `/map` route's own JS chunk (measured: 1.3MB
-  uncompressed, by far the largest chunk in the build) — fetching it as a
+  uncompressed, by far the largest chunk in the build). Fetching it as a
   plain static file instead moves it off the JS-parse critical path and lets
   it load in parallel with the PLACES CSV.
 - **Measures**: 8 BRFSS chronic-disease indicators defined in `mapConfig.js`
-  (`PLACES_MEASURES`) — obesity, diabetes, high blood pressure, coronary heart disease,
-  stroke, cancer, COPD, arthritis — each with a fixed color-scale `domain` so switching
+  (`PLACES_MEASURES`): obesity, diabetes, high blood pressure, coronary heart disease,
+  stroke, cancer, COPD, and arthritis. Each has a fixed color-scale `domain` so switching
   measures doesn't rescale the ramp.
 - **Zip/ZCTA-level maps are not implemented.** CDC PLACES does publish a ZCTA table,
   but it isn't fetched into the `health` data repo yet, and nationwide ZCTA cartographic
   boundaries are 100MB+ (too large to bundle the way `us-atlas` state/county boundaries
   are). Adding it would need its own data-sourcing + boundary-size plan.
 - **Borders**: drawn as `topojson.mesh()` lines (one stitched geometry per level), not
-  as each polygon's own stroke — independently-rendered adjacent polygons can have
+  as each polygon's own stroke, because independently rendered adjacent polygons can have
   sub-pixel seams at a shared edge where one's fill slivers over its neighbor's stroke.
   Rendered via `<Geo canvas>` rather than SVG: a national county-border mesh is ~3,141
   line segments in one `<path>`, and browsers can show stroke-tessellation artifacts
-  (stray triangles) on sufficiently complex single SVG paths — canvas draws pixels
+  (stray triangles) on sufficiently complex single SVG paths. Canvas draws pixels
   directly and doesn't hit that. Canvas-mode `Geo` marks render inside a `<foreignObject>`
   that svelteplot sizes to the full plot area; getting `pointer-events: none` to actually
   reach hover on the layers below needs an external CSS rule on both the `foreignObject`
@@ -169,7 +169,7 @@ granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
   `CanvasLayer.svelte`'s own inline `style`, so passing `style="pointer-events:none"`
   directly to the mark doesn't work).
 - **Zoom/pan**: a plain CSS `transform: translate(...) scale(...)` on a wrapper div
-  around `<Plot>` (see `zoomScale`/`panX`/`panY` in `+page.svelte`), not a re-projection —
+  around `<Plot>` (see `zoomScale`/`panX`/`panY` in `+page.svelte`), not a re-projection.
   SVG stays crisp at any zoom this way, and it never touches a `Geo` mark's props, so it
   can't retrigger a scale recomputation the way per-pixel `pointermove`-driven hover state
   once did (see the `onHoverEnter` comment). One easy-to-miss side effect: a CSS
@@ -180,13 +180,13 @@ granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
 
 ## Troubleshooting
 
-**Flat line / no x-axis**: CSV headers are quoted (e.g. `"week_end"`). The parser strips outer quotes — check that `dateKey`/`valueKey`/filter keys match the unquoted header names exactly.
+**Flat line / no x-axis**: CSV headers are quoted (e.g. `"week_end"`). The parser strips outer quotes, so check that `dateKey`/`valueKey`/filter keys match the unquoted header names exactly.
 
 **Empty series (no line at all)**: A `filters` entry doesn't match any rows. Fetch the raw CSV and inspect the exact column values (case-sensitive).
 
-**Wrong number of lines on chart**: A filter is under-constrained — multiple distinct values pass. Add another filter key to narrow it down (e.g. `rate_type: 'Age-adjusted'`).
+**Wrong number of lines on chart**: A filter is under-constrained and multiple distinct values pass. Add another filter key to narrow it down (e.g. `rate_type: 'Age-adjusted'`).
 
-**Hover tooltip reversed**: Data wasn't sorted ascending before display. Both loaders sort by `date` ascending — verify the `dateKey` column parses correctly.
+**Hover tooltip reversed**: Data wasn't sorted ascending before display. Both loaders sort by `date` ascending, so verify that the `dateKey` column parses correctly.
 
 **Build fails**: `rm -rf node_modules build .svelte-kit && pnpm install && pnpm run build`
 
@@ -198,4 +198,4 @@ granularity. Uses svelteplot's `Geo` mark with `projection="albers-usa"`.
 - [svelteplot](https://svelteplot.dev/) | [Observable Plot](https://observablehq.com/plot/)
 - [d3-format](https://d3js.org/d3-format) | [pnpm](https://pnpm.io/)
 - [CDC Data Portal](https://data.cdc.gov/) | [CDC WONDER](https://wonder.cdc.gov/)
-- [DATA_SOURCES.md](./DATA_SOURCES.md) — CDC dataset catalog for finding new data
+- [DATA_SOURCES.md](./DATA_SOURCES.md) - CDC dataset catalog for finding new data
