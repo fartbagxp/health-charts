@@ -65,7 +65,7 @@
   function onPointerMove(evt) { pointer = { x: evt.clientX, y: evt.clientY }; }
 </script>
 
-<svelte:head><title>Measles Cases by State — Health Charts</title></svelte:head>
+<svelte:head><title>Measles Cases by State · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">

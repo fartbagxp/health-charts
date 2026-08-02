@@ -9,7 +9,7 @@ export const SERIES_CONFIG = {
   flu: {
     id: 'flu',
     title: 'Flu New Admissions',
-    description: 'Weekly influenza new hospital admissions from CDC surveillance (2020–present)',
+    description: 'Weekly influenza new hospital admissions from CDC surveillance (2020-present)',
     color: '#1a6faf',
     csvUrl: `${RAW_BASE}/respiratory-combined.csv`,
     valueKey: 'flu_new_admissions',
@@ -23,7 +23,7 @@ export const SERIES_CONFIG = {
   covid: {
     id: 'covid',
     title: 'COVID-19 Hospitalizations',
-    description: 'Weekly COVID-19-associated hospital admissions (2020–present)',
+    description: 'Weekly COVID-19-associated hospital admissions (2020-present)',
     color: '#e63946',
     csvUrl: `${RAW_BASE}/covid-hospitalizations.csv`,
     valueKey: 'hospitalizations',
@@ -37,7 +37,7 @@ export const SERIES_CONFIG = {
   rsv: {
     id: 'rsv',
     title: 'RSV Hospitalization Rate',
-    description: 'Weekly RSV-associated hospitalization rate per 100,000 from CDC RSV-NET (2020–present)',
+    description: 'Weekly RSV-associated hospitalization rate per 100,000 from CDC RSV-NET (2020-present)',
     color: '#2a9d8f',
     csvUrl: `${RAW_BASE}/rsv-hospitalizations.csv`,
     valueKey: 'rate',
@@ -53,7 +53,7 @@ export const SERIES_CONFIG = {
   'resp-deaths-flu': {
     id: 'resp-deaths-flu',
     title: 'Flu Share of Deaths',
-    description: 'Influenza as a percentage of all U.S. deaths, weekly (Oct 2024–present)',
+    description: 'Influenza as a percentage of all U.S. deaths, weekly (Oct 2024-present)',
     color: '#1a6faf',
     csvUrl: `${CDC_OPEN_BASE}/resp_deaths_pct.csv`,
     dateKey: 'week_end',
@@ -69,7 +69,7 @@ export const SERIES_CONFIG = {
   'resp-deaths-covid': {
     id: 'resp-deaths-covid',
     title: 'COVID-19 Share of Deaths',
-    description: 'COVID-19 as a percentage of all U.S. deaths, weekly (Oct 2024–present)',
+    description: 'COVID-19 as a percentage of all U.S. deaths, weekly (Oct 2024-present)',
     color: '#e63946',
     csvUrl: `${CDC_OPEN_BASE}/resp_deaths_pct.csv`,
     dateKey: 'week_end',
@@ -85,7 +85,7 @@ export const SERIES_CONFIG = {
   'resp-deaths-rsv': {
     id: 'resp-deaths-rsv',
     title: 'RSV Share of Deaths',
-    description: 'RSV as a percentage of all U.S. deaths, weekly (Oct 2024–present)',
+    description: 'RSV as a percentage of all U.S. deaths, weekly (Oct 2024-present)',
     color: '#2a9d8f',
     csvUrl: `${CDC_OPEN_BASE}/resp_deaths_pct.csv`,
     dateKey: 'week_end',
@@ -103,7 +103,7 @@ export const SERIES_CONFIG = {
   'vacc-flu': {
     id: 'vacc-flu',
     title: 'Flu Vaccination Coverage',
-    description: 'Percentage of U.S. adults 18+ up-to-date on flu vaccine, national, weekly (2025–present)',
+    description: 'Percentage of U.S. adults 18+ up-to-date on flu vaccine, national, weekly (2025-present)',
     color: '#1a6faf',
     csvUrl: `${CDC_OPEN_BASE}/resp_vaccination.csv`,
     dateKey: 'week_ending',
@@ -126,7 +126,7 @@ export const SERIES_CONFIG = {
   'vacc-covid': {
     id: 'vacc-covid',
     title: 'COVID-19 Vaccination Coverage',
-    description: 'Percentage of U.S. adults 18+ up-to-date on COVID-19 vaccine, national, weekly (2025–present)',
+    description: 'Percentage of U.S. adults 18+ up-to-date on COVID-19 vaccine, national, weekly (2025-present)',
     color: '#e63946',
     csvUrl: `${CDC_OPEN_BASE}/resp_vaccination.csv`,
     dateKey: 'week_ending',
@@ -149,7 +149,7 @@ export const SERIES_CONFIG = {
   'vacc-rsv': {
     id: 'vacc-rsv',
     title: 'RSV Vaccination Coverage',
-    description: 'Percentage of U.S. adults 50+ up-to-date on RSV vaccine, national, weekly (2025–present)',
+    description: 'Percentage of U.S. adults 50+ up-to-date on RSV vaccine, national, weekly (2025-present)',
     color: '#2a9d8f',
     csvUrl: `${CDC_OPEN_BASE}/resp_vaccination.csv`,
     dateKey: 'week_ending',
@@ -174,7 +174,7 @@ export const SERIES_CONFIG = {
   'schoolvax': {
     id: 'schoolvax',
     title: 'Kindergarten Vaccination Coverage',
-    description: 'Annual vaccination coverage rates for U.S. kindergartners by vaccine, national, 2009–present (CDC SchoolVaxView)',
+    description: 'Annual vaccination coverage rates for U.S. kindergartners by vaccine, national, 2009-present (CDC SchoolVaxView)',
     csvUrl: `${CDC_OPEN_BASE}/schoolvaxview.csv`,
     dateKey: 'year_season',
     dateFormat: 'schoolyear',
@@ -199,7 +199,7 @@ export const SERIES_CONFIG = {
   'births-annual': {
     id: 'births-annual',
     title: 'U.S. Annual Births',
-    description: 'Total U.S. live births per year, 1995–2024 (CDC WONDER natality data)',
+    description: 'Total U.S. live births per year, 1995-2024 (CDC WONDER natality data)',
     color: '#f4a261',
     csvUrls: [
       `${WONDER_BASE}/births-by-year-1995-2002.csv`,
@@ -221,7 +221,7 @@ export const SERIES_CONFIG = {
   'mortality-all': {
     id: 'mortality-all',
     title: 'U.S. Mortality Rate',
-    description: 'Age-adjusted mortality rate per 100,000 for all causes, U.S. national, rolling 12-month (2023–present)',
+    description: 'Age-adjusted mortality rate per 100,000 for all causes, U.S. national, rolling 12-month (2023-present)',
     color: '#6a4c93',
     csvUrl: `${CDC_OPEN_BASE}/mortality_rates.csv`,
     dateKey: 'year_and_quarter',
@@ -244,7 +244,7 @@ export const SERIES_CONFIG = {
   'birth-rate': {
     id: 'birth-rate',
     title: 'U.S. Birth Rate',
-    description: 'General fertility rate per 1,000 women aged 15–44, U.S. national, quarterly (2023–present)',
+    description: 'General fertility rate per 1,000 women aged 15-44, U.S. national, quarterly (2023-present)',
     color: '#f4a261',
     csvUrl: `${CDC_OPEN_BASE}/birth_indicators.csv`,
     dateKey: 'year_and_quarter',
@@ -268,7 +268,7 @@ export const SERIES_CONFIG = {
   'deaths-annual': {
     id: 'deaths-annual',
     title: 'U.S. Annual Deaths',
-    description: 'Total U.S. deaths per year, 1979–2024 (CDC WONDER)',
+    description: 'Total U.S. deaths per year, 1979-2024 (CDC WONDER)',
     color: '#6a4c93',
     csvUrl: `${WONDER_BASE}/mortality-total-by-year.csv`,
     dateKey: 'year',
@@ -285,8 +285,8 @@ export const SERIES_CONFIG = {
   // Leading causes of death (CDC WONDER, 1979–2024)
   'deaths-circulatory': {
     id: 'deaths-circulatory',
-    title: 'Deaths — Circulatory Disease',
-    description: 'Annual U.S. deaths from diseases of the circulatory system (the #1 cause every year), 1979–2024',
+    title: 'Deaths: Circulatory Disease',
+    description: 'Annual U.S. deaths from diseases of the circulatory system (the #1 cause every year), 1979-2024',
     color: '#e63946',
     csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
     dateKey: 'year',
@@ -302,8 +302,8 @@ export const SERIES_CONFIG = {
   },
   'deaths-cancer': {
     id: 'deaths-cancer',
-    title: 'Deaths — Cancer',
-    description: 'Annual U.S. deaths from neoplasms (cancer, the #2 cause every year), 1979–2024',
+    title: 'Deaths: Cancer',
+    description: 'Annual U.S. deaths from neoplasms (cancer, the #2 cause every year), 1979-2024',
     color: '#e07a5f',
     csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
     dateKey: 'year',
@@ -320,8 +320,8 @@ export const SERIES_CONFIG = {
   // Cancer deaths by type — top 8 cancer sites by mortality burden (NCI SEER, 2000-2024)
   'deaths-cancer-by-type': {
     id: 'deaths-cancer-by-type',
-    title: 'Deaths — Cancer by Type',
-    description: 'Annual U.S. cancer deaths for the 8 cancer types with the highest mortality burden, 2000–2024. Breast reflects female cases (99% of breast cancer deaths); Prostate is male-only by nature of the disease.',
+    title: 'Deaths: Cancer by Type',
+    description: 'Annual U.S. cancer deaths for the 8 cancer types with the highest mortality burden, 2000-2024. Breast reflects female cases (99% of breast cancer deaths); Prostate is male-only by nature of the disease.',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -348,7 +348,7 @@ export const SERIES_CONFIG = {
   'cancer-sex-lung': {
     id: 'cancer-sex-lung',
     title: 'Lung Cancer Deaths by Sex',
-    description: 'Annual U.S. lung and bronchus cancer deaths by sex, 2000–2024',
+    description: 'Annual U.S. lung and bronchus cancer deaths by sex, 2000-2024',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -367,7 +367,7 @@ export const SERIES_CONFIG = {
   'cancer-sex-colorectal': {
     id: 'cancer-sex-colorectal',
     title: 'Colorectal Cancer Deaths by Sex',
-    description: 'Annual U.S. colon and rectum cancer deaths by sex, 2000–2024',
+    description: 'Annual U.S. colon and rectum cancer deaths by sex, 2000-2024',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -386,7 +386,7 @@ export const SERIES_CONFIG = {
   'cancer-sex-pancreas': {
     id: 'cancer-sex-pancreas',
     title: 'Pancreatic Cancer Deaths by Sex',
-    description: 'Annual U.S. pancreatic cancer deaths by sex, 2000–2024',
+    description: 'Annual U.S. pancreatic cancer deaths by sex, 2000-2024',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -405,7 +405,7 @@ export const SERIES_CONFIG = {
   'cancer-sex-liver': {
     id: 'cancer-sex-liver',
     title: 'Liver Cancer Deaths by Sex',
-    description: 'Annual U.S. liver and intrahepatic bile duct cancer deaths by sex, 2000–2024',
+    description: 'Annual U.S. liver and intrahepatic bile duct cancer deaths by sex, 2000-2024',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -424,7 +424,7 @@ export const SERIES_CONFIG = {
   'cancer-sex-leukemia': {
     id: 'cancer-sex-leukemia',
     title: 'Leukemia Deaths by Sex',
-    description: 'Annual U.S. leukemia deaths by sex, 2000–2024',
+    description: 'Annual U.S. leukemia deaths by sex, 2000-2024',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -443,8 +443,8 @@ export const SERIES_CONFIG = {
 
   'deaths-respiratory': {
     id: 'deaths-respiratory',
-    title: 'Deaths — Respiratory Disease',
-    description: 'Annual U.S. deaths from diseases of the respiratory system, 1979–2024',
+    title: 'Deaths: Respiratory Disease',
+    description: 'Annual U.S. deaths from diseases of the respiratory system, 1979-2024',
     color: '#2a9d8f',
     csvUrl: `${WONDER_BASE}/mortality-top5-causes-by-year.csv`,
     dateKey: 'year',
@@ -516,7 +516,7 @@ export const SERIES_CONFIG = {
   'measles-weekly': {
     id: 'measles-weekly',
     title: 'Measles Weekly Cases',
-    description: 'Weekly confirmed measles cases in the U.S. (2022–present)',
+    description: 'Weekly confirmed measles cases in the U.S. (2022-present)',
     color: '#6a4c93',
     csvUrl: `${CDC_OPEN_BASE}/measles_weekly_cases.csv`,
     dateKey: 'week_end',
@@ -533,7 +533,7 @@ export const SERIES_CONFIG = {
   'measles-annual': {
     id: 'measles-annual',
     title: 'U.S. Annual Measles Cases',
-    description: 'Reported measles cases per year in the U.S., showing the collapse after the 1963 vaccine and 2000 elimination (1962–present)',
+    description: 'Reported measles cases per year in the U.S., 1962-present. Cases collapsed after the 1963 vaccine and the 2000 elimination.',
     color: '#6a4c93',
     csvUrl: `${CDC_OPEN_BASE}/measles_annual_history.csv`,
     dateKey: 'year',
@@ -558,7 +558,7 @@ export const SERIES_CONFIG = {
   'life-expectancy-combined': {
     id: 'life-expectancy-combined',
     title: 'U.S. Life Expectancy',
-    description: 'Average life expectancy at birth by sex, all races, U.S. (1900–present)',
+    description: 'Average life expectancy at birth by sex, all races, U.S. (1900-present)',
     csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -580,7 +580,7 @@ export const SERIES_CONFIG = {
   'life-expectancy': {
     id: 'life-expectancy',
     title: 'U.S. Life Expectancy',
-    description: 'Average life expectancy at birth, all races, both sexes, U.S. (1900–present)',
+    description: 'Average life expectancy at birth, all races, both sexes, U.S. (1900-present)',
     color: '#457b9d',
     csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
     dateKey: 'year',
@@ -599,8 +599,8 @@ export const SERIES_CONFIG = {
   // U.S. life expectancy at birth — male, all races (CDC NCHS, 1900–present)
   'life-expectancy-male': {
     id: 'life-expectancy-male',
-    title: 'U.S. Life Expectancy — Male',
-    description: 'Average life expectancy at birth for males, all races, U.S. (1900–present)',
+    title: 'U.S. Life Expectancy: Male',
+    description: 'Average life expectancy at birth for males, all races, U.S. (1900-present)',
     color: '#1a6faf',
     csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
     dateKey: 'year',
@@ -619,8 +619,8 @@ export const SERIES_CONFIG = {
   // U.S. life expectancy at birth — female, all races (CDC NCHS, 1900–present)
   'life-expectancy-female': {
     id: 'life-expectancy-female',
-    title: 'U.S. Life Expectancy — Female',
-    description: 'Average life expectancy at birth for females, all races, U.S. (1900–present)',
+    title: 'U.S. Life Expectancy: Female',
+    description: 'Average life expectancy at birth for females, all races, U.S. (1900-present)',
     color: '#e07a5f',
     csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
     dateKey: 'year',
@@ -717,7 +717,7 @@ export const SERIES_CONFIG = {
   'maternal-mortality': {
     id: 'maternal-mortality',
     title: 'U.S. Maternal Mortality',
-    description: 'Total maternal deaths per year in the U.S. (1999–present)',
+    description: 'Total maternal deaths per year in the U.S. (1999-present)',
     color: '#e07a5f',
     csvUrl: `${WONDER_BASE}/maternal-mortality-by-year.csv`,
     dateKey: 'year',
@@ -735,7 +735,7 @@ export const SERIES_CONFIG = {
   'death-rates-historical': {
     id: 'death-rates-historical',
     title: 'U.S. Leading Cause Death Rates',
-    description: 'Age-adjusted death rates per 100,000 for leading causes of U.S. death (1900–present)',
+    description: 'Age-adjusted death rates per 100,000 for leading causes of U.S. death (1900-present)',
     csvUrl: `${CDC_OPEN_BASE}/death_rates_historical.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -759,7 +759,7 @@ export const SERIES_CONFIG = {
   'injury-drug-od': {
     id: 'injury-drug-od',
     title: 'Drug Overdose Death Rate',
-    description: 'Annualized monthly drug overdose death rate per 100,000, U.S. national (2019–present)',
+    description: 'Annualized monthly drug overdose death rate per 100,000, U.S. national (2019-present)',
     color: '#6a4c93',
     csvUrl: `${WISQARS_BASE}/injury_national.csv`,
     dateKey: 'period',
@@ -777,7 +777,7 @@ export const SERIES_CONFIG = {
   'drug-deaths-by-year': {
     id: 'drug-deaths-by-year',
     title: 'U.S. Drug Overdose Deaths by Type',
-    description: 'Annual U.S. drug overdose deaths by substance type, 1999–2024. Fentanyl surpassed all other drugs around 2016 and now dominates. Data from 2021 onward are provisional. Source: CDC WONDER.',
+    description: 'Annual U.S. drug overdose deaths by substance type, 1999-2024. Fentanyl surpassed all other drugs around 2016 and now dominates. Data from 2021 onward are provisional. Source: CDC WONDER.',
     csvUrl: `${WONDER_BASE}/drug-deaths-by-year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -802,7 +802,7 @@ export const SERIES_CONFIG = {
   'injury-suicide': {
     id: 'injury-suicide',
     title: 'Suicide Death Rate',
-    description: 'Annualized monthly suicide death rate per 100,000, U.S. national (2019–present)',
+    description: 'Annualized monthly suicide death rate per 100,000, U.S. national (2019-present)',
     color: '#457b9d',
     csvUrl: `${WISQARS_BASE}/injury_national.csv`,
     dateKey: 'period',
@@ -818,7 +818,7 @@ export const SERIES_CONFIG = {
   'injury-homicide': {
     id: 'injury-homicide',
     title: 'Homicide Death Rate',
-    description: 'Annualized monthly homicide death rate per 100,000, U.S. national (2019–present)',
+    description: 'Annualized monthly homicide death rate per 100,000, U.S. national (2019-present)',
     color: '#e63946',
     csvUrl: `${WISQARS_BASE}/injury_national.csv`,
     dateKey: 'period',
@@ -834,7 +834,7 @@ export const SERIES_CONFIG = {
   'injury-firearm': {
     id: 'injury-firearm',
     title: 'Firearm Death Rate',
-    description: 'Annualized monthly firearm death rate per 100,000 (all intents), U.S. national (2019–present)',
+    description: 'Annualized monthly firearm death rate per 100,000 (all intents), U.S. national (2019-present)',
     color: '#f4a261',
     csvUrl: `${WISQARS_BASE}/injury_national.csv`,
     dateKey: 'period',
@@ -852,7 +852,7 @@ export const SERIES_CONFIG = {
   'beam-foodborne': {
     id: 'beam-foodborne',
     title: 'Foodborne Pathogen Isolates',
-    description: 'Monthly human isolate counts for five enteric pathogens from CDC BEAM surveillance (2018–present)',
+    description: 'Monthly human isolate counts for five enteric pathogens from CDC BEAM surveillance (2018-present)',
     csvUrl: `${CDC_OPEN_BASE}/beam_foodborne.csv`,
     dateKey: 'date',
     valueKey: 'isolates',
@@ -875,7 +875,7 @@ export const SERIES_CONFIG = {
   'suicide-by-sex': {
     id: 'suicide-by-sex',
     title: 'U.S. Suicide Rate by Sex',
-    description: 'Annual U.S. suicide death rate per 100,000 by sex, 1999–2024. Male rates are consistently 3.5–4× female rates. Source: CDC WISQARS 1999–2016; CDC WONDER D77/D176 2017–2024.',
+    description: 'Annual U.S. suicide death rate per 100,000 by sex, 1999-2024. Male rates are consistently 3.5-4× female rates. Source: CDC WISQARS 1999-2016; CDC WONDER D77/D176 2017-2024.',
     csvUrl: `${WISQARS_BASE}/suicide_by_sex.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -897,7 +897,7 @@ export const SERIES_CONFIG = {
   'lyme-disease': {
     id: 'lyme-disease',
     title: 'Lyme Disease Cases',
-    description: 'Total reported Lyme disease cases per year in the U.S. (2016–present)',
+    description: 'Total reported Lyme disease cases per year in the U.S. (2016-present)',
     color: '#52b788',
     csvUrl: `${WONDER_BASE}/tick-borne-diseases-by-year.csv`,
     dateKey: 'year',
