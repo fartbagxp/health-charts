@@ -42,7 +42,7 @@ All chart data is fetched client-side from CSVs in the [fartbagxp/health](https:
 
 Each chart on the home page uses `IntersectionObserver` to start fetching its data as it scrolls near the viewport. Series that share a CSV file (e.g. the three `resp-deaths-*` series all read `resp_deaths_pct.csv`) share a single fetch via a URL-keyed cache in `fetchData.js`.
 
-Large raw sources (wastewater, PLACES) are pre-aggregated upstream by `health` itself (see its `cdc_open.aggregate` module) and fetched from `health`'s `data/processed/` directory — nothing is pre-processed in this repo anymore; an earlier local `aggregate-wastewater.js` script was removed once `health` started serving the smaller processed files directly.
+Large raw sources (wastewater, PLACES) are pre-aggregated upstream by `health` itself (see its `cdc_open.aggregate` module) and fetched from `health`'s `data/processed/` directory. This repo does no pre-processing of its own; an earlier local `aggregate-wastewater.js` script was removed once `health` started serving the smaller processed files directly.
 
 ## Scripts
 
@@ -112,5 +112,5 @@ pulse-code  →  health  →  health-charts
 (explore)      (archive)   (visualize)
 ```
 
-- **[fartbagxp/health](https://github.com/fartbagxp/health)** — the upstream data source. Every `csvUrl` in `src/lib/config.js` points at `raw.githubusercontent.com/fartbagxp/health/main/...`; nothing is copied into this repo, so a chart updates the moment `health` commits fresh data. Its README documents which CDC source and API backs each series.
-- **[fartbagxp/pulse-code](https://github.com/fartbagxp/pulse-code)** — further upstream. A CDC WONDER exploration CLI whose saved queries seed many of the WONDER-sourced series here (drug overdose, maternal mortality, suicide, births, tick-borne disease, etc.) — `health` archives their output as CSVs, which this repo then charts.
+- **[fartbagxp/health](https://github.com/fartbagxp/health)** is the upstream data source. Every `csvUrl` in `src/lib/config.js` points at `raw.githubusercontent.com/fartbagxp/health/main/...`; nothing is copied into this repo, so a chart updates the moment `health` commits fresh data. Its README documents which CDC source and API backs each series.
+- **[fartbagxp/pulse-code](https://github.com/fartbagxp/pulse-code)** sits further upstream: a CDC WONDER exploration CLI whose saved queries seed many of the WONDER-sourced series here (drug overdose, maternal mortality, suicide, births, tick-borne disease, etc.). `health` archives their output as CSVs, which this repo then charts.
