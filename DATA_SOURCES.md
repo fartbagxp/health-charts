@@ -65,9 +65,17 @@ Used for long historical runs (births, deaths by cause). Data is exported manual
 - Natality (births by year): https://wonder.cdc.gov/natality.html
 - Mortality (deaths by cause): https://wonder.cdc.gov/ucd-icd10.html
 
+## State Health Portals
+
+Every series in this repo is federal CDC data. State-level sources are cataloged upstream in the `health` repo: [State Health Data Portals](https://fartbagxp.github.io/health/state-portals/) covers the official health data portal for all 50 states and DC along with which ones expose a usable API, and [State & Local Sources](https://fartbagxp.github.io/health/local/) covers the endpoints that have been verified against live data.
+
+Before adding any state series, check the two notes below on California and New York. One of them duplicates a line this repo already charts.
+
 ## Data Quality Notes
 
 - **RSV pre-Oct 2024**: Voluntary hospital reporting; likely undercounted by large factor
+- **California is not an independent source**: Its Respiratory Virus Dashboard republishes CDC. Against NHSN (`ua7e-t2fy`), flu admissions match in 89 of 90 comparable weeks and COVID in 88 of 98. Charting it as a state series would duplicate an existing line under a different name. The COVID gap is confined to nine weeks (2024-09-07 through 2024-10-26) where CA ran 25% to 213% higher, ending the week of 2024-11-02, which lines up with the close of the voluntary-reporting era noted above
+- **New York is independent and runs higher**: Summing `vgyq-b7tb` to statewide weekly COVID admissions exceeds CDC's New York figure in all 43 overlapping weeks (median ratio 1.23, range 1.09 to 2.29); flu from `iye6-rifr` runs 5% to 17% above CDC in peak weeks. Likely a broader reporting denominator than NHSN captures, though neither portal documents the reconciliation. Label any such series as state-sourced rather than blending it into a national line
 - **COVID-19 Socrata dataset** (`7dk4-g6vg`): Archived, data ends Sep 2023
 - **CDC WONDER exports**: May require splitting into multiple files if date range spans ICD revision boundaries
 - **CDC Open CSVs**: Headers are quoted (e.g. `"week_end"`); the app's CSV parser strips outer quotes
