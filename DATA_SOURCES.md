@@ -25,6 +25,9 @@ Dataset catalog for finding and adding new health data. The app fetches CSVs fro
 | Lyme disease annual cases          | CDC WONDER `tick-borne-...csv`     | Annual, 2016-present       |
 | Foodborne pathogen isolates        | CDC BEAM `beam_foodborne.csv`      | Monthly, 2018-present      |
 | Chronic disease prevalence (map)   | CDC PLACES `places_county.csv` (processed, slimmed) | County-level, 2023, FIPS-keyed |
+| Health spending per capita         | NCHS DQS `dqs/national_health_spending.csv` (`s57w-7gbe`) | Annual, 1960-present |
+| Drug overdose rate by opioid type  | NCHS DQS `dqs/drug_overdose_by_type.csv` (`rdjz-vn2n`) | Annual, age-adjusted, 2018-present |
+| Low birthweight by state (map)     | NCHS DQS `dqs/low_birthweight_by_state.csv` (`ga7k-kycn`) | State-level, latest year, FIPS-keyed |
 
 ---
 

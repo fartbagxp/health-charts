@@ -11,6 +11,12 @@ export const PLACES_COUNTY_CSV_URL = `${CDC_OPEN_PROCESSED_BASE}/places_county.c
 // not a raw multi-disease, multi-year dump).
 export const MEASLES_BY_STATE_CSV_URL = `${CDC_OPEN_BASE}/measles_by_state.csv`;
 
+// One row per state (50 + DC): percent of live births that are low birthweight,
+// latest year. Aggregated server-side by health's nchs_dqs.fetch_dqs from the
+// NCHS DQS "low birthweight by state" table (Geographic classification only).
+const DQS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/dqs';
+export const LOW_BIRTHWEIGHT_BY_STATE_CSV_URL = `${DQS_BASE}/low_birthweight_by_state.csv`;
+
 // Sequential blue ramp (100->700, light->dark) for magnitude encoding.
 export const SEQUENTIAL_SCHEME = [
   '#cde2fb', '#b7d3f6', '#9ec5f4', '#86b6ef', '#6da7ec', '#5598e7',

@@ -4,6 +4,7 @@ const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/d
 const CDC_OPEN_PROCESSED_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/processed/cdc_open';
 const WISQARS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wisqars';
 const SEER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/seer';
+const DQS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/dqs';
 
 export const SERIES_CONFIG = {
   flu: {
@@ -910,11 +911,58 @@ export const SERIES_CONFIG = {
     sourceUrl: 'https://wonder.cdc.gov/nndss/nndss_annual_tables_menu.asp',
     frequency: 'Annual',
     category: 'Tick-borne Disease'
+  },
+
+  // Health spending — U.S. national health expenditure per capita, 1960–present
+  // (NCHS DQS / CMS National Health Expenditure Accounts). The CSV also carries
+  // dollars_billions and pct_gdp columns for alternate framings.
+  'health-spending-per-capita': {
+    id: 'health-spending-per-capita',
+    title: 'U.S. Health Spending per Capita',
+    description: 'National health expenditure per person per year, 1960-present (decadal before 2000, annual after). Source: NCHS Data Query System / CMS National Health Expenditure Accounts.',
+    color: '#1a6faf',
+    csvUrl: `${DQS_BASE}/national_health_spending.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'dollars_per_capita',
+    unit: 'dollars per capita',
+    format: '$,.0f',
+    source: 'NCHS DQS (CMS NHEA)',
+    sourceUrl: 'https://data.cdc.gov/d/s57w-7gbe',
+    frequency: 'Annual',
+    category: 'Health Spending'
+  },
+
+  // Drug overdose death rate by opioid type — age-adjusted per 100,000 (NCHS DQS,
+  // NVSS). Complements the WONDER count-based 'drug-deaths-by-year' with an
+  // age-adjusted *rate* and the DQS opioid-category breakdown.
+  'drug-overdose-rate-by-type': {
+    id: 'drug-overdose-rate-by-type',
+    title: 'Drug Overdose Death Rate by Opioid Type',
+    description: 'Age-adjusted U.S. drug overdose death rate per 100,000, by opioid type, 2018-present. Source: NCHS Data Query System (NVSS).',
+    csvUrl: `${DQS_BASE}/drug_overdose_by_type.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'rate',
+    unit: 'deaths per 100,000 (age adjusted)',
+    format: '.1f',
+    source: 'NCHS DQS (NVSS)',
+    sourceUrl: 'https://data.cdc.gov/d/rdjz-vn2n',
+    frequency: 'Annual',
+    category: 'Injury & Overdose',
+    subSeries: [
+      { key: 'all',                   label: 'All drug overdose deaths',            color: '#6a4c93', filters: { drug_type: 'all' } },
+      { key: 'any_opioid',            label: 'Any opioid',                          color: '#e63946', filters: { drug_type: 'any_opioid' } },
+      { key: 'synthetic_opioids',     label: 'Synthetic opioids (excl. methadone)', color: '#e76f51', filters: { drug_type: 'synthetic_opioids' } },
+      { key: 'natural_semisynthetic', label: 'Natural & semisynthetic opioids',     color: '#f4a261', filters: { drug_type: 'natural_semisynthetic' } },
+      { key: 'heroin',                label: 'Heroin',                              color: '#2a9d8f', filters: { drug_type: 'heroin' } },
+      { key: 'methadone',             label: 'Methadone',                           color: '#457b9d', filters: { drug_type: 'methadone' } }
+    ]
   }
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -926,7 +974,8 @@ export const CATEGORIES = [
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
   { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory'] },
   { name: 'Cancer Mortality', series: ['deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia'] },
-  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year'] },
+  { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year', 'drug-overdose-rate-by-type'] },
+  { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
