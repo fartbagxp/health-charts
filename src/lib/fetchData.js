@@ -206,6 +206,19 @@ export async function loadMeaslesByState(csvUrl) {
   }));
 }
 
+// Loads the per-state low-birthweight snapshot (one row per state, see health's
+// nchs_dqs.fetch_dqs), keyed by 2-digit state FIPS so it can be joined against
+// us-atlas topology the same way loadMeaslesByState() is.
+export async function loadLowBirthweightByState(csvUrl) {
+  const text = await fetchCSV(csvUrl);
+  return parseCSV(text).map(d => ({
+    state: d.state,
+    fips: d.state_fips,
+    year: +d.year,
+    pct: +d.pct_low_birthweight
+  }));
+}
+
 export async function loadSubSeries(config) {
   const urls = config.csvUrls ?? [config.csvUrl];
   const dateKey = config.dateKey || 'date';

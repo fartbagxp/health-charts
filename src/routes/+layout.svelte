@@ -33,6 +33,7 @@
     <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
     <a href="{base}/map" class="nav-link">Maps</a>
     <a href="{base}/map/measles" class="nav-link">Measles Map</a>
+    <a href="{base}/map/low-birthweight" class="nav-link">Low Birthweight Map</a>
     <a href="{base}/compare/measles-vaccination" class="nav-link">Measles vs. Vaccination</a>
     <a href="{base}/compare/covid-retrospective" class="nav-link">COVID Retrospective</a>
     <a href="{base}/compare/measles-wastewater" class="nav-link">Measles vs. Wastewater</a>
