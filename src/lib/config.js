@@ -913,26 +913,6 @@ export const SERIES_CONFIG = {
     category: 'Tick-borne Disease'
   },
 
-  // Health spending — U.S. national health expenditure per capita, 1960–present
-  // (NCHS DQS / CMS National Health Expenditure Accounts). The CSV also carries
-  // dollars_billions and pct_gdp columns for alternate framings.
-  'health-spending-per-capita': {
-    id: 'health-spending-per-capita',
-    title: 'U.S. Health Spending per Capita',
-    description: 'National health expenditure per person per year, 1960-present (decadal before 2000, annual after). Source: NCHS Data Query System / CMS National Health Expenditure Accounts.',
-    color: '#1a6faf',
-    csvUrl: `${DQS_BASE}/national_health_spending.csv`,
-    dateKey: 'year',
-    dateFormat: 'year',
-    valueKey: 'dollars_per_capita',
-    unit: 'dollars per capita',
-    format: '$,.0f',
-    source: 'NCHS DQS (CMS NHEA)',
-    sourceUrl: 'https://data.cdc.gov/d/s57w-7gbe',
-    frequency: 'Annual',
-    category: 'Health Spending'
-  },
-
   // Drug overdose death rate by opioid type — age-adjusted per 100,000 (NCHS DQS,
   // NVSS). Complements the WONDER count-based 'drug-deaths-by-year' with an
   // age-adjusted *rate* and the DQS opioid-category breakdown.
@@ -958,6 +938,27 @@ export const SERIES_CONFIG = {
       { key: 'heroin',                label: 'Heroin',                              color: '#2a9d8f', filters: { drug_type: 'heroin' } },
       { key: 'methadone',             label: 'Methadone',                           color: '#457b9d', filters: { drug_type: 'methadone' } }
     ]
+  },
+
+  // Health spending — U.S. national health expenditure per capita, 1960–present
+  // (NCHS DQS / CMS National Health Expenditure Accounts). The CSV also carries
+  // dollars_billions and pct_gdp columns for alternate framings. Kept last so it
+  // closes out the homepage chart list.
+  'health-spending-per-capita': {
+    id: 'health-spending-per-capita',
+    title: 'U.S. Health Spending per Capita',
+    description: 'National health expenditure per person per year, 1960-present (decadal before 2000, annual after). Source: NCHS Data Query System / CMS National Health Expenditure Accounts.',
+    color: '#1a6faf',
+    csvUrl: `${DQS_BASE}/national_health_spending.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'dollars_per_capita',
+    unit: 'dollars per capita',
+    format: '$,.0f',
+    source: 'NCHS DQS (CMS NHEA)',
+    sourceUrl: 'https://data.cdc.gov/d/s57w-7gbe',
+    frequency: 'Annual',
+    category: 'Health Spending'
   }
 };
 
