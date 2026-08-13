@@ -6,6 +6,18 @@
 
   let { children } = $props();
 
+  let theme = $state('light');
+
+  $effect(() => {
+    theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  });
+
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+
   const allSeries = Object.values(SERIES_CONFIG);
   let navQuery = $state('');
   let navResults = $derived(
@@ -57,6 +69,17 @@
         </div>
       {/if}
     </div>
+    <button
+      type="button"
+      class="theme-toggle"
+      class:is-dark={theme === 'dark'}
+      onclick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-pressed={theme === 'dark'}
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      💡
+    </button>
   </div>
 </nav>
 
