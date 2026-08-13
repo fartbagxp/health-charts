@@ -322,7 +322,7 @@ export const SERIES_CONFIG = {
   'deaths-cancer-by-type': {
     id: 'deaths-cancer-by-type',
     title: 'Deaths: Cancer by Type',
-    description: 'Annual U.S. cancer deaths for the 8 cancer types with the highest mortality burden, 2000-2024. Breast reflects female cases (99% of breast cancer deaths); Prostate is male-only by nature of the disease.',
+    description: 'Annual U.S. cancer deaths for 7 of the cancer types with the highest mortality burden, 2000-2024. Breast reflects female cases (99% of breast cancer deaths); Prostate is male-only by nature of the disease. Leukemia is temporarily omitted — the upstream SEER snapshot dropped its combined-subtype total.',
     csvUrl: `${SEER_BASE}/mortality_by_year.csv`,
     dateKey: 'year',
     dateFormat: 'year',
@@ -340,7 +340,6 @@ export const SERIES_CONFIG = {
       { key: 'breast',     label: 'Breast (Female)',          color: '#2a9d8f', filters: { site_label: 'Breast', sex_label: 'Female' } },
       { key: 'prostate',   label: 'Prostate',                 color: '#6a4c93', filters: { site_label: 'Prostate', sex_label: 'Male' } },
       { key: 'liver',      label: 'Liver and Bile Duct',      color: '#e76f51', filters: { site_label: 'Liver and Intrahepatic Bile Duct', sex_label: 'Both Sexes' } },
-      { key: 'leukemia',   label: 'Leukemia',                 color: '#52b788', filters: { site_label: 'Leukemia', sex_label: 'Both Sexes' } },
       { key: 'nhl',        label: 'Non-Hodgkin Lymphoma',     color: '#e07a5f', filters: { site_label: 'Non-Hodgkin Lymphoma', sex_label: 'Both Sexes' } }
     ]
   },
@@ -422,6 +421,11 @@ export const SERIES_CONFIG = {
       { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Liver and Intrahepatic Bile Duct', sex_label: 'Female' } }
     ]
   },
+  // Hidden: the upstream SEER snapshot (data/raw/seer/mortality_by_year.csv
+  // in health) dropped the combined 'Leukemia' site_label in favor of narrow
+  // myeloid subtypes (AML, CML, CMML, AML-M5) with no lymphocytic leukemia
+  // types and no aggregate total, so this filter now matches zero rows.
+  // Re-enable once the upstream catalog restores the aggregate site.
   'cancer-sex-leukemia': {
     id: 'cancer-sex-leukemia',
     title: 'Leukemia Deaths by Sex',
@@ -436,6 +440,7 @@ export const SERIES_CONFIG = {
     sourceUrl: 'https://seer.cancer.gov/statistics-network/explorer/',
     frequency: 'Annual',
     category: 'Birth & Mortality',
+    hidden: true,
     subSeries: [
       { key: 'male', label: 'Male', color: '#1a6faf', filters: { site_label: 'Leukemia', sex_label: 'Male' } },
       { key: 'female', label: 'Female', color: '#e07a5f', filters: { site_label: 'Leukemia', sex_label: 'Female' } }
@@ -458,6 +463,56 @@ export const SERIES_CONFIG = {
     sourceUrl: 'https://wonder.cdc.gov/ucd-icd10-expanded.html',
     frequency: 'Annual',
     category: 'Birth & Mortality'
+  },
+
+  // Deaths by place of death — monthly, all causes (CDC WONDER Provisional
+  // Mortality Statistics D176, 2018–2024)
+  'deaths-by-place': {
+    id: 'deaths-by-place',
+    title: 'U.S. Deaths by Place of Death',
+    description: 'Monthly U.S. deaths by place of death (all causes), national, 2018-2024',
+    csvUrl: `${WONDER_BASE}/deaths-by-place-of-death.csv`,
+    dateKey: ['year', 'month'],
+    dateFormat: 'year-month',
+    valueKey: 'deaths',
+    unit: 'deaths',
+    format: ',.0f',
+    source: 'CDC WONDER (Provisional Mortality Statistics)',
+    sourceUrl: 'https://wonder.cdc.gov/mcd-icd10-provisional.html',
+    frequency: 'Monthly',
+    category: 'Mortality',
+    subSeries: [
+      { key: 'home',     label: "Decedent's home",              color: '#1a6faf', filters: { place: "Decedent's home" } },
+      { key: 'inpatient',label: 'Medical Facility - Inpatient',  color: '#e63946', filters: { place: 'Medical Facility - Inpatient' } },
+      { key: 'nursing',  label: 'Nursing home/long term care',   color: '#f4a261', filters: { place: 'Nursing home/long term care' } },
+      { key: 'hospice',  label: 'Hospice facility',              color: '#2a9d8f', filters: { place: 'Hospice facility' } },
+      { key: 'er',       label: 'Medical Facility - Outpatient or ER', color: '#6a4c93', filters: { place: 'Medical Facility - Outpatient or ER' } },
+      { key: 'other',    label: 'Other',                         color: '#457b9d', filters: { place: 'Other' } },
+      { key: 'doa',      label: 'Medical Facility - Dead on Arrival', color: '#e76f51', filters: { place: 'Medical Facility - Dead on Arrival' } },
+      { key: 'unknown',  label: 'Place of death unknown',        color: '#a0a0a0', filters: { place: 'Place of death unknown' } }
+    ]
+  },
+
+  // U.S. life expectancy at birth — combined (CDC NCHS, 1900–present)
+  'life-expectancy-combined': {
+    id: 'life-expectancy-combined',
+    title: 'U.S. Life Expectancy',
+    description: 'Average life expectancy at birth by sex, all races, U.S. (1900-present)',
+    csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
+    dateKey: 'year',
+    dateFormat: 'year',
+    valueKey: 'average_life_expectancy',
+    unit: 'years',
+    format: '.1f',
+    source: 'CDC NCHS',
+    sourceUrl: 'https://data.cdc.gov/d/w9j2-ggv5',
+    frequency: 'Annual',
+    category: 'Mortality',
+    subSeries: [
+      { key: 'avg', label: 'Both Sexes', color: '#457b9d', filters: { race: 'All Races', sex: 'Both Sexes' } },
+      { key: 'male', label: 'Male', color: '#1a6faf', filters: { race: 'All Races', sex: 'Male' } },
+      { key: 'female', label: 'Female', color: '#e07a5f', filters: { race: 'All Races', sex: 'Female' } }
+    ]
   },
 
   // Nursing home respiratory vaccination rates (CDC, weekly, Oct 2024–Oct 2025, national)
@@ -546,34 +601,17 @@ export const SERIES_CONFIG = {
     sourceUrl: 'https://www.cdc.gov/measles/data-research/index.html',
     frequency: 'Annual',
     category: 'Measles',
+    // Pre-vaccine years (1962-64) ran 400k+ cases/year while recent years run
+    // in the tens to low thousands; a linear axis flattens the whole
+    // post-1963 era into an invisible line near zero, so this series uses a
+    // log y-axis to keep both eras readable.
+    yScale: 'log',
     // Vertical reference lines marking the two events that explain this
     // series' shape. `date` is parsed with the series' own dateFormat, so it
     // stays a plain year string here, matching dateKey's values.
     annotations: [
       { date: '1963', label: 'Vaccine licensed' },
       { date: '2000', label: 'US declares elimination' }
-    ]
-  },
-
-  // U.S. life expectancy at birth — combined (CDC NCHS, 1900–present)
-  'life-expectancy-combined': {
-    id: 'life-expectancy-combined',
-    title: 'U.S. Life Expectancy',
-    description: 'Average life expectancy at birth by sex, all races, U.S. (1900-present)',
-    csvUrl: `${CDC_OPEN_BASE}/life_expectancy.csv`,
-    dateKey: 'year',
-    dateFormat: 'year',
-    valueKey: 'average_life_expectancy',
-    unit: 'years',
-    format: '.1f',
-    source: 'CDC NCHS',
-    sourceUrl: 'https://data.cdc.gov/d/w9j2-ggv5',
-    frequency: 'Annual',
-    category: 'Mortality',
-    subSeries: [
-      { key: 'avg', label: 'Both Sexes', color: '#457b9d', filters: { race: 'All Races', sex: 'Both Sexes' } },
-      { key: 'male', label: 'Male', color: '#1a6faf', filters: { race: 'All Races', sex: 'Male' } },
-      { key: 'female', label: 'Female', color: '#e07a5f', filters: { race: 'All Races', sex: 'Female' } }
     ]
   },
 
@@ -963,7 +1001,7 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
@@ -971,10 +1009,10 @@ export const CATEGORIES = [
   { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
-  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
+  { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
   { name: 'Life Expectancy', series: ['life-expectancy-combined'] },
-  { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory'] },
-  { name: 'Cancer Mortality', series: ['deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'cancer-sex-leukemia'] },
+  { name: 'Mortality', series: ['death-rates-historical', 'mortality-all', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory', 'deaths-by-place'] },
+  { name: 'Cancer Mortality', series: ['deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver'] },
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year', 'drug-overdose-rate-by-type'] },
   { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },

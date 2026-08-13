@@ -46,6 +46,14 @@
   );
   const values = $derived(rows.map(d => +d[config.valueKey]));
 
+  // Log scale can't include 0, so the floor is the smallest positive value
+  // in the series (rounded down to a friendly power-of-ten-ish step).
+  const yMinLog = $derived.by(() => {
+    const positive = values.filter(v => v > 0);
+    const min = positive.length ? Math.min(...positive) : 1;
+    return Math.max(1, Math.pow(10, Math.floor(Math.log10(min))));
+  });
+
   const latestVal = $derived(isMulti
     ? fmt(+(subData[0]?.rows?.at(-1)?.[config.valueKey] ?? 0))
     : values.length ? fmt(values[values.length - 1]) : '—');
@@ -214,8 +222,10 @@
       onpointermove={onChartMove}
       onpointerleave={() => { hoveredDatum = null; }}
     >
-      <Plot height={420} marginRight={40} x={{ type: 'time' }} style="width:100%">
-        <RuleY y={0} />
+      <Plot height={420} marginRight={40} x={{ type: 'time' }} y={config.yScale === 'log' ? { type: 'log', domain: [yMinLog, Math.max(...values, 1)] } : undefined} style="width:100%">
+        {#if config.yScale !== 'log'}
+          <RuleY y={0} />
+        {/if}
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />

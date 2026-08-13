@@ -54,6 +54,16 @@
     return Math.ceil(max / 10000) * 10000;
   }
 
+  // Log scale can't include 0, so the floor is the smallest positive value
+  // in the series (rounded down to a friendly power-of-ten-ish step) rather
+  // than 0.
+  function yMin() {
+    if (config.yScale !== 'log') return 0;
+    const positive = rows.map(d => +d[config.valueKey]).filter(v => v > 0);
+    const min = positive.length ? Math.min(...positive) : 1;
+    return Math.max(1, Math.pow(10, Math.floor(Math.log10(min))));
+  }
+
   function yDomainMulti() {
     if (config.yDomain) return config.yDomain;
     const allValues = subData.flatMap(sub => sub.rows.map(d => +d[config.valueKey])).filter(v => !isNaN(v));
@@ -211,10 +221,12 @@
         height={220}
         marginTop={24} marginBottom={36} marginLeft={48} marginRight={40}
         x={{ type: 'time' }}
-        y={{ domain: [0, yMax()] }}
+        y={{ domain: [yMin(), yMax()], type: config.yScale === 'log' ? 'log' : undefined }}
         style="width:100%"
       >
-        <RuleY y={0} />
+        {#if config.yScale !== 'log'}
+          <RuleY y={0} />
+        {/if}
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY tickFormat={yTickFormat} />
