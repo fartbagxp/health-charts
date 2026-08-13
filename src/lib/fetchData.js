@@ -11,7 +11,23 @@ export function parseDate(str, format) {
     const m = str.match(/^(\d{4})-\d{2}$/);
     if (m) return new Date(+m[1], 6, 1);
   }
+  if (format === 'year-month') {
+    const m = str.match(/^(\d{4})-(\d{1,2})$/);
+    if (m) return new Date(+m[1], +m[2] - 1, 1);
+  }
   return new Date(str);
+}
+
+// Some CSVs split the date across two columns (e.g. separate year/month
+// integers) rather than one combined column. `dateKey` may be an array of
+// column names in that case; this joins them into the single string
+// `parseDate` expects (paired with dateFormat 'year-month').
+function dateValue(config, d) {
+  if (Array.isArray(config.dateKey)) {
+    const parts = config.dateKey.map(k => d[k]);
+    return parts.every(p => p !== undefined && p !== '') ? parts.join('-') : '';
+  }
+  return d[config.dateKey || 'date'];
 }
 
 function parseCSV(text) {
@@ -75,19 +91,18 @@ function fetchCSV(url) {
 
 export async function loadSeries(config) {
   const urls = config.csvUrls ?? [config.csvUrl];
-  const dateKey = config.dateKey || 'date';
   const texts = await Promise.all(urls.map(fetchCSV));
   const rows = texts
     .flatMap(text => parseCSV(text))
     .filter(d => {
-      if (!d[dateKey]) return false;
+      if (!dateValue(config, d)) return false;
       if (d[config.valueKey] === '') return false;
       if (config.filters) {
         return Object.entries(config.filters).every(([k, v]) => d[k] === v);
       }
       return true;
     })
-    .map(d => ({ ...d, date: parseDate(d[dateKey], config.dateFormat) }))
+    .map(d => ({ ...d, date: parseDate(dateValue(config, d), config.dateFormat) }))
     .sort((a, b) => a.date - b.date);
   if (config.aggregate === 'weekly_median') return weeklyMedian(rows, config.valueKey);
   return rows;
@@ -221,12 +236,11 @@ export async function loadLowBirthweightByState(csvUrl) {
 
 export async function loadSubSeries(config) {
   const urls = config.csvUrls ?? [config.csvUrl];
-  const dateKey = config.dateKey || 'date';
   const texts = await Promise.all(urls.map(fetchCSV));
   const allRows = texts
     .flatMap(text => parseCSV(text))
-    .filter(d => d[dateKey] && d[config.valueKey] !== '' && !isNaN(+d[config.valueKey]))
-    .map(d => { const dt = parseDate(d[dateKey], config.dateFormat); return { ...d, date: dt, ts: dt.getTime() }; })
+    .filter(d => dateValue(config, d) && d[config.valueKey] !== '' && !isNaN(+d[config.valueKey]))
+    .map(d => { const dt = parseDate(dateValue(config, d), config.dateFormat); return { ...d, date: dt, ts: dt.getTime() }; })
     .sort((a, b) => a.ts - b.ts);
   return config.subSeries.map(sub => ({
     key: sub.key,
