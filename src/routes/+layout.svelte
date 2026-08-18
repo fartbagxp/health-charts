@@ -7,6 +7,7 @@
   let { children } = $props();
 
   let theme = $state('light');
+  let navOpen = $state(false);
 
   $effect(() => {
     theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
@@ -43,12 +44,14 @@
 <nav>
   <div class="nav-inner">
     <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
-    <a href="{base}/map" class="nav-link">Maps</a>
-    <a href="{base}/map/measles" class="nav-link">Measles Map</a>
-    <a href="{base}/map/low-birthweight" class="nav-link">Low Birthweight Map</a>
-    <a href="{base}/compare/measles-vaccination" class="nav-link">Measles vs. Vaccination</a>
-    <a href="{base}/compare/covid-retrospective" class="nav-link">COVID Retrospective</a>
-    <a href="{base}/compare/measles-wastewater" class="nav-link">Measles vs. Wastewater</a>
+    <div class="nav-links" class:open={navOpen}>
+      <a href="{base}/map" class="nav-link" onclick={() => navOpen = false}>Maps</a>
+      <a href="{base}/map/measles" class="nav-link" onclick={() => navOpen = false}>Measles Map</a>
+      <a href="{base}/map/low-birthweight" class="nav-link" onclick={() => navOpen = false}>Low Birthweight Map</a>
+      <a href="{base}/compare/measles-vaccination" class="nav-link" onclick={() => navOpen = false}>Measles vs. Vaccination</a>
+      <a href="{base}/compare/covid-retrospective" class="nav-link" onclick={() => navOpen = false}>COVID Retrospective</a>
+      <a href="{base}/compare/measles-wastewater" class="nav-link" onclick={() => navOpen = false}>Measles vs. Wastewater</a>
+    </div>
     <div class="nav-search">
       <input
         type="text"
@@ -69,6 +72,15 @@
         </div>
       {/if}
     </div>
+    <button
+      type="button"
+      class="nav-toggle"
+      onclick={() => navOpen = !navOpen}
+      aria-label={navOpen ? 'Close navigation menu' : 'Open navigation menu'}
+      aria-expanded={navOpen}
+    >
+      {navOpen ? '✕' : '☰'}
+    </button>
     <button
       type="button"
       class="theme-toggle"
