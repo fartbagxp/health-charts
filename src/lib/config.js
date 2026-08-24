@@ -997,16 +997,100 @@ export const SERIES_CONFIG = {
     sourceUrl: 'https://data.cdc.gov/d/s57w-7gbe',
     frequency: 'Annual',
     category: 'Health Spending'
+  },
+
+  // Mpox wastewater signal (CDC NWSS, site-level weekly samples -> national median)
+  'wastewater-mpox': {
+    id: 'wastewater-mpox',
+    title: 'Mpox Wastewater Signal',
+    description: 'National median flow-normalized Mpox (monkeypox) DNA concentration across U.S. wastewater sampling sites (NWSS), aggregated weekly (2025-present)',
+    color: '#9b5de5',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/wastewater_mpox.csv`,
+    dateKey: 'sample_collect_date',
+    valueKey: 'pcr_target_flowpop_lin',
+    unit: 'copies/person/day',
+    format: '.3s',
+    source: 'CDC NWSS',
+    sourceUrl: 'https://data.cdc.gov/d/xpxn-rzgz',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater'
+  },
+
+  // COVID-19 wastewater activity percentile — the interpreted NWSS metric the
+  // public dashboard shows (CDC NWSS, site-level -> national weekly median)
+  'wastewater-covid-percentile': {
+    id: 'wastewater-covid-percentile',
+    title: 'COVID-19 Wastewater Activity Level',
+    description: 'National median COVID-19 wastewater activity percentile across U.S. sampling sites — where current levels sit within each site\'s own history, 0-100 (NWSS public metric, weekly)',
+    color: '#e63946',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/nwss_metric.csv`,
+    dateKey: 'week_end',
+    valueKey: 'median_percentile',
+    unit: 'activity percentile',
+    format: '.0f',
+    source: 'CDC NWSS (public metric)',
+    sourceUrl: 'https://data.cdc.gov/d/2ew6-ywp6',
+    frequency: 'Weekly (aggregated)',
+    category: 'Wastewater',
+    yDomain: [0, 100]
+  },
+
+  // CFA epidemic-trend nowcast — share of states with a growing trajectory,
+  // by respiratory disease (CDC Center for Forecasting & Outbreak Analytics)
+  'cfa-epidemic-growth': {
+    id: 'cfa-epidemic-growth',
+    title: 'Epidemic Growth Nowcast (share of states rising)',
+    description: 'Percentage of U.S. states where CDC\'s Center for Forecasting and Outbreak Analytics (CFA) nowcasts a growing trajectory for each respiratory disease. A near-real-time trend signal, not a case count. Accumulates weekly as CFA publishes.',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/epidemic_trends_national.csv`,
+    dateKey: 'date',
+    valueKey: 'pct_growing',
+    unit: '% of states growing',
+    format: '.0f',
+    source: 'CDC CFA (Epidemic Trends)',
+    sourceUrl: 'https://data.cdc.gov/d/5dqz-y4ea',
+    frequency: 'Daily (nowcast)',
+    category: 'Forecasting',
+    yDomain: [0, 100],
+    subSeries: [
+      { key: 'covid', label: 'COVID-19', color: '#e63946', filters: { disease: 'COVID-19' } },
+      { key: 'flu',   label: 'Influenza', color: '#1a6faf', filters: { disease: 'Influenza' } },
+      { key: 'rsv',   label: 'RSV',       color: '#2a9d8f', filters: { disease: 'RSV' } }
+    ]
+  },
+
+  // Kindergarten MMR coverage — Florida vs national (CDC SchoolVaxView, 2009-present).
+  // Florida fell below the 90% line in 2023-24; the 95% herd-immunity threshold
+  // for measles sits above every recent national figure.
+  'schoolvax-mmr-florida': {
+    id: 'schoolvax-mmr-florida',
+    title: 'Kindergarten MMR Coverage: Florida vs U.S.',
+    description: 'Annual MMR vaccination coverage among kindergartners, Florida vs the U.S. national estimate, 2009-present. Florida dropped below 90% in 2023-24 (CDC SchoolVaxView).',
+    csvUrl: `${CDC_OPEN_BASE}/schoolvaxview.csv`,
+    dateKey: 'year_season',
+    dateFormat: 'schoolyear',
+    valueKey: 'coverage_estimate',
+    unit: '% vaccinated',
+    format: '.1f',
+    source: 'CDC SchoolVaxView',
+    sourceUrl: 'https://data.cdc.gov/d/ijqb-a7ye',
+    frequency: 'Annual',
+    category: 'Vaccination Coverage',
+    yDomain: [80, 100],
+    subSeries: [
+      { key: 'florida',  label: 'Florida',       color: '#e63946', filters: { vaccine: 'MMR', geography: 'Florida', geography_type: 'States' } },
+      { key: 'national', label: 'United States',  color: '#457b9d', filters: { vaccine: 'MMR', geography: 'United States', geography_type: 'National' } }
+    ]
   }
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita'] },
+  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'schoolvax-mmr-florida', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita', 'wastewater-mpox', 'wastewater-covid-percentile', 'cfa-epidemic-growth'] },
+  { name: 'Forecasting', series: ['cfa-epidemic-growth'] },
   { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
-  { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax'] },
+  { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax', 'schoolvax-mmr-florida'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
-  { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5'] },
+  { name: 'Wastewater Surveillance', series: ['wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'wastewater-mpox', 'wastewater-covid-percentile'] },
   { name: 'Measles', series: ['measles-weekly', 'measles-annual'] },
   { name: 'Tick-borne Disease', series: ['lyme-disease'] },
   { name: 'Birth & Mortality', series: ['births-annual', 'birth-rate', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'maternal-mortality'] },
@@ -1017,6 +1101,6 @@ export const CATEGORIES = [
   { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
   { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
-  { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid'] },
+  { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid', 'wastewater-covid-percentile'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
 ];
