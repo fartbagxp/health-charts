@@ -102,10 +102,10 @@
 <footer>
   <div class="footer-inner">
     <p>
-      Data sources:
-      <a href="https://www.cdc.gov/fluview/index.html" target="_blank" rel="noopener">CDC FluView</a>,
-      <a href="https://www.cdc.gov/covid/php/covid-net/index.html" target="_blank" rel="noopener">CDC COVID-NET</a>,
-      <a href="https://www.cdc.gov/rsv/php/surveillance/rsv-net.html" target="_blank" rel="noopener">CDC RSV-NET</a>
+      Data from CDC &amp; NCI surveillance systems — NHSN, RESP-NET, NVSS, WONDER, NWSS,
+      WISQARS, NIS, SchoolVaxView, BEAM, CFA Epidemic Trends, and SEER — archived by
+      <a href="https://github.com/fartbagxp/health" target="_blank" rel="noopener">fartbagxp/health</a>.
+      See the full <a href="{base}/#sources">Data Sources</a> list for how each is collected.
     </p>
     <p class="footer-note">Health Charts is a personal project inspired by <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a></p>
   </div>

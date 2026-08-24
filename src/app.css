@@ -413,6 +413,33 @@ main { flex: 1; }
 .source-item a:hover { text-decoration: underline; }
 .source-item span { color: var(--fg-mid); font-size: 0.8125rem; }
 
+.sources-intro {
+  color: var(--fg-mid);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  max-width: 70ch;
+}
+.source-list { gap: 1.25rem; }
+.source-item { gap: 0.25rem; }
+.source-program { color: var(--fg); font-weight: 500; font-size: 0.85rem; }
+.source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0.125rem 0;
+}
+.source-tag {
+  font-size: 0.7rem;
+  color: var(--fg-mid);
+  background: var(--bg-card, var(--bg));
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.1rem 0.45rem;
+  line-height: 1.35;
+}
+.source-contents { color: var(--fg-mid); font-size: 0.8125rem; line-height: 1.45; }
+
 /* series detail */
 .series-main {
   max-width: 1200px;

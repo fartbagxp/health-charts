@@ -1,5 +1,6 @@
 <script>
   import { SERIES_CONFIG } from '$lib/config.js';
+  import { DATA_SOURCES } from '$lib/sources.js';
   import ChartPanel from '$lib/ChartPanel.svelte';
 
   const allSeries = Object.values(SERIES_CONFIG).filter(s => !s.hidden);
@@ -21,41 +22,26 @@
     <ChartPanel config={s} />
   {/each}
 
-  <section class="sources-box">
+  <section class="sources-box" id="sources">
     <h2 class="section-title">Data Sources</h2>
+    <p class="sources-intro">
+      Every series is archived by <a href="https://github.com/fartbagxp/health" target="_blank" rel="noopener noreferrer">fartbagxp/health</a>
+      from the CDC and NCI surveillance systems below. Each lists the collecting program, how it is
+      collected, the center that runs it, how often it refreshes, and what it contains.
+    </p>
     <div class="source-list">
-      <div class="source-item">
-        <a href="https://www.cdc.gov/fluview/index.html" target="_blank" rel="noopener noreferrer">CDC FluView</a>
-        <span>Weekly influenza surveillance network</span>
-      </div>
-      <div class="source-item">
-        <a href="https://www.cdc.gov/covid/php/covid-net/index.html" target="_blank" rel="noopener noreferrer">CDC COVID-NET</a>
-        <span>COVID-19 hospitalization surveillance</span>
-      </div>
-      <div class="source-item">
-        <a href="https://www.cdc.gov/rsv/php/surveillance/rsv-net.html" target="_blank" rel="noopener noreferrer">CDC RSV-NET</a>
-        <span>RSV hospitalization surveillance</span>
-      </div>
-      <div class="source-item">
-        <a href="https://www.cdc.gov/measles/data-research/index.html" target="_blank" rel="noopener noreferrer">CDC Measles Data</a>
-        <span>National measles case surveillance</span>
-      </div>
-      <div class="source-item">
-        <a href="https://www.cdc.gov/nchs/index.htm" target="_blank" rel="noopener noreferrer">CDC NCHS</a>
-        <span>Births, mortality, and life expectancy</span>
-      </div>
-      <div class="source-item">
-        <a href="https://wonder.cdc.gov/" target="_blank" rel="noopener noreferrer">CDC WONDER</a>
-        <span>Historical natality, mortality, and notifiable diseases</span>
-      </div>
-      <div class="source-item">
-        <a href="https://seer.cancer.gov/statistics-network/explorer/" target="_blank" rel="noopener noreferrer">NCI SEER*Explorer</a>
-        <span>Cancer mortality statistics by type and sex</span>
-      </div>
-      <div class="source-item">
-        <a href="https://data.cdc.gov/" target="_blank" rel="noopener noreferrer">CDC Open Data Portal</a>
-        <span>Source datasets behind these charts</span>
-      </div>
+      {#each DATA_SOURCES as s}
+        <div class="source-item">
+          <a href={s.url} target="_blank" rel="noopener noreferrer">{s.system}</a>
+          <span class="source-program">{s.program}</span>
+          <div class="source-meta">
+            <span class="source-tag">{s.center}</span>
+            <span class="source-tag">{s.collection}</span>
+            <span class="source-tag">{s.frequency}</span>
+          </div>
+          <span class="source-contents">{s.contents}</span>
+        </div>
+      {/each}
     </div>
   </section>
 </div>
