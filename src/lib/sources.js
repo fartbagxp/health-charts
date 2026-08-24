@@ -16,9 +16,9 @@
 export const DATA_SOURCES = [
   {
     system: 'NHSN',
-    program: 'National Healthcare Safety Network — Hospital Respiratory Data',
+    program: 'National Healthcare Safety Network (Hospital Respiratory Data)',
     collection: 'Mandatory electronic reporting from acute-care hospitals',
-    center: 'NCEZID — Division of Healthcare Quality Promotion',
+    center: 'NCEZID, Division of Healthcare Quality Promotion',
     frequency: 'Weekly',
     contents: 'COVID-19, influenza, and RSV new hospital admissions, inpatient/ICU census, and bed occupancy',
     url: 'https://data.cdc.gov/d/ua7e-t2fy'
@@ -27,16 +27,16 @@ export const DATA_SOURCES = [
     system: 'RESP-NET (COVID-NET · RSV-NET · FluSurv-NET)',
     program: 'Respiratory Virus Hospitalization Surveillance Network',
     collection: 'Population-based surveillance: lab-confirmed hospitalizations found through EIP/IHSP catchment labs and medical-record review',
-    center: 'NCIRD — respiratory surveillance programs',
+    center: 'NCIRD respiratory surveillance programs',
     frequency: 'Weekly (seasonal)',
     contents: 'Lab-confirmed influenza, COVID-19, and RSV hospitalization rates by age, sex, and race',
     url: 'https://www.cdc.gov/resp-net/dashboard/index.html'
   },
   {
     system: 'NVSS (Vital Statistics Rapid Release)',
-    program: 'National Vital Statistics System — provisional mortality & natality',
+    program: 'National Vital Statistics System, provisional mortality and natality',
     collection: 'Death and birth certificates filed by state and jurisdiction vital-records offices',
-    center: 'NCHS — Division of Vital Statistics',
+    center: 'NCHS, Division of Vital Statistics',
     frequency: 'Weekly to quarterly (provisional)',
     contents: 'Provisional mortality rates, share of deaths from COVID/flu/RSV, quarterly birth indicators, monthly deaths by cause, life expectancy',
     url: 'https://www.cdc.gov/nchs/nvss/index.htm'
@@ -54,7 +54,7 @@ export const DATA_SOURCES = [
     system: 'NIS (Adult COVID / Fall Respiratory modules)',
     program: 'National Immunization Survey',
     collection: 'Random-digit-dial and probability-panel telephone survey',
-    center: 'NCIRD — Immunization Services Division',
+    center: 'NCIRD, Immunization Services Division',
     frequency: 'Weekly (respiratory season)',
     contents: 'Flu, COVID-19, and RSV vaccination coverage among adults, national and by state',
     url: 'https://data.cdc.gov/d/5c6r-xi2t'
@@ -63,16 +63,16 @@ export const DATA_SOURCES = [
     system: 'SchoolVaxView',
     program: 'School Vaccination Assessment Program',
     collection: 'State and local immunization programs report kindergarten school-entry records',
-    center: 'NCIRD — Immunization Services Division',
+    center: 'NCIRD, Immunization Services Division',
     frequency: 'Annual (school year)',
     contents: 'Kindergarten MMR/DTaP/polio/HepB/varicella coverage and exemption rates, national and by state',
     url: 'https://data.cdc.gov/d/ijqb-a7ye'
   },
   {
-    system: 'NHSN — Long-Term Care Facility component',
+    system: 'NHSN, Long-Term Care Facility component',
     program: 'National Healthcare Safety Network (nursing homes)',
     collection: 'Nursing-home facilities report resident cases and vaccination',
-    center: 'NCEZID — Division of Healthcare Quality Promotion',
+    center: 'NCEZID, Division of Healthcare Quality Promotion',
     frequency: 'Weekly',
     contents: 'Nursing-home resident COVID/flu/RSV cases and up-to-date vaccination rates',
     url: 'https://data.cdc.gov/d/tscn-ryh9'
@@ -90,7 +90,7 @@ export const DATA_SOURCES = [
     system: 'BEAM Dashboard',
     program: 'Bacteria, Enterics, Amoeba and Mycotics surveillance',
     collection: 'State and local public-health laboratories report pathogen isolates',
-    center: 'NCEZID — Division of Foodborne, Waterborne, and Environmental Diseases',
+    center: 'NCEZID, Division of Foodborne, Waterborne, and Environmental Diseases',
     frequency: 'Monthly',
     contents: 'Salmonella, STEC, Campylobacter, Shigella, and Vibrio human isolate counts',
     url: 'https://www.cdc.gov/beam/dashboard/index.html'
@@ -99,7 +99,7 @@ export const DATA_SOURCES = [
     system: 'WISQARS',
     program: 'Web-based Injury Statistics Query and Reporting System',
     collection: 'Compiled from NVSS death certificates (fatal injury) and related systems',
-    center: 'NCIPC — National Center for Injury Prevention and Control',
+    center: 'NCIPC, National Center for Injury Prevention and Control',
     frequency: 'Annual, with monthly provisional',
     contents: 'Firearm, suicide, homicide, and drug-overdose death rates by geography',
     url: 'https://wisqars.cdc.gov/'
@@ -115,18 +115,18 @@ export const DATA_SOURCES = [
   },
   {
     system: 'Epidemic Trends (Rt nowcast)',
-    program: 'Center for Forecasting and Outbreak Analytics — Epidemic Trends',
+    program: 'Center for Forecasting and Outbreak Analytics (Epidemic Trends)',
     collection: 'Model-based nowcast synthesizing ED-visit, wastewater, and hospitalization signals',
-    center: 'CFA — Center for Forecasting and Outbreak Analytics',
+    center: 'CFA, Center for Forecasting and Outbreak Analytics',
     frequency: 'Several times weekly (nowcast)',
     contents: 'Growing/declining epidemic-trend classification per state for COVID-19, influenza, and RSV',
     url: 'https://data.cdc.gov/d/5dqz-y4ea'
   },
   {
     system: 'Measles Surveillance (NNDSS)',
-    program: 'National Notifiable Diseases Surveillance System — measles',
+    program: 'National Notifiable Diseases Surveillance System (measles)',
     collection: 'Case reporting from state and local health departments',
-    center: 'NCIRD — Division of Viral Diseases (via NNDSS)',
+    center: 'NCIRD, Division of Viral Diseases (via NNDSS)',
     frequency: 'Weekly (annual history since 1962)',
     contents: 'Confirmed U.S. measles cases, weekly since 2022 and annually since 1962',
     url: 'https://www.cdc.gov/measles/data-research/index.html'
@@ -135,7 +135,7 @@ export const DATA_SOURCES = [
     system: 'PLACES',
     program: 'PLACES: Local Data for Better Health',
     collection: 'Small-area estimates modeled from the Behavioral Risk Factor Surveillance System (BRFSS) telephone survey',
-    center: 'NCCDPHP — National Center for Chronic Disease Prevention and Health Promotion',
+    center: 'NCCDPHP, National Center for Chronic Disease Prevention and Health Promotion',
     frequency: 'Annual',
     contents: 'County-level chronic-disease prevalence (obesity, diabetes, high blood pressure, and more)',
     url: 'https://data.cdc.gov/d/swc5-untb'
@@ -144,7 +144,7 @@ export const DATA_SOURCES = [
     system: 'SEER*Explorer',
     program: 'Surveillance, Epidemiology, and End Results Program',
     collection: 'Population-based cancer registries',
-    center: 'National Cancer Institute (NCI) — part of NIH, not CDC',
+    center: 'National Cancer Institute (NCI), part of NIH, not CDC',
     frequency: 'Annual',
     contents: 'Cancer incidence and U.S. mortality by site, sex, race, and age',
     url: 'https://seer.cancer.gov/statistics-network/explorer/'

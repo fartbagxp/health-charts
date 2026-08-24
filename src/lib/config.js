@@ -24,7 +24,7 @@ export const SERIES_CONFIG = {
   covid: {
     id: 'covid',
     title: 'COVID-19 Hospitalizations',
-    description: 'Weekly COVID-19-associated hospital admissions (2020-present)',
+    description: 'Weekly COVID-19-associated hospital admissions (2020-2024, archived COVID-NET series; for current admissions see the Flu/COVID/RSV NHSN charts)',
     color: '#e63946',
     csvUrl: `${RAW_BASE}/covid-hospitalizations.csv`,
     valueKey: 'hospitalizations',
@@ -1016,12 +1016,12 @@ export const SERIES_CONFIG = {
     category: 'Wastewater'
   },
 
-  // COVID-19 wastewater activity percentile — the interpreted NWSS metric the
+  // COVID-19 wastewater activity percentile: the interpreted NWSS metric the
   // public dashboard shows (CDC NWSS, site-level -> national weekly median)
   'wastewater-covid-percentile': {
     id: 'wastewater-covid-percentile',
     title: 'COVID-19 Wastewater Activity Level',
-    description: 'National median COVID-19 wastewater activity percentile across U.S. sampling sites — where current levels sit within each site\'s own history, 0-100 (NWSS public metric, weekly)',
+    description: 'National median COVID-19 wastewater activity percentile across U.S. sampling sites: where current levels sit within each site\'s own history, 0-100 (NWSS public metric, weekly)',
     color: '#e63946',
     csvUrl: `${CDC_OPEN_PROCESSED_BASE}/nwss_metric.csv`,
     dateKey: 'week_end',
@@ -1035,7 +1035,7 @@ export const SERIES_CONFIG = {
     yDomain: [0, 100]
   },
 
-  // CFA epidemic-trend nowcast — share of states with a growing trajectory,
+  // CFA epidemic-trend nowcast: share of states with a growing trajectory,
   // by respiratory disease (CDC Center for Forecasting & Outbreak Analytics)
   'cfa-epidemic-growth': {
     id: 'cfa-epidemic-growth',
@@ -1058,7 +1058,7 @@ export const SERIES_CONFIG = {
     ]
   },
 
-  // Kindergarten MMR coverage — Florida vs national (CDC SchoolVaxView, 2009-present).
+  // Kindergarten MMR coverage, Florida vs national (CDC SchoolVaxView, 2009-present).
   // Florida fell below the 90% line in 2023-24; the 95% herd-immunity threshold
   // for measles sits above every recent national figure.
   'schoolvax-mmr-florida': {
