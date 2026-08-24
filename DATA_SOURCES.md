@@ -1,33 +1,67 @@
 # CDC Data Sources Reference
 
-Dataset catalog for finding and adding new health data. The app fetches CSVs from `fartbagxp/health` at build time. This doc is for discovering new datasets to add to that repo and then wire into `config.js`.
+The app fetches CSVs from [`fartbagxp/health`](https://github.com/fartbagxp/health)
+at build time. This doc is the canonical reference for the surveillance systems
+behind every chart — kept consistent with the `health` archive and with
+`src/lib/sources.js` (which drives the on-site "Data Sources" section). For the
+full upstream catalog of every dataset `health` collects, see its
+[Data Catalog](https://fartbagxp.github.io/health/data-catalog/).
+
+Each system below lists **the collecting program, how it is collected, the CDC
+center that runs it, how often it refreshes, and what it contains.**
 
 ---
 
-## Active Data Sources (already in use)
+## Surveillance systems
 
-| Series                             | Source                                                    | Notes                                |
-| ---------------------------------- | --------------------------------------------------------- | ------------------------------------ |
-| Flu / COVID / RSV hospitalizations | CDC RESP-NET combined CSV                                 | Weekly, 2020-present                 |
-| COVID-19 hospitalizations (legacy) | CDC COVID-NET `7dk4-g6vg`                                 | Archived through Sep 2023            |
-| RSV hospitalization rate           | CDC RSV-NET `29hc-w46k`                                   | Weekly rate per 100k                 |
-| Respiratory death %                | CDC Open `resp_deaths_pct.csv`                            | Weekly, Oct 2024-present             |
-| Vaccination coverage (adults)      | CDC NIS-ACM `resp_vaccination.csv`                        | Weekly, 2025-present                 |
-| Nursing home vaccination           | CDC NHSN `nursing_home_resp.csv`                          | Weekly, Oct 2024-present             |
-| Mortality rate (all causes)        | CDC NCHS `mortality_rates.csv`                            | Quarterly rolling 12-month           |
-| Birth rate (fertility)             | CDC NCHS `birth_indicators.csv`                           | Quarterly                            |
-| Annual births 1995-2024            | CDC WONDER natality (3 files)                             | Annual                               |
-| Annual deaths 1979-2024            | CDC WONDER mortality                                      | Annual                               |
-| Deaths by cause 1979-2024          | CDC WONDER top-cause breakdown                            | Annual                               |
-| Measles weekly cases               | CDC `measles_weekly_cases.csv`                            | Weekly, 2022-present                 |
-| Measles annual cases               | CDC `measles_annual_history.csv`                          | Annual, 1962-present                 |
-| Life expectancy at birth           | CDC NCHS `life_expectancy.csv`                            | Annual, 1900-present                 |
-| Lyme disease annual cases          | CDC WONDER `tick-borne-...csv`                            | Annual, 2016-present                 |
-| Foodborne pathogen isolates        | CDC BEAM `beam_foodborne.csv`                             | Monthly, 2018-present                |
-| Chronic disease prevalence (map)   | CDC PLACES `places_county.csv` (processed, slimmed)       | County-level, 2023, FIPS-keyed       |
-| Health spending per capita         | NCHS DQS `dqs/national_health_spending.csv` (`s57w-7gbe`) | Annual, 1960-present                 |
-| Drug overdose rate by opioid type  | NCHS DQS `dqs/drug_overdose_by_type.csv` (`rdjz-vn2n`)    | Annual, age-adjusted, 2018-present   |
-| Low birthweight by state (map)     | NCHS DQS `dqs/low_birthweight_by_state.csv` (`ga7k-kycn`) | State-level, latest year, FIPS-keyed |
+| System (program) | CDC center | How it's collected | Frequency | Contains |
+| ---------------- | ---------- | ------------------ | --------- | -------- |
+| **NHSN** — National Healthcare Safety Network (Hospital Respiratory Data) | NCEZID — Div. of Healthcare Quality Promotion | Mandatory electronic reporting from acute-care hospitals | Weekly | COVID/flu/RSV new admissions, inpatient/ICU census, bed occupancy |
+| **RESP-NET** — COVID-NET · RSV-NET · FluSurv-NET | NCIRD — respiratory surveillance programs | Population-based surveillance: lab-confirmed hospitalizations via EIP/IHSP catchment labs + medical-record review | Weekly (seasonal) | Lab-confirmed flu/COVID/RSV hospitalization rates |
+| **NVSS** — National Vital Statistics System (Rapid Release) | NCHS — Div. of Vital Statistics | Death & birth certificates filed by state vital-records offices | Weekly–quarterly (provisional) | Provisional mortality rates, % deaths from COVID/flu/RSV, birth indicators, monthly deaths by cause, life expectancy |
+| **WONDER** — over NVSS & NNDSS | NCHS (platform) | Vital records + notifiable-disease case counts, as a query system | Annual (long runs) | Births since 1995, deaths by cause since 1979, maternal mortality, Lyme/tick-borne cases |
+| **NIS** — National Immunization Survey (adult COVID / fall respiratory) | NCIRD — Immunization Services Div. | Random-digit-dial & probability-panel telephone survey | Weekly (respiratory season) | Adult flu/COVID/RSV vaccination coverage |
+| **SchoolVaxView** — School Vaccination Assessment Program | NCIRD — Immunization Services Div. | State/local immunization programs report kindergarten school-entry records | Annual (school year) | Kindergarten MMR/DTaP/polio/HepB/varicella coverage & exemptions, national + by state |
+| **NHSN (LTCF)** — nursing-home component | NCEZID — Div. of Healthcare Quality Promotion | Nursing-home facility reporting | Weekly | Nursing-home resident COVID/flu/RSV cases & up-to-date vaccination |
+| **NWSS** — National Wastewater Surveillance System | CDC NWSS program (OPHDST, w/ NCIRD/CFA analytics) | RNA/DNA quantification from community wastewater at treatment plants (environmental sampling + labs) | Weekly | SARS-CoV-2, flu A, RSV, measles, H5, mpox concentrations & activity levels |
+| **BEAM Dashboard** — Bacteria, Enterics, Amoeba & Mycotics | NCEZID — Div. of Foodborne, Waterborne & Environmental Diseases | State/local public-health labs report pathogen isolates | Monthly | Salmonella, STEC, Campylobacter, Shigella, Vibrio isolate counts |
+| **WISQARS** — Web-based Injury Statistics Query & Reporting System | NCIPC — Injury Prevention & Control | Compiled from NVSS death certificates + related systems | Annual (+ monthly provisional) | Firearm, suicide, homicide, drug-overdose death rates by geography |
+| **NCHS DQS** — Data Query System (Health, United States) | NCHS | Vital records + CMS National Health Expenditure Accounts | Annual | Age-adjusted overdose rates by opioid type; national health spending per capita |
+| **Epidemic Trends** — Rt nowcast | CFA — Center for Forecasting & Outbreak Analytics | Model-based nowcast over ED-visit, wastewater & hospitalization signals | Several times weekly | Growing/declining epidemic-trend class per state for COVID/flu/RSV |
+| **Measles Surveillance** — via NNDSS | NCIRD — Div. of Viral Diseases | Case reporting from state/local health departments | Weekly (annual history) | Confirmed U.S. measles cases (weekly 2022–, annual 1962–) |
+| **PLACES** — Local Data for Better Health | NCCDPHP — Chronic Disease Prevention | Small-area estimates modeled from the BRFSS telephone survey | Annual | County chronic-disease prevalence (obesity, diabetes, etc.) |
+| **SEER\*Explorer** — Surveillance, Epidemiology & End Results | **NCI (NIH)** — not CDC | Population-based cancer registries | Annual | Cancer incidence & U.S. mortality by site, sex, race, age |
+
+> Collection methods at a glance: **surveys** (NIS, PLACES/BRFSS) · **vital records**
+> (NVSS, WONDER, WISQARS) · **hospital/facility reporting** (NHSN) · **lab &
+> population-based surveillance** (RESP-NET, BEAM, measles/NNDSS) · **wastewater**
+> (NWSS) · **model-based nowcast** (CFA) · **cancer registries** (SEER).
+
+## Series in this app → system & dataset
+
+| Chart series | System | Dataset / file |
+| ------------ | ------ | -------------- |
+| Flu / COVID / RSV hospitalizations | NHSN | `ua7e-t2fy` → `resp/respiratory-combined.csv` |
+| COVID-19 hospitalizations (legacy) | COVID-NET | `7dk4-g6vg` (archived) |
+| RSV hospitalization rate | RSV-NET | `29hc-w46k` |
+| Respiratory death % | NVSS | `4bc2-bbpq` → `resp_deaths_pct.csv` |
+| Adult vaccination coverage | NIS | `5c6r-xi2t` → `resp_vaccination.csv` |
+| Kindergarten vaccination (incl. FL vs U.S. MMR) | SchoolVaxView | `ijqb-a7ye` → `schoolvaxview.csv` |
+| Nursing-home vaccination | NHSN (LTCF) | `tscn-ryh9` → `nursing_home_resp.csv` |
+| Mortality rate / birth rate / life expectancy | NVSS | `489q-934x`, `76vv-a7x8`, `w9j2-ggv5` |
+| Annual births / deaths / deaths by cause | WONDER | natality & UCD mortality exports |
+| Maternal mortality · Lyme disease | WONDER (NVSS / NNDSS) | `maternal-mortality-*`, `tick-borne-*` |
+| Measles weekly / annual | Measles Surveillance | `measles_weekly_cases.csv`, `measles_annual_history.csv` |
+| Wastewater: COVID / flu / RSV / measles / H5 / mpox | NWSS | `j9g8-acpt`, `ymmh-divb`, `45cq-cw4i`, `akvg-8vrb`, `mtpu-urpp`, `xpxn-rzgz` |
+| COVID wastewater activity level | NWSS (public metric) | `2ew6-ywp6` → `nwss_metric.csv` |
+| Epidemic growth nowcast | CFA Epidemic Trends | `5dqz-y4ea` → `epidemic_trends_national.csv` |
+| Foodborne pathogen isolates | BEAM | `jbhn-e8xn` → `beam_foodborne.csv` |
+| Injury / suicide / homicide / firearm / overdose | WISQARS | `injury_national.csv`, `suicide_by_sex.csv` |
+| Cancer deaths by type / sex | SEER\*Explorer | `seer/mortality_by_year.csv` |
+| Drug overdose rate by opioid type | NCHS DQS | `rdjz-vn2n` → `dqs/drug_overdose_by_type.csv` |
+| Health spending per capita | NCHS DQS | `s57w-7gbe` → `dqs/national_health_spending.csv` |
+| Chronic disease prevalence (map) | PLACES | `swc5-untb` → `processed/places_county.csv` |
+| Low birthweight by state (map) | NCHS DQS | `ga7k-kycn` → `dqs/low_birthweight_by_state.csv` |
 
 ---
 
