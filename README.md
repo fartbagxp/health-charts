@@ -4,9 +4,9 @@
 [![Last Commit](https://img.shields.io/github/last-commit/fartbagxp/health-charts?logo=git&logoColor=white&label=last%20commit)](https://github.com/fartbagxp/health-charts/commits/main)
 [![View Dashboard](https://img.shields.io/badge/view-dashboard-0057A8?logo=googlechrome&logoColor=white)](https://fartbagxp.github.io/health-charts)
 [![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
-[![Data Series](https://img.shields.io/badge/data%20series-37-4CAF50?logo=databricks&logoColor=white)](https://fartbagxp.github.io/health-charts)
+[![Data Series](https://img.shields.io/badge/data%20series-50-4CAF50?logo=databricks&logoColor=white)](https://fartbagxp.github.io/health-charts)
 
-A U.S. public health data dashboard built on CDC surveillance and federal health data. 37 series spanning hospitalizations, wastewater signals, vaccination rates, mortality, injury, births, and foodborne illness.
+A U.S. public health data dashboard built on CDC surveillance and federal health data. 50 series spanning hospitalizations, wastewater signals, vaccination rates, epidemic-trend nowcasts, mortality, injury, births, and foodborne illness.
 
 **[View the dashboard →](https://fartbagxp.github.io/health-charts)**
 
@@ -77,7 +77,8 @@ health-charts/
 │   ├── app.html                     # HTML shell
 │   ├── app.css                      # Global styles
 │   ├── lib/
-│   │   ├── config.js                # All 37 series definitions (URLs, keys, colors)
+│   │   ├── config.js                # All 54 series definitions (50 visible, 4 hidden)
+│   │   ├── sources.js               # Canonical CDC/NCI source registry (Data Sources section)
 │   │   ├── mapConfig.js             # CDC PLACES measures, color scheme, PLACES CSV url
 │   │   ├── fetchData.js             # CSV fetching, parsing, and URL-keyed cache
 │   │   └── ChartPanel.svelte        # Self-fetching chart card (used on home page)

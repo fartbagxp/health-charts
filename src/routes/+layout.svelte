@@ -102,8 +102,8 @@
 <footer>
   <div class="footer-inner">
     <p>
-      Data from CDC &amp; NCI surveillance systems — NHSN, RESP-NET, NVSS, WONDER, NWSS,
-      WISQARS, NIS, SchoolVaxView, BEAM, CFA Epidemic Trends, and SEER — archived by
+      Data from CDC and NCI surveillance systems (NHSN, RESP-NET, NVSS, WONDER, NWSS,
+      WISQARS, NIS, SchoolVaxView, BEAM, CFA Epidemic Trends, and SEER), archived by
       <a href="https://github.com/fartbagxp/health" target="_blank" rel="noopener">fartbagxp/health</a>.
       See the full <a href="{base}/#sources">Data Sources</a> list for how each is collected.
     </p>

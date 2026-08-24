@@ -2,13 +2,13 @@
 
 The app fetches CSVs from [`fartbagxp/health`](https://github.com/fartbagxp/health)
 at build time. This doc is the canonical reference for the surveillance systems
-behind every chart — kept consistent with the `health` archive and with
+behind every chart. It is kept consistent with the `health` archive and with
 `src/lib/sources.js` (which drives the on-site "Data Sources" section). For the
 full upstream catalog of every dataset `health` collects, see its
 [Data Catalog](https://fartbagxp.github.io/health/data-catalog/).
 
-Each system below lists **the collecting program, how it is collected, the CDC
-center that runs it, how often it refreshes, and what it contains.**
+Each system below lists the collecting program, how it is collected, the CDC
+center that runs it, how often it refreshes, and what it contains.
 
 ---
 
@@ -16,26 +16,26 @@ center that runs it, how often it refreshes, and what it contains.**
 
 | System (program) | CDC center | How it's collected | Frequency | Contains |
 | ---------------- | ---------- | ------------------ | --------- | -------- |
-| **NHSN** — National Healthcare Safety Network (Hospital Respiratory Data) | NCEZID — Div. of Healthcare Quality Promotion | Mandatory electronic reporting from acute-care hospitals | Weekly | COVID/flu/RSV new admissions, inpatient/ICU census, bed occupancy |
-| **RESP-NET** — COVID-NET · RSV-NET · FluSurv-NET | NCIRD — respiratory surveillance programs | Population-based surveillance: lab-confirmed hospitalizations via EIP/IHSP catchment labs + medical-record review | Weekly (seasonal) | Lab-confirmed flu/COVID/RSV hospitalization rates |
-| **NVSS** — National Vital Statistics System (Rapid Release) | NCHS — Div. of Vital Statistics | Death & birth certificates filed by state vital-records offices | Weekly–quarterly (provisional) | Provisional mortality rates, % deaths from COVID/flu/RSV, birth indicators, monthly deaths by cause, life expectancy |
-| **WONDER** — over NVSS & NNDSS | NCHS (platform) | Vital records + notifiable-disease case counts, as a query system | Annual (long runs) | Births since 1995, deaths by cause since 1979, maternal mortality, Lyme/tick-borne cases |
-| **NIS** — National Immunization Survey (adult COVID / fall respiratory) | NCIRD — Immunization Services Div. | Random-digit-dial & probability-panel telephone survey | Weekly (respiratory season) | Adult flu/COVID/RSV vaccination coverage |
-| **SchoolVaxView** — School Vaccination Assessment Program | NCIRD — Immunization Services Div. | State/local immunization programs report kindergarten school-entry records | Annual (school year) | Kindergarten MMR/DTaP/polio/HepB/varicella coverage & exemptions, national + by state |
-| **NHSN (LTCF)** — nursing-home component | NCEZID — Div. of Healthcare Quality Promotion | Nursing-home facility reporting | Weekly | Nursing-home resident COVID/flu/RSV cases & up-to-date vaccination |
-| **NWSS** — National Wastewater Surveillance System | CDC NWSS program (OPHDST, w/ NCIRD/CFA analytics) | RNA/DNA quantification from community wastewater at treatment plants (environmental sampling + labs) | Weekly | SARS-CoV-2, flu A, RSV, measles, H5, mpox concentrations & activity levels |
-| **BEAM Dashboard** — Bacteria, Enterics, Amoeba & Mycotics | NCEZID — Div. of Foodborne, Waterborne & Environmental Diseases | State/local public-health labs report pathogen isolates | Monthly | Salmonella, STEC, Campylobacter, Shigella, Vibrio isolate counts |
-| **WISQARS** — Web-based Injury Statistics Query & Reporting System | NCIPC — Injury Prevention & Control | Compiled from NVSS death certificates + related systems | Annual (+ monthly provisional) | Firearm, suicide, homicide, drug-overdose death rates by geography |
-| **NCHS DQS** — Data Query System (Health, United States) | NCHS | Vital records + CMS National Health Expenditure Accounts | Annual | Age-adjusted overdose rates by opioid type; national health spending per capita |
-| **Epidemic Trends** — Rt nowcast | CFA — Center for Forecasting & Outbreak Analytics | Model-based nowcast over ED-visit, wastewater & hospitalization signals | Several times weekly | Growing/declining epidemic-trend class per state for COVID/flu/RSV |
-| **Measles Surveillance** — via NNDSS | NCIRD — Div. of Viral Diseases | Case reporting from state/local health departments | Weekly (annual history) | Confirmed U.S. measles cases (weekly 2022–, annual 1962–) |
-| **PLACES** — Local Data for Better Health | NCCDPHP — Chronic Disease Prevention | Small-area estimates modeled from the BRFSS telephone survey | Annual | County chronic-disease prevalence (obesity, diabetes, etc.) |
-| **SEER\*Explorer** — Surveillance, Epidemiology & End Results | **NCI (NIH)** — not CDC | Population-based cancer registries | Annual | Cancer incidence & U.S. mortality by site, sex, race, age |
+| **NHSN**, National Healthcare Safety Network (Hospital Respiratory Data) | NCEZID, Div. of Healthcare Quality Promotion | Mandatory electronic reporting from acute-care hospitals | Weekly | COVID/flu/RSV new admissions, inpatient/ICU census, bed occupancy |
+| **RESP-NET** (COVID-NET, RSV-NET, FluSurv-NET) | NCIRD respiratory surveillance programs | Population-based surveillance: lab-confirmed hospitalizations via EIP/IHSP catchment labs plus medical-record review | Weekly (seasonal) | Lab-confirmed flu/COVID/RSV hospitalization rates |
+| **NVSS**, National Vital Statistics System (Rapid Release) | NCHS, Div. of Vital Statistics | Death and birth certificates filed by state vital-records offices | Weekly to quarterly (provisional) | Provisional mortality rates, % deaths from COVID/flu/RSV, birth indicators, monthly deaths by cause, life expectancy |
+| **WONDER**, over NVSS and NNDSS | NCHS (platform) | Vital records and notifiable-disease case counts, as a query system | Annual (long runs) | Births since 1995, deaths by cause since 1979, maternal mortality, Lyme/tick-borne cases |
+| **NIS**, National Immunization Survey (adult COVID / fall respiratory) | NCIRD, Immunization Services Div. | Random-digit-dial and probability-panel telephone survey | Weekly (respiratory season) | Adult flu/COVID/RSV vaccination coverage |
+| **SchoolVaxView**, School Vaccination Assessment Program | NCIRD, Immunization Services Div. | State/local immunization programs report kindergarten school-entry records | Annual (school year) | Kindergarten MMR/DTaP/polio/HepB/varicella coverage and exemptions, national and by state |
+| **NHSN (LTCF)**, nursing-home component | NCEZID, Div. of Healthcare Quality Promotion | Nursing-home facility reporting | Weekly | Nursing-home resident COVID/flu/RSV cases and up-to-date vaccination |
+| **NWSS**, National Wastewater Surveillance System | CDC NWSS program (OPHDST, with NCIRD/CFA analytics) | RNA/DNA quantification from community wastewater at treatment plants (environmental sampling plus labs) | Weekly | SARS-CoV-2, flu A, RSV, measles, H5, mpox concentrations and activity levels |
+| **BEAM Dashboard**, Bacteria, Enterics, Amoeba, and Mycotics | NCEZID, Div. of Foodborne, Waterborne, and Environmental Diseases | State/local public-health labs report pathogen isolates | Monthly | Salmonella, STEC, Campylobacter, Shigella, Vibrio isolate counts |
+| **WISQARS**, Web-based Injury Statistics Query and Reporting System | NCIPC, Injury Prevention and Control | Compiled from NVSS death certificates and related systems | Annual (plus monthly provisional) | Firearm, suicide, homicide, drug-overdose death rates by geography |
+| **NCHS DQS**, Data Query System (Health, United States) | NCHS | Vital records and CMS National Health Expenditure Accounts | Annual | Age-adjusted overdose rates by opioid type; national health spending per capita |
+| **Epidemic Trends** (Rt nowcast) | CFA, Center for Forecasting and Outbreak Analytics | Model-based nowcast over ED-visit, wastewater, and hospitalization signals | Several times weekly | Growing/declining epidemic-trend class per state for COVID/flu/RSV |
+| **Measles Surveillance**, via NNDSS | NCIRD, Div. of Viral Diseases | Case reporting from state/local health departments | Weekly (annual history) | Confirmed U.S. measles cases (weekly since 2022, annual since 1962) |
+| **PLACES**, Local Data for Better Health | NCCDPHP, Chronic Disease Prevention | Small-area estimates modeled from the BRFSS telephone survey | Annual | County chronic-disease prevalence (obesity, diabetes, etc.) |
+| **SEER\*Explorer**, Surveillance, Epidemiology, and End Results | **NCI (NIH)**, not CDC | Population-based cancer registries | Annual | Cancer incidence and U.S. mortality by site, sex, race, age |
 
-> Collection methods at a glance: **surveys** (NIS, PLACES/BRFSS) · **vital records**
-> (NVSS, WONDER, WISQARS) · **hospital/facility reporting** (NHSN) · **lab &
-> population-based surveillance** (RESP-NET, BEAM, measles/NNDSS) · **wastewater**
-> (NWSS) · **model-based nowcast** (CFA) · **cancer registries** (SEER).
+> Collection methods at a glance: surveys (NIS, PLACES/BRFSS); vital records
+> (NVSS, WONDER, WISQARS); hospital and facility reporting (NHSN); lab and
+> population-based surveillance (RESP-NET, BEAM, measles/NNDSS); wastewater
+> (NWSS); model-based nowcast (CFA); and cancer registries (SEER).
 
 ## Series in this app → system & dataset
 
@@ -50,7 +50,7 @@ center that runs it, how often it refreshes, and what it contains.**
 | Nursing-home vaccination | NHSN (LTCF) | `tscn-ryh9` → `nursing_home_resp.csv` |
 | Mortality rate / birth rate / life expectancy | NVSS | `489q-934x`, `76vv-a7x8`, `w9j2-ggv5` |
 | Annual births / deaths / deaths by cause | WONDER | natality & UCD mortality exports |
-| Maternal mortality · Lyme disease | WONDER (NVSS / NNDSS) | `maternal-mortality-*`, `tick-borne-*` |
+| Maternal mortality, Lyme disease | WONDER (NVSS / NNDSS) | `maternal-mortality-*`, `tick-borne-*` |
 | Measles weekly / annual | Measles Surveillance | `measles_weekly_cases.csv`, `measles_annual_history.csv` |
 | Wastewater: COVID / flu / RSV / measles / H5 / mpox | NWSS | `j9g8-acpt`, `ymmh-divb`, `45cq-cw4i`, `akvg-8vrb`, `mtpu-urpp`, `xpxn-rzgz` |
 | COVID wastewater activity level | NWSS (public metric) | `2ew6-ywp6` → `nwss_metric.csv` |
