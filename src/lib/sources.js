@@ -133,12 +133,12 @@ export const DATA_SOURCES = [
   },
   {
     system: 'PLACES',
-    program: 'PLACES: Local Data for Better Health',
-    collection: 'Small-area estimates modeled from the Behavioral Risk Factor Surveillance System (BRFSS) telephone survey',
+    program: 'PLACES: Local Data for Better Health (all seven portal pages, incl. Non-Medical Factor Measures)',
+    collection: 'Small-area estimates modeled from the BRFSS telephone survey (40 measures); 9 non-medical factors derived from the 5-year American Community Survey',
     center: 'NCCDPHP, National Center for Chronic Disease Prevention and Health Promotion',
     frequency: 'Annual',
-    contents: 'County-level chronic-disease prevalence (obesity, diabetes, high blood pressure, and more)',
-    url: 'https://data.cdc.gov/d/swc5-untb'
+    contents: '49 county/state health measures — outcomes, prevention, risk behaviors, health status, disability, health-related social needs, and non-medical factors. Sub-county drill-down via the community fartbagxp/cdc-places Dolt mirror (not CDC).',
+    url: 'https://data.cdc.gov/browse?q=PLACES'
   },
   {
     system: 'SEER*Explorer',

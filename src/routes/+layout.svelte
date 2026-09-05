@@ -45,7 +45,7 @@
   <div class="nav-inner">
     <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
     <div class="nav-links" class:open={navOpen}>
-      <a href="{base}/map" class="nav-link" onclick={() => navOpen = false}>Maps</a>
+      <a href="{base}/map" class="nav-link" onclick={() => navOpen = false}>PLACES Map</a>
       <a href="{base}/map/measles" class="nav-link" onclick={() => navOpen = false}>Measles Map</a>
       <a href="{base}/map/low-birthweight" class="nav-link" onclick={() => navOpen = false}>Low Birthweight Map</a>
       <a href="{base}/compare/measles-vaccination" class="nav-link" onclick={() => navOpen = false}>Measles vs. Vaccination</a>
