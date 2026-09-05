@@ -108,41 +108,152 @@ export async function loadSeries(config) {
   return rows;
 }
 
-// Loads CDC PLACES county-level chronic disease data (crude prevalence rows
-// only), keyed by 5-digit county FIPS so it can be joined against us-atlas
-// topojson. State rows are derived by population-weighting the counties,
-// since the CSV itself has no true state-level aggregate rows. The CSV is
-// already filtered/slimmed server-side (see health's
-// cdc_open.aggregate.aggregate_places_county()), so no further row filtering
-// is needed here.
-export async function loadPlacesCounty(csvUrl) {
-  const text = await fetchCSV(csvUrl);
-  const counties = parseCSV(text)
+import {
+  PLACES_MEASURES_CSV_URL,
+  PLACES_COUNTY_CRUDE_CSV_URL,
+  PLACES_COUNTY_AGEADJ_CSV_URL,
+  PLACES_STATE_ROLLUP_CSV_URL,
+  NMF_COUNTY_CSV_URL,
+  NMF_STATE_ROLLUP_CSV_URL,
+  CT_PLANNING_REGION_TO_COUNTY,
+  STATE_ABBR_TO_FIPS,
+  DOLT_PLACES_SQL_URL,
+  DOLT_PLACES_RELEASE_YEAR,
+  DOLT_NMF_PERIOD
+} from '$lib/mapConfig.js';
+
+// The 49-row PLACES measure catalog (both families). Returns plain objects the
+// UI groups by category; join key is `measureId`.
+export async function loadPlacesMeasures() {
+  const text = await fetchCSV(PLACES_MEASURES_CSV_URL);
+  return parseCSV(text)
+    .filter(d => d.measureid)
     .map(d => ({
-      fips: d.locationid,
-      stateFips: d.locationid.slice(0, 2),
-      stateAbbr: d.stateabbr,
-      name: d.locationname,
       measureId: d.measureid,
-      value: +d.data_value,
-      population: +d.totalpopulation || 0
+      categoryId: d.categoryid,
+      category: d.category,
+      label: d.short_question_text || d.measure,
+      question: d.measure,
+      unit: d.data_value_unit || '%',
+      source: d.data_source
     }));
+}
 
-  const byMeasureState = new Map();
-  for (const c of counties) {
-    const key = `${c.measureId}|${c.stateFips}`;
-    if (!byMeasureState.has(key)) {
-      byMeasureState.set(key, { fips: c.stateFips, stateAbbr: c.stateAbbr, measureId: c.measureId, totalPop: 0, weightedSum: 0 });
+// Color domain from the data's own spread, floored/ceiled to whole units so the
+// ramp uses its full range rather than starting at zero (matches the
+// low-birthweight map's convention).
+function domainOf(byFips) {
+  const vals = [...byFips.values()].map(r => r.value).filter(v => !isNaN(v));
+  if (!vals.length) return [0, 1];
+  return [Math.floor(Math.min(...vals)), Math.ceil(Math.max(...vals))];
+}
+
+// One measure's national choropleth layer, keyed by FIPS (5-digit county or
+// 2-digit state) for a direct join against us-atlas topojson.
+//
+//   family    'brfss' (40 BRFSS measures) | 'acs' (9 Non-Medical Factors)
+//   level     'state' | 'county'
+//   valueType 'CrdPrv' | 'AgeAdjPrv' — BRFSS only; ignored for 'acs'
+//
+// State values come straight from the committed rollups (population-weighted
+// upstream by health's `places derive`), never re-aggregated here. The two
+// 4 MB BRFSS county files are fetched lazily on first county view via the
+// shared fetchCSV cache.
+export async function loadPlacesChoropleth({ measureId, family, level, valueType = 'CrdPrv' }) {
+  if (family === 'acs') {
+    const url = level === 'county' ? NMF_COUNTY_CSV_URL : NMF_STATE_ROLLUP_CSV_URL;
+    const byFips = new Map();
+    for (const d of parseCSV(await fetchCSV(url))) {
+      if (d.measureid !== measureId || d.data_value === '') continue;
+      const value = +d.data_value;
+      if (isNaN(value)) continue;
+      if (level === 'county') {
+        byFips.set(d.locationid, { value, moe: d.moe !== '' && d.moe != null ? +d.moe : null });
+      } else {
+        const fips = STATE_ABBR_TO_FIPS[d.stateabbr];
+        if (fips) byFips.set(fips, { value });
+      }
     }
-    const s = byMeasureState.get(key);
-    s.totalPop += c.population;
-    s.weightedSum += c.value * c.population;
+    return { byFips, domain: domainOf(byFips) };
   }
-  const states = [...byMeasureState.values()]
-    .filter(s => s.totalPop > 0)
-    .map(s => ({ fips: s.fips, stateAbbr: s.stateAbbr, measureId: s.measureId, value: s.weightedSum / s.totalPop }));
 
-  return { counties, states };
+  if (level === 'state') {
+    const byFips = new Map();
+    for (const d of parseCSV(await fetchCSV(PLACES_STATE_ROLLUP_CSV_URL))) {
+      if (d.measureid !== measureId || d.data_value_type !== valueType) continue;
+      const value = +d.data_value;
+      if (isNaN(value)) continue;
+      const fips = STATE_ABBR_TO_FIPS[d.stateabbr];
+      if (fips) byFips.set(fips, { value });
+    }
+    return { byFips, domain: domainOf(byFips) };
+  }
+
+  // BRFSS, county level.
+  const url = valueType === 'AgeAdjPrv' ? PLACES_COUNTY_AGEADJ_CSV_URL : PLACES_COUNTY_CRUDE_CSV_URL;
+  const byFips = new Map();
+  // Connecticut planning-region rows are accumulated onto the retired county
+  // FIPS this app's topology uses (see CT_PLANNING_REGION_TO_COUNTY), weighted
+  // by region population where more than one region lands on one county.
+  const ct = new Map();
+  for (const d of parseCSV(await fetchCSV(url))) {
+    if (d.measureid !== measureId || d.data_value === '') continue;
+    const value = +d.data_value;
+    if (isNaN(value)) continue;
+    const ctCounty = CT_PLANNING_REGION_TO_COUNTY[d.locationid];
+    if (ctCounty) {
+      const w = +d.totalpopulation || 1;
+      const a = ct.get(ctCounty) ?? { wsum: 0, w: 0 };
+      a.wsum += value * w;
+      a.w += w;
+      ct.set(ctCounty, a);
+    } else {
+      byFips.set(d.locationid, { value });
+    }
+  }
+  for (const [fips, a] of ct) byFips.set(fips, { value: a.wsum / a.w });
+  return { byFips, domain: domainOf(byFips) };
+}
+
+async function doltQuery(sql) {
+  const res = await fetch(`${DOLT_PLACES_SQL_URL}?q=${encodeURIComponent(sql)}`);
+  if (!res.ok) throw new Error(`DoltHub HTTP ${res.status}`);
+  const json = await res.json();
+  if (json.query_execution_status && json.query_execution_status !== 'Success') {
+    throw new Error(json.query_execution_message || 'DoltHub query failed');
+  }
+  return json.rows ?? [];
+}
+
+// One county's full 49-measure profile, live from the DoltHub mirror. Two
+// PK-prefix range scans (~0.3s each), one per family — never a JOIN against the
+// 6.6M-row fact table. Returns Map<measureId, { value, low?, high?, moe? }>.
+// Connecticut counties return SDOH only: PLACES 2025 keys BRFSS rows by
+// planning region, not the retired county FIPS passed here.
+export async function loadCountyProfile(fips) {
+  const brfssSql =
+    `SELECT measure_id, data_value, low_confidence_limit, high_confidence_limit ` +
+    `FROM measurement WHERE release_year=${DOLT_PLACES_RELEASE_YEAR} ` +
+    `AND geo_level='county' AND location_id='${fips}' AND data_value_type='CrdPrv'`;
+  const nmfSql =
+    `SELECT measure_id, data_value, moe FROM nmf_measurement ` +
+    `WHERE period='${DOLT_NMF_PERIOD}' AND geo_level='county' AND location_id='${fips}'`;
+  const [brfss, nmf] = await Promise.all([doltQuery(brfssSql), doltQuery(nmfSql)]);
+  const out = new Map();
+  for (const r of brfss) {
+    out.set(r.measure_id, {
+      value: +r.data_value,
+      low: r.low_confidence_limit != null && r.low_confidence_limit !== '' ? +r.low_confidence_limit : null,
+      high: r.high_confidence_limit != null && r.high_confidence_limit !== '' ? +r.high_confidence_limit : null
+    });
+  }
+  for (const r of nmf) {
+    out.set(r.measure_id, {
+      value: +r.data_value,
+      moe: r.moe != null && r.moe !== '' ? +r.moe : null
+    });
+  }
+  return out;
 }
 
 function mondayOf(d) {

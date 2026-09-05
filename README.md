@@ -44,6 +44,8 @@ Each chart on the home page uses `IntersectionObserver` to start fetching its da
 
 Large raw sources (wastewater, PLACES) are pre-aggregated upstream by `health` itself (see its `cdc_open.aggregate` module) and fetched from `health`'s `data/processed/` directory. This repo does no pre-processing of its own; an earlier local `aggregate-wastewater.js` script was removed once `health` started serving the smaller processed files directly.
 
+The **PLACES Map** (`/map`) covers all 49 measures of [CDC's PLACES portal](https://experience.arcgis.com/experience/22c7182a162d45788dd52a2362f8ed65) — 40 BRFSS-modeled health measures plus 9 American Community Survey non-medical factors, across 7 categories. County and state choropleths read the committed slices in `health`'s `data/processed/places/` (`county_crude.csv`, `county_ageadj.csv`, `state_rollup.csv`, `nmf_county.csv`, `nmf_state_rollup.csv`, `measures.csv`). Clicking a county fetches its full profile live from the community [`fartbagxp/cdc-places`](https://www.dolthub.com/repositories/fartbagxp/cdc-places) Dolt mirror (CORS-enabled, keyless) rather than shipping the multi-gigabyte sub-county tables.
+
 ## Scripts
 
 ```bash
@@ -79,7 +81,8 @@ health-charts/
 │   ├── lib/
 │   │   ├── config.js                # All 54 series definitions (50 visible, 4 hidden)
 │   │   ├── sources.js               # Canonical CDC/NCI source registry (Data Sources section)
-│   │   ├── mapConfig.js             # CDC PLACES measures, color scheme, PLACES CSV url
+│   │   ├── mapConfig.js             # PLACES CSV/Dolt URLs, category order, color scheme, CT FIPS crosswalk
+│   │   ├── ChoroplethMap.svelte     # Shared US choropleth chrome (zoom/pan, hover, borders)
 │   │   ├── fetchData.js             # CSV fetching, parsing, and URL-keyed cache
 │   │   └── ChartPanel.svelte        # Self-fetching chart card (used on home page)
 │   └── routes/
@@ -88,7 +91,7 @@ health-charts/
 │       ├── +page.svelte             # Home page — renders a ChartPanel per series
 │       ├── map/
 │       │   ├── +page.js             # Maps: static prerendered route
-│       │   └── +page.svelte         # Maps: US choropleth (state/county)
+│       │   └── +page.svelte         # PLACES Map: 49-measure US choropleth + county drill-down panel
 │       └── series/[id]/
 │           ├── +page.js             # Loads config only; data is fetched client-side
 │           └── +page.svelte         # Series detail — full chart, stats, CSV download

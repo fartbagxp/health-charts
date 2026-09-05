@@ -1,13 +1,13 @@
 <script>
   import { format } from 'd3-format';
-  import { Plot, Geo } from 'svelteplot';
   import { feature, mesh } from 'topojson-client';
   import { base } from '$app/paths';
-  import { loadPlacesCounty } from '$lib/fetchData.js';
+  import { replaceState } from '$app/navigation';
+  import ChoroplethMap from '$lib/ChoroplethMap.svelte';
+  import { loadPlacesMeasures, loadPlacesChoropleth, loadCountyProfile } from '$lib/fetchData.js';
   import {
-    PLACES_COUNTY_CSV_URL,
-    PLACES_MEASURES,
-    PLACES_MEASURE_LIST,
+    PLACES_CATEGORY_ORDER,
+    PLACES_HIGHER_IS_BETTER,
     SEQUENTIAL_SCHEME,
     NO_DATA_FILL,
     STATE_FIPS_TO_ABBR
@@ -15,61 +15,97 @@
 
   // Geometry is fetched at runtime from public/topo/ (see
   // scripts/prepare-map-topology.js) rather than statically imported from
-  // us-atlas. A static `import ... from 'us-atlas/counties-10m.json'` bundles
-  // the full topology into this route's own JS chunk — measured at 1.3MB
-  // uncompressed (by far the largest chunk in the build) before this change.
-  // As a plain fetched JSON file it loads in parallel with the PLACES CSV
-  // below, off the JS-parse critical path, and is cacheable independently of
-  // app code.
-  //
-  // Borders are drawn as a single stitched mesh line, not as each polygon's own
-  // stroke. Adjacent county/state polygons are rendered as independent <path>
-  // elements, and even though they share the same topojson arc, each one's `d`
-  // is computed separately by geoPath — sub-pixel rounding differences at the
-  // shared edge mean one polygon's fill can sliver over its neighbor's stroke,
-  // making that shared border vanish. topojson.mesh() dedupes shared arcs into
-  // one continuous line, so there's no seam to disappear at.
+  // us-atlas: a static import bundles the full ~1.3MB topology into this
+  // route's JS chunk. As fetched JSON it loads in parallel with the PLACES
+  // CSVs, off the JS-parse critical path, and caches independently of app code.
   let countyFeatures = $state([]);
   let stateFeatures = $state([]);
   let countyBorders = $state(null);
   let stateBorders = $state(null);
 
-  let measureId = $state('OBESITY');
-  // State loads first and is the default view: state topology is ~114KB
-  // vs. county's ~842KB, and computing its feature()/mesh() is ~5ms vs.
-  // ~60ms (measured) — showing it first gets something on screen faster.
-  // County geometry is fetched lazily, only once the user actually asks
-  // for it via the toggle below, not eagerly in the background — loading
-  // things the user didn't ask for yet turned out to feel worse, not
-  // faster, when tried as a cross-page prefetch.
+  // State loads first and is the default view: state topology is ~114KB vs.
+  // county's ~842KB, and its feature()/mesh() is ~5ms vs. ~60ms. County
+  // geometry is fetched lazily, only once the user switches to it.
   let level = $state('state');
-  let placesData = $state({ counties: [], states: [] });
-  let loading = $state(true);
-  let loadError = $state(null);
+  let measureId = $state('OBESITY');
+  let valueType = $state('CrdPrv'); // 'CrdPrv' | 'AgeAdjPrv' — BRFSS only
+
+  let measures = $state([]);
+  let topoLoading = $state(true);
+  let topoError = $state(null);
 
   let countyTopologyLoading = $state(false);
   let countyTopologyLoaded = $state(false);
   let countyTopologyError = $state(null);
 
-  // Split low-frequency hover identity (which feature) from high-frequency
-  // pointer position (tooltip placement) — see perf note near onHoverEnter.
-  let hoveredId = $state(null);
-  let pointer = $state({ x: 0, y: 0 });
+  let layer = $state({ byFips: new Map(), domain: [0, 1] });
+  let layerLoading = $state(true);
+  let layerError = $state(null);
+  let layerToken = 0;
 
+  let selectedFips = $state(null);
+  let profile = $state(null);
+  let profileLoading = $state(false);
+  let profileError = $state(null);
+  let profileToken = 0;
+
+  const measure = $derived(measures.find((m) => m.measureId === measureId));
+  const family = $derived(measure?.categoryId === 'SDOH' ? 'acs' : 'brfss');
+  const canAgeAdjust = $derived(family === 'brfss');
+  const effectiveValueType = $derived(canAgeAdjust ? valueType : 'CrdPrv');
+  const higherIsBetter = $derived(PLACES_HIGHER_IS_BETTER.has(measureId));
+
+  const displayFeatures = $derived(level === 'county' ? countyFeatures : stateFeatures);
+  const fmt = format('.1f');
+
+  const measuresByCategory = $derived.by(() => {
+    const byCat = new Map();
+    for (const m of measures) {
+      if (!byCat.has(m.categoryId)) byCat.set(m.categoryId, { label: m.category, items: [] });
+      byCat.get(m.categoryId).items.push(m);
+    }
+    return PLACES_CATEGORY_ORDER.filter((id) => byCat.has(id)).map((id) => ({
+      id,
+      label: byCat.get(id).label,
+      items: byCat.get(id).items
+    }));
+  });
+
+  const colorScale = $derived({
+    type: 'linear',
+    scheme: higherIsBetter ? [...SEQUENTIAL_SCHEME].reverse() : SEQUENTIAL_SCHEME,
+    domain: layer.domain,
+    unknown: NO_DATA_FILL,
+    label:
+      `${measure?.question ?? measure?.label ?? ''}` +
+      (effectiveValueType === 'AgeAdjPrv' ? ', age-adjusted' : '') +
+      ` (${measure?.unit ?? '%'})`
+  });
+
+  // --- initial load: measure catalog + state topology, then apply URL params ---
   $effect(() => {
     (async () => {
       try {
-        const [placesResult, statesTopology] = await Promise.all([
-          loadPlacesCounty(PLACES_COUNTY_CSV_URL),
-          fetch(`${base}/topo/states-10m.json`).then(r => r.json())
+        const [cat, statesTopology] = await Promise.all([
+          loadPlacesMeasures(),
+          fetch(`${base}/topo/states-10m.json`).then((r) => r.json())
         ]);
-        placesData = placesResult;
+        measures = cat;
         stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
         stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
+
+        const params = new URLSearchParams(location.search);
+        const m = params.get('measure');
+        if (m && cat.some((c) => c.measureId === m)) measureId = m;
+        if (params.get('type') === 'AgeAdjPrv') valueType = 'AgeAdjPrv';
+        const c = params.get('county');
+        if (c) selectedFips = c;
+        // A shared drill-down link implies the county view.
+        if (params.get('level') === 'county' || c) level = 'county';
       } catch (e) {
-        loadError = e.message ?? 'Failed to load';
+        topoError = e.message ?? 'Failed to load';
       } finally {
-        loading = false;
+        topoLoading = false;
       }
     })();
   });
@@ -78,9 +114,9 @@
     if (countyTopologyLoaded || countyTopologyLoading) return;
     countyTopologyLoading = true;
     try {
-      const countiesTopology = await fetch(`${base}/topo/counties-10m.json`).then(r => r.json());
-      countyFeatures = feature(countiesTopology, countiesTopology.objects.counties).features;
-      countyBorders = mesh(countiesTopology, countiesTopology.objects.counties, (a, b) => a !== b);
+      const t = await fetch(`${base}/topo/counties-10m.json`).then((r) => r.json());
+      countyFeatures = feature(t, t.objects.counties).features;
+      countyBorders = mesh(t, t.objects.counties, (a, b) => a !== b);
       countyTopologyLoaded = true;
     } catch (e) {
       countyTopologyError = e.message ?? 'Failed to load county boundaries';
@@ -89,171 +125,121 @@
     }
   }
 
-  // Triggers only when the user actually switches to County — a direct
-  // result of something they clicked, not a background guess.
+  // Triggers only when the user actually switches to County.
   $effect(() => {
     if (level === 'county') ensureCountyTopologyLoaded();
   });
 
-  const measure = $derived(PLACES_MEASURES[measureId]);
-  const fmt = $derived(format(measure.format));
-  const displayFeatures = $derived(level === 'county' ? countyFeatures : stateFeatures);
-  const featuresById = $derived.by(() => new Map(displayFeatures.map(f => [f.id, f])));
-  const hoveredFeature = $derived(hoveredId ? featuresById.get(hoveredId) : null);
+  // --- choropleth layer: reload whenever measure / level / value-type change ---
+  $effect(() => {
+    if (!measure) return;
+    const fam = family;
+    const lvl = level;
+    const vt = effectiveValueType;
+    const mid = measureId;
+    if (lvl === 'county' && !countyTopologyLoaded) return; // wait for geometry
+    const token = ++layerToken;
+    layerLoading = true;
+    layerError = null;
+    loadPlacesChoropleth({ measureId: mid, family: fam, level: lvl, valueType: vt })
+      .then((res) => {
+        if (token === layerToken) layer = res;
+      })
+      .catch((e) => {
+        if (token === layerToken) layerError = e.message ?? 'Failed to load';
+      })
+      .finally(() => {
+        if (token === layerToken) layerLoading = false;
+      });
+  });
 
-  // fips -> { value, stateAbbr } for the current measure + geography level
-  const rowByFips = $derived.by(() => {
-    const rows = level === 'county' ? placesData.counties : placesData.states;
-    const map = new Map();
-    for (const r of rows) {
-      if (r.measureId === measureId) map.set(r.fips, r);
+  // --- county drill-down profile ---
+  $effect(() => {
+    const fips = selectedFips;
+    if (!fips) {
+      profile = null;
+      return;
     }
-    return map;
+    const token = ++profileToken;
+    profileLoading = true;
+    profileError = null;
+    loadCountyProfile(fips)
+      .then((res) => {
+        if (token === profileToken) profile = res;
+      })
+      .catch((e) => {
+        if (token === profileToken) profileError = e.message ?? 'Failed to load';
+      })
+      .finally(() => {
+        if (token === profileToken) profileLoading = false;
+      });
+  });
+
+  // --- keep the URL shareable ---
+  $effect(() => {
+    if (topoLoading) return;
+    const url = new URL(location.href);
+    const set = (k, v) => (v ? url.searchParams.set(k, v) : url.searchParams.delete(k));
+    set('measure', measureId === 'OBESITY' ? null : measureId);
+    set('level', level === 'county' ? 'county' : null);
+    set('type', effectiveValueType === 'AgeAdjPrv' ? 'AgeAdjPrv' : null);
+    set('county', selectedFips);
+    replaceState(url, {});
   });
 
   function valueOf(f) {
-    return rowByFips.get(f.id)?.value ?? null;
+    return layer.byFips.get(f.id)?.value ?? null;
   }
 
-  // Derived from the FIPS code itself, not the PLACES row — counties with no
-  // PLACES data at all (Kentucky, Pennsylvania) still need a state label.
   function tooltipText(f) {
-    const row = rowByFips.get(f.id);
-    const place = level === 'county'
-      ? `${f.properties.name}, ${STATE_FIPS_TO_ABBR[f.id.slice(0, 2)] ?? ''}`
-      : f.properties.name;
-    const val = row?.value != null ? `${fmt(row.value)}${measure.unit}` : 'No data';
+    const row = layer.byFips.get(f.id);
+    const place =
+      level === 'county'
+        ? `${f.properties.name}, ${STATE_FIPS_TO_ABBR[f.id.slice(0, 2)] ?? ''}`
+        : f.properties.name;
+    const val = row?.value != null ? `${fmt(row.value)}${measure?.unit ?? '%'}` : 'No data';
     return `${place}: ${val}`;
   }
 
-  // onpointerenter/leave fire once per feature (not per pixel), so hoveredId
-  // only changes a handful of times per hover session. Cursor position is
-  // tracked separately via a plain pointermove on the wrapping div — that
-  // only repositions the tooltip <div>, it never touches the Geo marks'
-  // props. Reusing a single `hovered` object keyed off pointermove for both
-  // used to force svelteplot's Plot to recompute scales across all 3,143
-  // county paths on every mouse pixel, which is what made hovering laggy.
-  function onHoverEnter(evt, datum) {
-    hoveredId = datum.id;
-  }
-  function onHoverLeave() {
-    hoveredId = null;
+  function handleSelect(f) {
+    if (level !== 'county') return;
+    selectedFips = f.id;
   }
 
-  // Zoom/pan is a plain CSS transform on a wrapper div, not a re-projection.
-  // SVG is vector content, so scaling it with CSS stays crisp at any zoom —
-  // and critically, this never touches a Geo mark's props/data, so it can't
-  // re-trigger svelteplot's scale recomputation across all county paths the
-  // way the old hover implementation accidentally did.
-  //
-  // transform-origin is pinned at the content's top-left corner (0 0, set in
-  // <style>) rather than left at its default center. A fixed, known origin is
-  // what makes the point-under-cursor math below tractable: with origin 0 0,
-  // a content-local point (x,y) maps to screen space as
-  // `panX + x*zoomScale, panY + y*zoomScale`. Zooming "at" a point solves that
-  // equation for the new panX/panY that keeps the same content point under the
-  // cursor before and after the scale change — a "center zoom" is just this
-  // same math with the container's center as the point.
-  const ZOOM_MIN = 1;
-  const ZOOM_MAX = 8;
-  const ZOOM_STEP = 1.4;
-
-  let zoomScale = $state(1);
-  let panX = $state(0);
-  let panY = $state(0);
-  let dragging = $state(false);
-  let mapWrapEl = $state(null);
-  let dragOrigin = { x: 0, y: 0, panX: 0, panY: 0 };
-
-  // Valid pan range with a top-left origin: the scaled content (width*scale)
-  // must fully cover the container, so its left/top edge can't move past 0
-  // and its right/bottom edge can't move short of the container's edge.
-  function clampPan(x, y, scale) {
-    if (!mapWrapEl) return { x, y };
-    const rect = mapWrapEl.getBoundingClientRect();
-    const minX = rect.width * (1 - scale);
-    const minY = rect.height * (1 - scale);
-    return { x: Math.min(0, Math.max(minX, x)), y: Math.min(0, Math.max(minY, y)) };
+  function closePanel() {
+    selectedFips = null;
   }
 
-  // (cx, cy) are container-relative coordinates (i.e. relative to mapWrapEl's
-  // own top-left, not the viewport) of the point to zoom toward.
-  function zoomAt(cx, cy, nextScale) {
-    const newScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, nextScale));
-    if (newScale === zoomScale) return;
-    const ratio = newScale / zoomScale;
-    const rawX = cx - (cx - panX) * ratio;
-    const rawY = cy - (cy - panY) * ratio;
-    zoomScale = newScale;
-    if (zoomScale === ZOOM_MIN) {
-      panX = 0;
-      panY = 0;
-    } else {
-      ({ x: panX, y: panY } = clampPan(rawX, rawY, zoomScale));
-    }
-  }
-
-  function containerCenter() {
-    const rect = mapWrapEl?.getBoundingClientRect();
-    return rect ? { x: rect.width / 2, y: rect.height / 2 } : { x: 0, y: 0 };
-  }
-
-  function zoomIn() {
-    const { x, y } = containerCenter();
-    zoomAt(x, y, zoomScale * ZOOM_STEP);
-  }
-  function zoomOut() {
-    const { x, y } = containerCenter();
-    zoomAt(x, y, zoomScale / ZOOM_STEP);
-  }
-  function resetZoom() {
-    zoomScale = ZOOM_MIN;
-    panX = 0;
-    panY = 0;
-  }
-
-  function onWheelZoom(evt) {
-    evt.preventDefault();
-    const rect = mapWrapEl.getBoundingClientRect();
-    zoomAt(evt.clientX - rect.left, evt.clientY - rect.top, zoomScale * (evt.deltaY < 0 ? 1.15 : 1 / 1.15));
-  }
-
-  function onMapPointerDown(evt) {
-    if (zoomScale <= ZOOM_MIN) return;
-    dragging = true;
-    dragOrigin = { x: evt.clientX, y: evt.clientY, panX, panY };
-    evt.currentTarget.setPointerCapture(evt.pointerId);
-  }
-
-  function onPointerMove(evt) {
-    pointer = { x: evt.clientX, y: evt.clientY };
-    if (!dragging) return;
-    ({ x: panX, y: panY } = clampPan(
-      dragOrigin.panX + (evt.clientX - dragOrigin.x),
-      dragOrigin.panY + (evt.clientY - dragOrigin.y),
-      zoomScale
-    ));
-  }
-
-  function onMapPointerUp() {
-    dragging = false;
-  }
+  const isCT = $derived(!!selectedFips && selectedFips.slice(0, 2) === '09');
+  const selectedLabel = $derived.by(() => {
+    if (!selectedFips) return '';
+    const f = countyFeatures.find((x) => x.id === selectedFips);
+    return f
+      ? `${f.properties.name}, ${STATE_FIPS_TO_ABBR[selectedFips.slice(0, 2)] ?? ''}`
+      : selectedFips;
+  });
 </script>
 
-<svelte:head><title>Maps · Health Charts</title></svelte:head>
+<svelte:head><title>PLACES Health Map · Health Charts</title></svelte:head>
 
 <div class="series-main">
   <div class="series-header">
     <div>
-      <h1>Chronic Disease Map</h1>
+      <h1>PLACES Health Map</h1>
       <p class="series-desc">
-        County- and state-level chronic disease prevalence among U.S. adults, from CDC PLACES
-        (model-based estimates from BRFSS survey data).
+        {measure?.question ?? 'County- and state-level health estimates for U.S. adults'} — one of
+        {measures.length || 49} measures across all seven pages of CDC's PLACES portal
+        (BRFSS-modeled small-area estimates, plus American Community Survey non-medical factors).
+        {#if level === 'county'}Click a county for its full profile.{/if}
       </p>
       <div class="meta-pills">
         <span class="meta-pill">Annual</span>
-        <span class="meta-pill"><a href="https://www.cdc.gov/places/index.html" target="_blank" rel="noopener">Source: CDC PLACES</a></span>
-        <span class="meta-pill">Health Outcomes</span>
+        <span class="meta-pill">{measure?.source ?? 'BRFSS'}</span>
+        <span class="meta-pill"
+          ><a href="https://www.cdc.gov/places/index.html" target="_blank" rel="noopener"
+            >Source: CDC PLACES</a
+          ></span
+        >
       </div>
     </div>
   </div>
@@ -262,96 +248,112 @@
     <label class="map-control">
       <span>Measure</span>
       <select bind:value={measureId}>
-        {#each PLACES_MEASURE_LIST as m}
-          <option value={m.id}>{m.label}</option>
+        {#each measuresByCategory as cat}
+          <optgroup label={cat.label}>
+            {#each cat.items as m}
+              <option value={m.measureId}>{m.label}</option>
+            {/each}
+          </optgroup>
         {/each}
       </select>
     </label>
+
     <div class="map-control">
       <span>Geography</span>
-      <div class="level-toggle">
+      <div class="seg">
         <button class:active={level === 'state'} onclick={() => (level = 'state')}>State</button>
         <button class:active={level === 'county'} onclick={() => (level = 'county')}>County</button>
       </div>
     </div>
-    <div class="map-control">
-      <span>Zoom</span>
-      <div class="level-toggle">
-        <button onclick={zoomOut} disabled={zoomScale <= ZOOM_MIN} aria-label="Zoom out">&minus;</button>
-        <button onclick={resetZoom} disabled={zoomScale === ZOOM_MIN}>{Math.round(zoomScale * 100)}%</button>
-        <button onclick={zoomIn} disabled={zoomScale >= ZOOM_MAX} aria-label="Zoom in">+</button>
+
+    <div class="map-control" class:disabled={!canAgeAdjust}>
+      <span>Prevalence</span>
+      <div class="seg">
+        <button
+          class:active={effectiveValueType === 'CrdPrv'}
+          onclick={() => (valueType = 'CrdPrv')}>Crude</button
+        >
+        <button
+          class:active={effectiveValueType === 'AgeAdjPrv'}
+          disabled={!canAgeAdjust}
+          onclick={() => (valueType = 'AgeAdjPrv')}>Age-adjusted</button
+        >
       </div>
     </div>
   </div>
 
-  {#if loadError}
-    <div class="chart-error-msg">Failed to load data: {loadError}</div>
-  {:else if loading}
-    <div class="chart-loading-placeholder" aria-busy="true"></div>
-  {:else if level === 'county' && countyTopologyError}
-    <div class="chart-error-msg">Failed to load county boundaries: {countyTopologyError}</div>
-  {:else if level === 'county' && !countyTopologyLoaded}
-    <div class="chart-loading-placeholder" aria-busy="true"></div>
-  {:else}
-    <div
-      class="chart-wrap map-wrap"
-      class:can-pan={zoomScale > ZOOM_MIN}
-      class:dragging
-      role="figure"
-      bind:this={mapWrapEl}
-      onpointermove={onPointerMove}
-      onpointerdown={onMapPointerDown}
-      onpointerup={onMapPointerUp}
-      onpointercancel={onMapPointerUp}
-      onwheel={onWheelZoom}
-    >
-      <div class="zoom-content" class:no-transition={dragging} style="transform: translate({panX}px, {panY}px) scale({zoomScale})">
-        <Plot
-          projection="albers-usa"
-          color={{
-            type: 'linear',
-            scheme: SEQUENTIAL_SCHEME,
-            domain: measure.domain,
-            unknown: NO_DATA_FILL,
-            legend: true,
-            label: `${measure.label}, crude prevalence (${measure.unit})`
-          }}
-          style="width:100%"
-        >
-          <Geo
-            data={displayFeatures}
-            fill={valueOf}
-            title={tooltipText}
-            onpointerenter={onHoverEnter}
-            onpointerleave={onHoverLeave}
-          />
-          <Geo canvas data={level === 'county' ? [countyBorders] : []} fill="none" stroke="#1a1a2e" strokeOpacity={0.2} strokeWidth={0.5} />
-          <Geo canvas data={[stateBorders]} fill="none" stroke="#1a1a2e" strokeOpacity={0.4} strokeWidth={1} />
-        </Plot>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Rendered outside .zoom-content on purpose: a CSS `transform` on an ancestor
-       (even translate(0,0) scale(1)) makes that ancestor the containing block for
-       `position: fixed` descendants, which would peg this tooltip to the panned/
-       zoomed map instead of the viewport. Keeping it out of that subtree means
-       pointer.x/pointer.y (real client coordinates) stay correct at any zoom. -->
-  {#if hoveredFeature}
-    <div
-      class="tip-box"
-      style="position:fixed; left:{pointer.x + 14}px; top:{pointer.y}px; transform:translateY(-50%); pointer-events:none"
-    >
-      <div class="tip-label">{measure.label}</div>
-      <div class="tip-val">{tooltipText(hoveredFeature)}</div>
-    </div>
-  {/if}
+  <ChoroplethMap
+    features={displayFeatures}
+    countyBorders={level === 'county' ? countyBorders : null}
+    {stateBorders}
+    {valueOf}
+    tooltip={tooltipText}
+    tipLabel={measure?.label ?? ''}
+    color={colorScale}
+    loading={topoLoading || layerLoading || (level === 'county' && !countyTopologyLoaded)}
+    error={topoError || layerError || (level === 'county' ? countyTopologyError : null)}
+    onselect={level === 'county' ? handleSelect : null}
+  />
 
   <p class="chart-source">
-    Source: <a href="https://www.cdc.gov/places/index.html" target="_blank" rel="noopener">CDC PLACES</a>
-    · Boundaries: <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noopener">us-atlas</a> (US Census cartographic boundaries)
+    Source:
+    <a href="https://www.cdc.gov/places/index.html" target="_blank" rel="noopener">CDC PLACES</a>
+    ·
+    <a href="https://data.cdc.gov/browse?q=PLACES" target="_blank" rel="noopener">data.cdc.gov</a>
+    · County drill-down via the community
+    <a href="https://www.dolthub.com/repositories/fartbagxp/cdc-places" target="_blank" rel="noopener"
+      >fartbagxp/cdc-places</a
+    > Dolt mirror (not CDC) · Boundaries:
+    <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noopener">us-atlas</a>
   </p>
 </div>
+
+{#if selectedFips}
+  <div class="panel-backdrop" role="presentation" onclick={closePanel}></div>
+  <aside class="county-panel" aria-label="County profile">
+    <div class="panel-top">
+      <div>
+        <div class="panel-eyebrow">County profile</div>
+        <h2>{selectedLabel}</h2>
+      </div>
+      <button class="panel-close" onclick={closePanel} aria-label="Close">✕</button>
+    </div>
+
+    {#if profileError}
+      <p class="panel-msg">Couldn't load this county: {profileError}</p>
+    {:else if profileLoading || !profile}
+      <p class="panel-msg" aria-busy="true">Loading…</p>
+    {:else}
+      {#if isCT}
+        <p class="panel-note">
+          Connecticut switched to planning-region geography in PLACES 2025, so only the
+          American Community Survey measures resolve for the retired county FIPS.
+        </p>
+      {/if}
+      {#each measuresByCategory as cat}
+        {@const rows = cat.items.filter((m) => profile.has(m.measureId))}
+        {#if rows.length}
+          <div class="panel-cat">{cat.label}</div>
+          {#each rows as m}
+            {@const r = profile.get(m.measureId)}
+            <div class="pm" class:current={m.measureId === measureId}>
+              <div class="pm-row">
+                <span class="pm-label">{m.label}</span>
+                <span class="pm-val"
+                  >{fmt(r.value)}{m.unit}{#if r.moe != null}<span class="pm-ci"> ±{fmt(r.moe)}</span
+                    >{:else if r.low != null && r.high != null}<span class="pm-ci">
+                      {fmt(r.low)}–{fmt(r.high)}</span
+                    >{/if}</span
+                >
+              </div>
+              <div class="pm-bar"><span style="width:{Math.min(100, r.value)}%"></span></div>
+            </div>
+          {/each}
+        {/if}
+      {/each}
+    {/if}
+  </aside>
+{/if}
 
 <style>
   .map-controls {
@@ -373,6 +375,10 @@
     letter-spacing: 0.05em;
   }
 
+  .map-control.disabled {
+    opacity: 0.5;
+  }
+
   .map-control select {
     padding: 0.45rem 0.75rem;
     border: 1px solid var(--border);
@@ -383,10 +389,10 @@
     font-weight: 400;
     text-transform: none;
     letter-spacing: normal;
-    min-width: 220px;
+    min-width: 260px;
   }
 
-  .level-toggle {
+  .seg {
     display: flex;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -394,7 +400,7 @@
     width: fit-content;
   }
 
-  .level-toggle button {
+  .seg button {
     padding: 0.45rem 1rem;
     border: none;
     background: var(--bg-card);
@@ -406,78 +412,145 @@
     cursor: pointer;
   }
 
-  .level-toggle button + button { border-left: 1px solid var(--border); }
-  .level-toggle button.active { background: #1a1a2e; color: #fff; }
-  .level-toggle button:disabled { opacity: 0.4; cursor: default; }
+  .seg button + button {
+    border-left: 1px solid var(--border);
+  }
+  .seg button.active {
+    background: #1a1a2e;
+    color: #fff;
+  }
+  .seg button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 
-  .map-wrap {
-    padding: 1rem;
+  .panel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 20, 0.28);
+    z-index: 300;
+  }
+
+  .county-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 92vw);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+    z-index: 301;
+    overflow-y: auto;
+    padding: 1.25rem 1.4rem 2rem;
+  }
+
+  .panel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .panel-eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+    font-weight: 700;
+  }
+
+  .county-panel h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--fg);
+  }
+
+  .panel-close {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg-mid);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .panel-msg,
+  .panel-note {
+    color: var(--fg-mid);
+    font-size: 0.85rem;
+  }
+
+  .panel-note {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .panel-cat {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg-muted);
+    font-weight: 700;
+    margin: 1rem 0 0.4rem;
+  }
+
+  .pm {
+    padding: 0.35rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .pm.current {
+    background: color-mix(in srgb, var(--link) 12%, transparent);
+  }
+
+  .pm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pm-label {
+    color: var(--fg-mid);
+  }
+
+  .pm-val {
+    font-weight: 700;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+
+  .pm-ci {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+  }
+
+  .pm-bar {
+    margin-top: 0.3rem;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--border);
     overflow: hidden;
   }
 
-  .map-wrap.can-pan {
-    cursor: grab;
+  .pm-bar span {
+    display: block;
+    height: 100%;
+    background: var(--link);
   }
 
-  .map-wrap.can-pan.dragging {
-    cursor: grabbing;
-  }
-
-  .zoom-content {
-    transform-origin: 0 0;
-    transition: transform 0.12s ease-out;
-  }
-
-  .zoom-content.no-transition {
-    transition: none;
-  }
-
-  /* Hover highlight is pure CSS (no JS/mark involved) so hovering never
-     triggers a Plot/scale recompute — see onHoverEnter for why that mattered. */
-  .map-wrap :global(g.geo path) {
-    cursor: pointer;
-  }
-
-  /* The canvas-rendered border marks (see script comment on countyBorders) sit
-     in a <foreignObject> layered on top of the choropleth fills. svelteplot's
-     CanvasLayer sets its own inline `style="width:...;height:...;"` on the
-     <canvas> *after* spreading our props, which silently discards a
-     `style="pointer-events:none"` prop passed to <Geo>. Setting it here from
-     an external rule isn't clobbered the same way, since the inline style
-     never declares pointer-events itself — this is what lets hover reach the
-     fills underneath again. */
-  .map-wrap :global(foreignObject),
-  .map-wrap :global(foreignObject canvas) {
-    pointer-events: none;
-  }
-
-  .map-wrap :global(g.geo path:hover) {
-    stroke: #1a1a2e !important;
-    stroke-width: 1.75px !important;
-  }
-
-  .chart-loading-placeholder {
-    height: 420px;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    margin: 8px 0;
-  }
-
-  .chart-error-msg {
-    height: 420px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--fg-muted);
-    font-size: 0.85rem;
-    border: 1px dashed var(--border);
-    border-radius: 4px;
-  }
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+  @media (max-width: 640px) {
+    .map-control select {
+      min-width: 0;
+      width: 100%;
+    }
   }
 </style>

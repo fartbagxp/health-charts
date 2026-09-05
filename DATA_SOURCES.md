@@ -29,7 +29,7 @@ center that runs it, how often it refreshes, and what it contains.
 | **NCHS DQS**, Data Query System (Health, United States) | NCHS | Vital records and CMS National Health Expenditure Accounts | Annual | Age-adjusted overdose rates by opioid type; national health spending per capita |
 | **Epidemic Trends** (Rt nowcast) | CFA, Center for Forecasting and Outbreak Analytics | Model-based nowcast over ED-visit, wastewater, and hospitalization signals | Several times weekly | Growing/declining epidemic-trend class per state for COVID/flu/RSV |
 | **Measles Surveillance**, via NNDSS | NCIRD, Div. of Viral Diseases | Case reporting from state/local health departments | Weekly (annual history) | Confirmed U.S. measles cases (weekly since 2022, annual since 1962) |
-| **PLACES**, Local Data for Better Health | NCCDPHP, Chronic Disease Prevention | Small-area estimates modeled from the BRFSS telephone survey | Annual | County chronic-disease prevalence (obesity, diabetes, etc.) |
+| **PLACES**, Local Data for Better Health (7 portal pages) | NCCDPHP, Chronic Disease Prevention | 40 measures modeled from the BRFSS telephone survey + 9 non-medical factors from the 5-year ACS | Annual | 49 county/state health measures: outcomes, prevention, risk behaviors, health status, disability, social needs, non-medical factors |
 | **SEER\*Explorer**, Surveillance, Epidemiology, and End Results | **NCI (NIH)**, not CDC | Population-based cancer registries | Annual | Cancer incidence and U.S. mortality by site, sex, race, age |
 
 > Collection methods at a glance: surveys (NIS, PLACES/BRFSS); vital records
@@ -60,7 +60,7 @@ center that runs it, how often it refreshes, and what it contains.
 | Cancer deaths by type / sex | SEER\*Explorer | `seer/mortality_by_year.csv` |
 | Drug overdose rate by opioid type | NCHS DQS | `rdjz-vn2n` → `dqs/drug_overdose_by_type.csv` |
 | Health spending per capita | NCHS DQS | `s57w-7gbe` → `dqs/national_health_spending.csv` |
-| Chronic disease prevalence (map) | PLACES | `swc5-untb` → `processed/places_county.csv` |
+| PLACES health map (49 measures, county/state) | PLACES + Non-Medical Factors | `processed/places/{county_crude,county_ageadj,state_rollup,nmf_county,nmf_state_rollup,measures}.csv`; county drill-down live from the `fartbagxp/cdc-places` Dolt mirror |
 | Low birthweight by state (map) | NCHS DQS | `ga7k-kycn` → `dqs/low_birthweight_by_state.csv` |
 
 ---
