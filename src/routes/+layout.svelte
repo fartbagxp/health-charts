@@ -1,8 +1,8 @@
 <script>
   import '../app.css';
-  import { base } from '$app/paths';
+  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
-  import { SERIES_CONFIG } from '$lib/config.js';
+  import { SERIES_CONFIG } from '#lib/config.js';
 
   let { children } = $props();
 
@@ -35,7 +35,7 @@
     if (e.key !== 'Enter') return;
     const match = navResults[0];
     if (match) {
-      goto(`${base}/series/${match.id}`);
+      goto(resolve(`/series/${match.id}`));
       navQuery = '';
     }
   }
@@ -43,14 +43,14 @@
 
 <nav>
   <div class="nav-inner">
-    <a href="{base}/" class="nav-logo"><span>Health</span>Charts</a>
+    <a href={resolve(`/`)} class="nav-logo"><span>Health</span>Charts</a>
     <div class="nav-links" class:open={navOpen}>
-      <a href="{base}/map" class="nav-link" onclick={() => navOpen = false}>PLACES Map</a>
-      <a href="{base}/map/measles" class="nav-link" onclick={() => navOpen = false}>Measles Map</a>
-      <a href="{base}/map/low-birthweight" class="nav-link" onclick={() => navOpen = false}>Low Birthweight Map</a>
-      <a href="{base}/compare/measles-vaccination" class="nav-link" onclick={() => navOpen = false}>Measles vs. Vaccination</a>
-      <a href="{base}/compare/covid-retrospective" class="nav-link" onclick={() => navOpen = false}>COVID Retrospective</a>
-      <a href="{base}/compare/measles-wastewater" class="nav-link" onclick={() => navOpen = false}>Measles vs. Wastewater</a>
+      <a href={resolve(`/map`)} class="nav-link" onclick={() => navOpen = false}>PLACES Map</a>
+      <a href={resolve(`/map/measles`)} class="nav-link" onclick={() => navOpen = false}>Measles Map</a>
+      <a href={resolve(`/map/low-birthweight`)} class="nav-link" onclick={() => navOpen = false}>Low Birthweight Map</a>
+      <a href={resolve(`/compare/measles-vaccination`)} class="nav-link" onclick={() => navOpen = false}>Measles vs. Vaccination</a>
+      <a href={resolve(`/compare/covid-retrospective`)} class="nav-link" onclick={() => navOpen = false}>COVID Retrospective</a>
+      <a href={resolve(`/compare/measles-wastewater`)} class="nav-link" onclick={() => navOpen = false}>Measles vs. Wastewater</a>
     </div>
     <div class="nav-search">
       <input
@@ -63,7 +63,7 @@
       {#if navResults.length > 0}
         <div class="nav-dropdown">
           {#each navResults as s}
-            <a href="{base}/series/{s.id}" onclick={() => navQuery = ''}>
+            <a href={resolve(`/series/${s.id}`)} onclick={() => navQuery = ''}>
               <span class="nav-dot" style="background:{s.color}"></span>
               <span class="nav-result-title">{s.title}</span>
               <span class="nav-result-meta">{s.frequency}</span>
@@ -105,7 +105,7 @@
       Data from CDC and NCI surveillance systems (NHSN, RESP-NET, NVSS, WONDER, NWSS,
       WISQARS, NIS, SchoolVaxView, BEAM, CFA Epidemic Trends, and SEER), archived by
       <a href="https://github.com/fartbagxp/health" target="_blank" rel="noopener">fartbagxp/health</a>.
-      See the full <a href="{base}/#sources">Data Sources</a> list for how each is collected.
+      See the full <a href={resolve(`/#sources`)}>Data Sources</a> list for how each is collected.
     </p>
     <p class="footer-note">Health Charts is a personal project inspired by <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a></p>
   </div>

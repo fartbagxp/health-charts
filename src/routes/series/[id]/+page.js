@@ -1,4 +1,4 @@
-import { SERIES_CONFIG } from '$lib/config.js';
+import { SERIES_CONFIG } from '#lib/config.js';
 import { error } from '@sveltejs/kit';
 
 export const prerender = true;

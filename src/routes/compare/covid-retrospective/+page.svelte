@@ -1,9 +1,9 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Dot, Text } from 'svelteplot';
-  import { base } from '$app/paths';
-  import { loadSeries, indexToCommonBase, WEEKLY_BUCKET } from '$lib/fetchData.js';
-  import { SERIES_CONFIG } from '$lib/config.js';
+  import { resolve } from '$app/paths';
+  import { loadSeries, indexToCommonBase, WEEKLY_BUCKET } from '#lib/fetchData.js';
+  import { SERIES_CONFIG } from '#lib/config.js';
 
   const HOSP_COLOR = '#e63946';
   const WASTEWATER_COLOR = '#1a6faf';
@@ -122,8 +122,8 @@
         Weekly COVID-19 hospital admissions against the national wastewater RNA signal, both indexed to
         {#if baseDate}100 at the week of {fmtWeek(baseDate)}{:else}a common base week{/if} so two
         differently-scaled measures share one axis honestly. See
-        <a href="{base}/series/covid">hospitalizations</a> and
-        <a href="{base}/series/wastewater-covid">the wastewater signal</a> for the real, unindexed series.
+        <a href={resolve(`/series/covid`)}>hospitalizations</a> and
+        <a href={resolve(`/series/wastewater-covid`)}>the wastewater signal</a> for the real, unindexed series.
         Dashed lines mark four points in the pandemic timeline. Hospitalization reporting for this series
         ends April 2024; the wastewater signal runs through the present.
       </p>

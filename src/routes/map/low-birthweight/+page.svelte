@@ -1,10 +1,10 @@
 <script>
   import { format } from 'd3-format';
   import { feature, mesh } from 'topojson-client';
-  import { base } from '$app/paths';
-  import ChoroplethMap from '$lib/ChoroplethMap.svelte';
-  import { loadLowBirthweightByState } from '$lib/fetchData.js';
-  import { LOW_BIRTHWEIGHT_BY_STATE_CSV_URL, SEQUENTIAL_SCHEME, NO_DATA_FILL } from '$lib/mapConfig.js';
+  import { resolve, asset } from '$app/paths';
+  import ChoroplethMap from '#lib/ChoroplethMap.svelte';
+  import { loadLowBirthweightByState } from '#lib/fetchData.js';
+  import { LOW_BIRTHWEIGHT_BY_STATE_CSV_URL, SEQUENTIAL_SCHEME, NO_DATA_FILL } from '#lib/mapConfig.js';
 
   // State-only choropleth — the NCHS DQS "low birthweight by state" table
   // reports at state granularity only, so (like /map/measles) there's no county
@@ -22,7 +22,7 @@
       try {
         const [rows, statesTopology] = await Promise.all([
           loadLowBirthweightByState(LOW_BIRTHWEIGHT_BY_STATE_CSV_URL),
-          fetch(`${base}/topo/states-10m.json`).then((r) => r.json())
+          fetch(asset(`/topo/states-10m.json`)).then((r) => r.json())
         ]);
         stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
         stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
@@ -66,7 +66,7 @@
         Percent of live births classified as low birthweight (under 2,500 grams), by state, from CDC's
         National Vital Statistics System via the NCHS Data Query System. Higher percentages indicate a
         greater share of newborns at elevated health risk.
-        See <a href="{base}/series/health-spending-per-capita">U.S. health spending</a> and the other
+        See <a href={resolve(`/series/health-spending-per-capita`)}>U.S. health spending</a> and the other
         NCHS DQS series for the national time-series view.
       </p>
       <div class="meta-pills">

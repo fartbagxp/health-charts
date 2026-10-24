@@ -1,9 +1,9 @@
 <script>
   import { feature, mesh } from 'topojson-client';
-  import { base } from '$app/paths';
-  import ChoroplethMap from '$lib/ChoroplethMap.svelte';
-  import { loadMeaslesByState } from '$lib/fetchData.js';
-  import { MEASLES_BY_STATE_CSV_URL, SEQUENTIAL_SCHEME, NO_DATA_FILL } from '$lib/mapConfig.js';
+  import { resolve, asset } from '$app/paths';
+  import ChoroplethMap from '#lib/ChoroplethMap.svelte';
+  import { loadMeaslesByState } from '#lib/fetchData.js';
+  import { MEASLES_BY_STATE_CSV_URL, SEQUENTIAL_SCHEME, NO_DATA_FILL } from '#lib/mapConfig.js';
 
   // State-only choropleth — NNDSS (the source for measles_by_state.csv) only
   // reports at state granularity, so unlike /map's PLACES data there's no
@@ -21,7 +21,7 @@
       try {
         const [rows, statesTopology] = await Promise.all([
           loadMeaslesByState(MEASLES_BY_STATE_CSV_URL),
-          fetch(`${base}/topo/states-10m.json`).then((r) => r.json())
+          fetch(asset(`/topo/states-10m.json`)).then((r) => r.json())
         ]);
         stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
         stateBorders = mesh(statesTopology, statesTopology.objects.states, (a, b) => a !== b);
@@ -58,8 +58,8 @@
       <p class="series-desc">
         Cumulative confirmed measles cases so far this year, by state, from CDC's National Notifiable
         Diseases Surveillance System (NNDSS). Combines imported and locally-acquired (indigenous) cases.
-        See the <a href="{base}/series/measles-weekly">national weekly trend</a> and
-        <a href="{base}/compare/measles-wastewater">wastewater comparison</a> for the time-series view.
+        See the <a href={resolve(`/series/measles-weekly`)}>national weekly trend</a> and
+        <a href={resolve(`/compare/measles-wastewater`)}>wastewater comparison</a> for the time-series view.
       </p>
       <div class="meta-pills">
         <span class="meta-pill">{#if asOf}Week {asOf.week}, {asOf.year}{:else}Weekly{/if}</span>

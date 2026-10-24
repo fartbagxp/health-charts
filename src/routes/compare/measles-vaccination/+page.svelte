@@ -1,9 +1,9 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleY, GridY, Dot } from 'svelteplot';
-  import { base } from '$app/paths';
-  import { loadSeries, loadSubSeries, indexToCommonBase } from '$lib/fetchData.js';
-  import { SERIES_CONFIG } from '$lib/config.js';
+  import { resolve } from '$app/paths';
+  import { loadSeries, loadSubSeries, indexToCommonBase } from '#lib/fetchData.js';
+  import { SERIES_CONFIG } from '#lib/config.js';
 
   const MEASLES_COLOR = '#6a4c93';
   const MMR_COLOR = '#2a9d8f';
@@ -117,8 +117,8 @@
         Annual U.S. measles cases against kindergarten MMR vaccination coverage, both indexed to
         {#if baseYear}100 at {baseYear}{:else}a common base year{/if} so two very differently-scaled
         measures (case counts vs. a percentage) can share one axis honestly. See
-        <a href="{base}/series/measles-annual">measles cases</a> and
-        <a href="{base}/series/schoolvax">vaccination coverage</a> for the real, unindexed series.
+        <a href={resolve(`/series/measles-annual`)}>measles cases</a> and
+        <a href={resolve(`/series/schoolvax`)}>vaccination coverage</a> for the real, unindexed series.
         Hover for the actual value and index at any year. A small coverage dip tends to line up with a
         disproportionately larger case increase, which is what you would expect once coverage nears the
         herd-immunity threshold, not a charting artifact.

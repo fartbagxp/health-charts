@@ -70,11 +70,11 @@ function weeklyMedian(rows, valueKey) {
     .sort((a, b) => a.date - b.date);
 }
 
-import { base } from '$app/paths';
+import { asset } from '$app/paths';
 
 // Resolve root-relative paths against the SvelteKit base path.
 function resolveUrl(url) {
-  if (url.startsWith('/') && !url.startsWith('//')) return `${base}${url}`;
+  if (url.startsWith('/') && !url.startsWith('//')) return asset(url);
   return url;
 }
 
@@ -120,7 +120,7 @@ import {
   DOLT_PLACES_SQL_URL,
   DOLT_PLACES_RELEASE_YEAR,
   DOLT_NMF_PERIOD
-} from '$lib/mapConfig.js';
+} from '#lib/mapConfig.js';
 
 // The 49-row PLACES measure catalog (both families). Returns plain objects the
 // UI groups by category; join key is `measureId`.
