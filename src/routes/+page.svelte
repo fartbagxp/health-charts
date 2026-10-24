@@ -1,7 +1,7 @@
 <script>
-  import { SERIES_CONFIG } from '$lib/config.js';
-  import { DATA_SOURCES } from '$lib/sources.js';
-  import ChartPanel from '$lib/ChartPanel.svelte';
+  import { SERIES_CONFIG } from '#lib/config.js';
+  import { DATA_SOURCES } from '#lib/sources.js';
+  import ChartPanel from '#lib/ChartPanel.svelte';
 
   const allSeries = Object.values(SERIES_CONFIG).filter(s => !s.hidden);
 </script>

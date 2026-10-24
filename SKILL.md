@@ -55,7 +55,6 @@ health-charts/
 │           ├── +page.js              # Detail: fetches single dataset at build time
 │           └── +page.svelte          # Detail: full chart + metrics grid + CSV export
 ├── build/                            # Static output (gitignored)
-├── svelte.config.js
 ├── vite.config.js
 └── package.json
 ```

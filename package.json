@@ -12,6 +12,10 @@
     "setup-datawrapper": "node --env-file=.env scripts/setup-datawrapper.js"
   },
   "type": "module",
+  "imports": {
+    "#lib": "./src/lib",
+    "#lib/*": "./src/lib/*"
+  },
   "devDependencies": {
     "@sveltejs/adapter-static": "4.0.0",
     "@sveltejs/kit": "3.1.0",

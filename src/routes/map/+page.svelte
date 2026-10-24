@@ -1,17 +1,17 @@
 <script>
   import { format } from 'd3-format';
   import { feature, mesh } from 'topojson-client';
-  import { base } from '$app/paths';
+  import { asset } from '$app/paths';
   import { replaceState } from '$app/navigation';
-  import ChoroplethMap from '$lib/ChoroplethMap.svelte';
-  import { loadPlacesMeasures, loadPlacesChoropleth, loadCountyProfile } from '$lib/fetchData.js';
+  import ChoroplethMap from '#lib/ChoroplethMap.svelte';
+  import { loadPlacesMeasures, loadPlacesChoropleth, loadCountyProfile } from '#lib/fetchData.js';
   import {
     PLACES_CATEGORY_ORDER,
     PLACES_HIGHER_IS_BETTER,
     SEQUENTIAL_SCHEME,
     NO_DATA_FILL,
     STATE_FIPS_TO_ABBR
-  } from '$lib/mapConfig.js';
+  } from '#lib/mapConfig.js';
 
   // Geometry is fetched at runtime from public/topo/ (see
   // scripts/prepare-map-topology.js) rather than statically imported from
@@ -88,7 +88,7 @@
       try {
         const [cat, statesTopology] = await Promise.all([
           loadPlacesMeasures(),
-          fetch(`${base}/topo/states-10m.json`).then((r) => r.json())
+          fetch(asset(`/topo/states-10m.json`)).then((r) => r.json())
         ]);
         measures = cat;
         stateFeatures = feature(statesTopology, statesTopology.objects.states).features;
@@ -114,7 +114,7 @@
     if (countyTopologyLoaded || countyTopologyLoading) return;
     countyTopologyLoading = true;
     try {
-      const t = await fetch(`${base}/topo/counties-10m.json`).then((r) => r.json());
+      const t = await fetch(asset(`/topo/counties-10m.json`)).then((r) => r.json());
       countyFeatures = feature(t, t.objects.counties).features;
       countyBorders = mesh(t, t.objects.counties, (a, b) => a !== b);
       countyTopologyLoaded = true;

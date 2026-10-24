@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate } from '$lib/fetchData.js';
+  import { loadSeries, loadSubSeries, parseDate } from '#lib/fetchData.js';
 
   let { config } = $props();
 

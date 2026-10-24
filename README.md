@@ -103,7 +103,6 @@ health-charts/
 ├── scripts/
 │   └── prepare-map-topology.js      # Copies us-atlas boundaries into public/topo/
 ├── .github/workflows/deploy.yml     # CI: build (auto-runs prebuild) → deploy to GitHub Pages
-├── svelte.config.js
 └── vite.config.js
 ```
 

@@ -1,9 +1,9 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Dot } from 'svelteplot';
-  import { base } from '$app/paths';
-  import { loadSeries } from '$lib/fetchData.js';
-  import { SERIES_CONFIG } from '$lib/config.js';
+  import { resolve } from '$app/paths';
+  import { loadSeries } from '#lib/fetchData.js';
+  import { SERIES_CONFIG } from '#lib/config.js';
 
   const CASES_COLOR = '#6a4c93';
   const WASTEWATER_COLOR = '#2a9d8f';
@@ -123,8 +123,8 @@
         picks up measles activity the way it does for COVID/flu/RSV. These are two panels sharing one time
         axis rather than one indexed line, because case counts hit zero in several weeks in this window and
         a common-base index breaks when the base value is zero. See
-        <a href="{base}/series/measles-weekly">the full case history</a> (back to 2022) and
-        <a href="{base}/series/wastewater-measles">the full wastewater series</a>.
+        <a href={resolve(`/series/measles-weekly`)}>the full case history</a> (back to 2022) and
+        <a href={resolve(`/series/wastewater-measles`)}>the full wastewater series</a>.
       </p>
       <div class="meta-pills">
         <span class="meta-pill">Weekly</span>
