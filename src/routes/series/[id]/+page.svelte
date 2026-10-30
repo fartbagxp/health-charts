@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate, formatISODate } from '#lib/fetchData.js';
+  import { loadSeries, loadSubSeries, parseDate, formatISODate, multiTipDate } from '#lib/fetchData.js';
 
   let { data } = $props();
   const config = $derived(data.config);
@@ -201,7 +201,7 @@
         {#snippet overlay()}
           {#if hoveredDatum && multiDatum}
             <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
-              <div class="tip-date">{new Date(hoveredDatum.ts).toLocaleDateString('en-US', { year: 'numeric' })}</div>
+              <div class="tip-date">{multiTipDate(hoveredDatum.ts, config.dateFormat)}</div>
               {#each multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>

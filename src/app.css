@@ -949,6 +949,13 @@ main { flex: 1; }
 
 .panel-source a:hover { color: var(--fg-mid); }
 
+/* Panels have no inner padding of their own, so inset the legend to the
+   same 1.25rem gutter as .panel-header and .panel-source. */
+.chart-panel .chart-legend {
+  padding: 0 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .chart-source {
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;

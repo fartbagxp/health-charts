@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate } from '#lib/fetchData.js';
+  import { loadSeries, loadSubSeries, parseDate, multiTipDate } from '#lib/fetchData.js';
 
   let { config } = $props();
 
@@ -174,6 +174,14 @@
   {:else if !loaded}
     <div class="chart-placeholder chart-skeleton" aria-busy="true"></div>
   {:else if config.subSeries}
+    <div class="chart-legend">
+      {#each subData as sub}
+        <span class="legend-item">
+          <span class="legend-swatch" style="background:{sub.color}"></span>
+          {sub.label}
+        </span>
+      {/each}
+    </div>
     <div
       role="figure"
       style="position:relative"
@@ -197,7 +205,7 @@
         {#snippet overlay()}
           {#if hovered.multiDatum}
             <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none">
-              <div class="tip-date">{new Date(hovered.datum.ts).toLocaleDateString('en-US', { year: 'numeric' })}</div>
+              <div class="tip-date">{multiTipDate(hovered.datum.ts, config.dateFormat)}</div>
               {#each hovered.multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>

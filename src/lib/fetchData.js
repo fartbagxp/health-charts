@@ -30,6 +30,15 @@ export function formatISODate(d) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+// Tooltip date for multi-line charts: annual series show just the year,
+// weekly/daily series need the full date to be readable.
+export function multiTipDate(ts, format) {
+  const annual = format === 'year' || format === 'schoolyear';
+  return new Date(ts).toLocaleDateString('en-US', annual
+    ? { year: 'numeric' }
+    : { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 // Some CSVs split the date across two columns (e.g. separate year/month
 // integers) rather than one combined column. `dateKey` may be an array of
 // column names in that case; this joins them into the single string
@@ -96,7 +105,15 @@ const csvCache = new Map();
 function fetchCSV(url) {
   const resolved = resolveUrl(url);
   if (!csvCache.has(resolved)) {
-    csvCache.set(resolved, fetch(resolved).then(r => r.text()));
+    // A 404 body would otherwise parse as a zero-row CSV and render an empty
+    // chart instead of the panel's error state. Drop failures from the cache
+    // so a later view can retry.
+    const p = fetch(resolved).then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status} for ${resolved}`);
+      return r.text();
+    });
+    p.catch(() => csvCache.delete(resolved));
+    csvCache.set(resolved, p);
   }
   return csvCache.get(resolved);
 }
