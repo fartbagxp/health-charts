@@ -21,6 +21,30 @@ export const SERIES_CONFIG = {
     frequency: 'Weekly',
     category: 'Influenza'
   },
+  // Flu admissions per 100k by Census region (NHSN state rows rolled up by
+  // health's cdc_open.aggregate), the regional split KFF and Force of
+  // Infection use. Rates, not counts, so the populous South doesn't
+  // dominate.
+  'flu-region': {
+    id: 'flu-region',
+    title: 'Flu Admissions by Region',
+    description: 'Weekly influenza new hospital admissions per 100,000 residents by U.S. Census region (Northeast, Midwest, South, West), 2020-present',
+    csvUrl: `${CDC_OPEN_PROCESSED_BASE}/flu_census_region.csv`,
+    dateKey: 'week_end',
+    valueKey: 'rate_per_100k',
+    unit: 'per 100,000',
+    format: '.2f',
+    source: 'CDC NHSN',
+    sourceUrl: 'https://data.cdc.gov/d/mpgq-jmmr',
+    frequency: 'Weekly',
+    category: 'Influenza',
+    subSeries: [
+      { key: 'west',      label: 'West',      color: '#e63946', filters: { region: 'West' } },
+      { key: 'south',     label: 'South',     color: '#f4a261', filters: { region: 'South' } },
+      { key: 'midwest',   label: 'Midwest',   color: '#2a9d8f', filters: { region: 'Midwest' } },
+      { key: 'northeast', label: 'Northeast', color: '#1a6faf', filters: { region: 'Northeast' } }
+    ]
+  },
   covid: {
     id: 'covid',
     title: 'COVID-19 Hospitalizations',
@@ -1084,9 +1108,9 @@ export const SERIES_CONFIG = {
 };
 
 export const CATEGORIES = [
-  { name: 'All Series', series: ['flu', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'schoolvax-mmr-florida', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita', 'wastewater-mpox', 'wastewater-covid-percentile', 'cfa-epidemic-growth'] },
+  { name: 'All Series', series: ['flu', 'flu-region', 'covid', 'rsv', 'resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv', 'vacc-flu', 'vacc-covid', 'vacc-rsv', 'nursing-flu', 'nursing-covid', 'nursing-rsv', 'wastewater-covid', 'wastewater-flu', 'wastewater-rsv', 'wastewater-measles', 'wastewater-h5', 'measles-weekly', 'measles-annual', 'lyme-disease', 'births-annual', 'deaths-annual', 'deaths-circulatory', 'deaths-cancer', 'deaths-cancer-by-type', 'cancer-sex-lung', 'cancer-sex-colorectal', 'cancer-sex-pancreas', 'cancer-sex-liver', 'deaths-respiratory', 'deaths-by-place', 'mortality-all', 'life-expectancy-combined', 'birth-rate', 'maternal-mortality', 'death-rates-historical', 'injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'beam-foodborne', 'schoolvax', 'schoolvax-mmr-florida', 'drug-deaths-by-year', 'drug-overdose-rate-by-type', 'health-spending-per-capita', 'wastewater-mpox', 'wastewater-covid-percentile', 'cfa-epidemic-growth'] },
   { name: 'Forecasting', series: ['cfa-epidemic-growth'] },
-  { name: 'Hospitalizations', series: ['flu', 'covid', 'rsv'] },
+  { name: 'Hospitalizations', series: ['flu', 'flu-region', 'covid', 'rsv'] },
   { name: 'Vaccination Coverage', series: ['vacc-flu', 'vacc-covid', 'vacc-rsv', 'schoolvax', 'schoolvax-mmr-florida'] },
   { name: 'Nursing Home Vaccination', series: ['nursing-flu', 'nursing-covid', 'nursing-rsv'] },
   { name: 'Respiratory Mortality', series: ['resp-deaths-flu', 'resp-deaths-covid', 'resp-deaths-rsv'] },
@@ -1100,7 +1124,7 @@ export const CATEGORIES = [
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year', 'drug-overdose-rate-by-type'] },
   { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
-  { name: 'Influenza', series: ['flu', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
+  { name: 'Influenza', series: ['flu', 'flu-region', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid', 'wastewater-covid-percentile'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
 ];
