@@ -15,7 +15,19 @@ export function parseDate(str, format) {
     const m = str.match(/^(\d{4})-(\d{1,2})$/);
     if (m) return new Date(+m[1], +m[2] - 1, 1);
   }
+  // Plain YYYY-MM-DD strings parse as UTC midnight in `new Date(str)`, which
+  // renders as the previous day in US time zones. Build them as local dates
+  // to match the other formats above.
+  const ymd = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (ymd) return new Date(+ymd[1], +ymd[2] - 1, +ymd[3]);
   return new Date(str);
+}
+
+// Local-time YYYY-MM-DD, the inverse of parseDate for plain dates.
+// (toISOString() would convert to UTC and can shift the day.)
+export function formatISODate(d) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
 // Some CSVs split the date across two columns (e.g. separate year/month

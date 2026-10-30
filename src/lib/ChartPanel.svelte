@@ -15,7 +15,7 @@
   let hovered = $state({ datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false });
 
   const MARGIN_LEFT = 48;
-  const MARGIN_RIGHT = 16;
+  const MARGIN_RIGHT = 40;
 
   async function loadData() {
     if (loaded || loading) return;
@@ -182,7 +182,7 @@
     >
       <Plot
         height={220}
-        marginTop={24} marginBottom={36} marginLeft={48} marginRight={40}
+        marginTop={24} marginBottom={36} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT}
         x={{ type: 'time' }}
         y={{ domain: yDomainMulti() }}
         style="width:100%"
@@ -219,7 +219,7 @@
     >
       <Plot
         height={220}
-        marginTop={24} marginBottom={36} marginLeft={48} marginRight={40}
+        marginTop={24} marginBottom={36} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT}
         x={{ type: 'time' }}
         y={{ domain: [yMin(), yMax()], type: config.yScale === 'log' ? 'log' : undefined }}
         style="width:100%"
