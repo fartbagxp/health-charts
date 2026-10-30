@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate } from '#lib/fetchData.js';
+  import { loadSeries, loadSubSeries, parseDate, formatISODate } from '#lib/fetchData.js';
 
   let { data } = $props();
   const config = $derived(data.config);
@@ -75,7 +75,7 @@
   let flipLeft = $state(false);
 
   const MARGIN_LEFT = 40;
-  const MARGIN_RIGHT = 16;
+  const MARGIN_RIGHT = 40;
 
   function onChartMove(evt) {
     const rect = evt.currentTarget.getBoundingClientRect();
@@ -134,7 +134,7 @@
             const match = sub.rows.find(r => r.ts === d.ts);
             return match ? match[config.valueKey] : '';
           });
-          return [new Date(d.ts).toISOString().slice(0, 10), ...vals].join(',');
+          return [formatISODate(new Date(d.ts)), ...vals].join(',');
         })
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
@@ -143,7 +143,7 @@
       a.click();
       URL.revokeObjectURL(url);
     } else {
-      const lines = ['Date,' + config.valueKey, ...rows.map(d => `${d.date.toISOString().slice(0,10)},${d[config.valueKey]}`)];
+      const lines = ['Date,' + config.valueKey, ...rows.map(d => `${formatISODate(d.date)},${d[config.valueKey]}`)];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = Object.assign(document.createElement('a'), { href: url, download: `${config.id}-data.csv` });
@@ -190,7 +190,7 @@
       onpointermove={onChartMoveMulti}
       onpointerleave={() => { hoveredDatum = null; multiDatum = null; }}
     >
-      <Plot height={420} marginRight={40} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
+      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
         <RuleY y={config.yDomain ? config.yDomain[0] : 0} />
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
@@ -222,7 +222,7 @@
       onpointermove={onChartMove}
       onpointerleave={() => { hoveredDatum = null; }}
     >
-      <Plot height={420} marginRight={40} x={{ type: 'time' }} y={config.yScale === 'log' ? { type: 'log', domain: [yMinLog, Math.max(...values, 1)] } : undefined} style="width:100%">
+      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={config.yScale === 'log' ? { type: 'log', domain: [yMinLog, Math.max(...values, 1)] } : undefined} style="width:100%">
         {#if config.yScale !== 'log'}
           <RuleY y={0} />
         {/if}

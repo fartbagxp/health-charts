@@ -2,7 +2,7 @@
   import { format } from 'd3-format';
   import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Dot, Text } from 'svelteplot';
   import { resolve } from '$app/paths';
-  import { loadSeries, indexToCommonBase, WEEKLY_BUCKET } from '#lib/fetchData.js';
+  import { loadSeries, indexToCommonBase, WEEKLY_BUCKET, parseDate } from '#lib/fetchData.js';
   import { SERIES_CONFIG } from '#lib/config.js';
 
   const HOSP_COLOR = '#e63946';
@@ -18,7 +18,7 @@
     { date: '2021-12-01', label: 'Omicron detected in US' },
     { date: '2023-05-11', label: 'US Public Health Emergency ends' }
   ];
-  const annotationRows = ANNOTATIONS.map(a => ({ date: new Date(a.date), label: a.label }));
+  const annotationRows = ANNOTATIONS.map(a => ({ date: parseDate(a.date), label: a.label }));
 
   let series = $state([]);
   let loading = $state(true);
