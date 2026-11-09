@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
-  import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate, formatISODate, multiTipDate } from '#lib/fetchData.js';
+  import { Plot, Line, Dot, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
+  import { loadSeries, loadSubSeries, parseDate, formatISODate, multiTipDate, priorYearRows } from '#lib/fetchData.js';
 
   let { data } = $props();
   const config = $derived(data.config);
@@ -70,6 +70,11 @@
 
   let hoveredDatum = $state(null);
   let multiDatum = $state(null);
+  // Same point in the calendar for previous years (see priorYearRows).
+  // Single series: hoveredDatum's matches. Multi: the union of years any
+  // sub-series has, which become tooltip columns.
+  let priors = $state([]);
+  let priorYears = $state([]);
   let clientX = $state(0);
   let clientY = $state(0);
   let flipLeft = $state(false);
@@ -91,6 +96,7 @@
     hoveredDatum = rows.reduce((best, d) =>
       Math.abs(d.date.getTime() - targetTime) < Math.abs(best.date.getTime() - targetTime) ? d : best
     );
+    priors = priorYearRows(rows, hoveredDatum, config.valueKey);
     clientX = evt.clientX;
     clientY = evt.clientY;
     flipLeft = evt.clientX > window.innerWidth * 0.6;
@@ -112,12 +118,17 @@
       Math.abs(d.ts - targetTime) < Math.abs(best.ts - targetTime) ? d : best
     );
     hoveredDatum = closest;
-    multiDatum = subData.map(sub => ({
-      key: sub.key,
-      label: sub.label,
-      color: sub.color,
-      datum: sub.rows.find(d => d.ts === closest.ts) ?? closest
-    }));
+    multiDatum = subData.map(sub => {
+      const datum = sub.rows.find(d => d.ts === closest.ts) ?? closest;
+      return {
+        key: sub.key,
+        label: sub.label,
+        color: sub.color,
+        datum,
+        priors: priorYearRows(sub.rows, datum, config.valueKey)
+      };
+    });
+    priorYears = [...new Set(multiDatum.flatMap(s => s.priors.map(p => p.yearsAgo)))].sort((a, b) => a - b);
     clientX = evt.clientX;
     clientY = evt.clientY;
     flipLeft = evt.clientX > window.innerWidth * 0.6;
@@ -198,15 +209,34 @@
         {#each subData as sub}
           <Line data={sub.rows} x="date" y={config.valueKey} stroke={sub.color} strokeWidth={2} />
         {/each}
+        {#if hoveredDatum && multiDatum}
+          {#each multiDatum as sub}
+            <Dot data={sub.priors} x="date" y="value" r={3.5} fill="var(--white)" stroke={sub.color} strokeWidth={1.5} />
+            <Dot data={[sub.datum]} x="date" y={config.valueKey} r={4} fill={sub.color} stroke="var(--white)" strokeWidth={1} />
+          {/each}
+        {/if}
         {#snippet overlay()}
           {#if hoveredDatum && multiDatum}
-            <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
+            <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none; grid-template-columns: auto auto repeat({1 + priorYears.length}, auto)">
               <div class="tip-date">{multiTipDate(hoveredDatum.ts, config.dateFormat)}</div>
+              {#if priorYears.length}
+                <div class="tip-row">
+                  <span></span><span></span>
+                  <span class="tip-year">{new Date(hoveredDatum.ts).getFullYear()}</span>
+                  {#each priorYears as k}
+                    <span class="tip-year">{new Date(hoveredDatum.ts).getFullYear() - k}</span>
+                  {/each}
+                </div>
+              {/if}
               {#each multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>
                   <span class="tip-label">{sub.label}</span>
-                  <span class="tip-val">{fmt(+sub.datum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></span>
+                  <span class="tip-val">{fmt(+sub.datum[config.valueKey])}{#if !priorYears.length} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span>{/if}</span>
+                  {#each priorYears as k}
+                    {@const p = sub.priors.find(p => p.yearsAgo === k)}
+                    <span class="tip-val tip-prior-val">{p ? fmt(p.value) : '—'}</span>
+                  {/each}
                 </div>
               {/each}
             </div>
@@ -244,12 +274,23 @@
           />
         {/if}
         <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
+        {#if hoveredDatum}
+          <Dot data={priors} x="date" y="value" r={3.5} fill="var(--white)" stroke={config.color ?? 'black'} strokeWidth={1.5} />
+          <Dot data={[hoveredDatum]} x="date" y={config.valueKey} r={4} fill={config.color ?? 'black'} stroke="var(--white)" strokeWidth={1} />
+        {/if}
         {#snippet overlay()}
           {#if hoveredDatum}
             <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
               <div class="tip-label">{config.title}</div>
               <div class="tip-date">{hoveredDatum.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
               <div class="tip-val">{fmt(+hoveredDatum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></div>
+              {#each priors as p}
+                <div class="tip-row">
+                  <span class="tip-swatch tip-swatch-hollow" style="border-color:{config.color ?? 'black'}"></span>
+                  <span class="tip-prior-date">{p.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  <span class="tip-val tip-prior-val">{fmt(p.value)}</span>
+                </div>
+              {/each}
             </div>
           {/if}
         {/snippet}

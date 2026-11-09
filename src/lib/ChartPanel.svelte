@@ -1,7 +1,7 @@
 <script>
   import { format } from 'd3-format';
-  import { Plot, Line, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
-  import { loadSeries, loadSubSeries, parseDate, multiTipDate } from '#lib/fetchData.js';
+  import { Plot, Line, Dot, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
+  import { loadSeries, loadSubSeries, parseDate, multiTipDate, priorYearRows } from '#lib/fetchData.js';
 
   let { config } = $props();
 
@@ -12,7 +12,8 @@
   let error = $state(null);
   let sectionEl = $state(null);
 
-  let hovered = $state({ datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false });
+  const EMPTY_HOVER = { datum: null, multiDatum: null, priors: [], priorYears: [], clientX: 0, clientY: 0, flipLeft: false };
+  let hovered = $state({ ...EMPTY_HOVER });
 
   const MARGIN_LEFT = 48;
   const MARGIN_RIGHT = 40;
@@ -101,7 +102,7 @@
     const fraction = (mouseX - MARGIN_LEFT) / innerWidth;
 
     if (fraction < 0 || fraction > 1 || !rows.length) {
-      hovered = { datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false };
+      hovered = { ...EMPTY_HOVER };
       return;
     }
 
@@ -111,7 +112,8 @@
     const datum = rows.reduce((best, d) =>
       Math.abs(d.date.getTime() - targetTime) < Math.abs(best.date.getTime() - targetTime) ? d : best
     );
-    hovered = { datum, multiDatum: null, clientX: evt.clientX, clientY: evt.clientY, flipLeft: evt.clientX > window.innerWidth * 0.6 };
+    const priors = priorYearRows(rows, datum, config.valueKey);
+    hovered = { ...EMPTY_HOVER, datum, priors, clientX: evt.clientX, clientY: evt.clientY, flipLeft: evt.clientX > window.innerWidth * 0.6 };
   }
 
   function onChartMoveMulti(evt) {
@@ -122,7 +124,7 @@
 
     const firstRows = subData[0]?.rows ?? [];
     if (fraction < 0 || fraction > 1 || !firstRows.length) {
-      hovered = { datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false };
+      hovered = { ...EMPTY_HOVER };
       return;
     }
 
@@ -132,17 +134,23 @@
     const closest = firstRows.reduce((best, d) =>
       Math.abs(d.ts - targetTime) < Math.abs(best.ts - targetTime) ? d : best
     );
-    const multiDatum = subData.map(sub => ({
-      key: sub.key,
-      label: sub.label,
-      color: sub.color,
-      datum: sub.rows.find(d => d.ts === closest.ts) ?? closest
-    }));
-    hovered = { datum: closest, multiDatum, clientX: evt.clientX, clientY: evt.clientY, flipLeft: evt.clientX > window.innerWidth * 0.6 };
+    const multiDatum = subData.map(sub => {
+      const datum = sub.rows.find(d => d.ts === closest.ts) ?? closest;
+      return {
+        key: sub.key,
+        label: sub.label,
+        color: sub.color,
+        datum,
+        priors: priorYearRows(sub.rows, datum, config.valueKey)
+      };
+    });
+    // Tooltip columns: one per prior year that any region has data for.
+    const priorYears = [...new Set(multiDatum.flatMap(s => s.priors.map(p => p.yearsAgo)))].sort((a, b) => a - b);
+    hovered = { ...EMPTY_HOVER, datum: closest, multiDatum, priorYears, clientX: evt.clientX, clientY: evt.clientY, flipLeft: evt.clientX > window.innerWidth * 0.6 };
   }
 
   function onChartLeave() {
-    hovered = { datum: null, multiDatum: null, clientX: 0, clientY: 0, flipLeft: false };
+    hovered = { ...EMPTY_HOVER };
   }
 
   // Vertical reference lines for series with an `annotations` config (e.g.
@@ -202,15 +210,34 @@
         {#each subData as sub}
           <Line data={sub.rows} x="date" y={config.valueKey} stroke={sub.color} strokeWidth={2} />
         {/each}
+        {#if hovered.multiDatum}
+          {#each hovered.multiDatum as sub}
+            <Dot data={sub.priors} x="date" y="value" r={3} fill="var(--white)" stroke={sub.color} strokeWidth={1.5} />
+            <Dot data={[sub.datum]} x="date" y={config.valueKey} r={3.5} fill={sub.color} stroke="var(--white)" strokeWidth={1} />
+          {/each}
+        {/if}
         {#snippet overlay()}
           {#if hovered.multiDatum}
-            <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none">
+            <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none; grid-template-columns: auto auto repeat({1 + hovered.priorYears.length}, auto)">
               <div class="tip-date">{multiTipDate(hovered.datum.ts, config.dateFormat)}</div>
+              {#if hovered.priorYears.length}
+                <div class="tip-row">
+                  <span></span><span></span>
+                  <span class="tip-year">{new Date(hovered.datum.ts).getFullYear()}</span>
+                  {#each hovered.priorYears as k}
+                    <span class="tip-year">{new Date(hovered.datum.ts).getFullYear() - k}</span>
+                  {/each}
+                </div>
+              {/if}
               {#each hovered.multiDatum as sub}
                 <div class="tip-row">
                   <span class="tip-swatch" style="background:{sub.color}"></span>
                   <span class="tip-label">{sub.label}</span>
-                  <span class="tip-val">{format(config.format)(+sub.datum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></span>
+                  <span class="tip-val">{format(config.format)(+sub.datum[config.valueKey])}{#if !hovered.priorYears.length} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span>{/if}</span>
+                  {#each hovered.priorYears as k}
+                    {@const p = sub.priors.find(p => p.yearsAgo === k)}
+                    <span class="tip-val tip-prior-val">{p ? format(config.format)(p.value) : '—'}</span>
+                  {/each}
                 </div>
               {/each}
             </div>
@@ -242,12 +269,23 @@
           <RuleX data={annotationDates} x={(d) => d} stroke="var(--fg-muted)" strokeOpacity={0.5} strokeDasharray="3,3" />
         {/if}
         <Line data={rows} x="date" y={config.valueKey} stroke={config.color ?? 'black'} strokeWidth={2} />
+        {#if hovered.datum}
+          <Dot data={hovered.priors} x="date" y="value" r={3} fill="var(--white)" stroke={config.color ?? 'black'} strokeWidth={1.5} />
+          <Dot data={[hovered.datum]} x="date" y={config.valueKey} r={3.5} fill={config.color ?? 'black'} stroke="var(--white)" strokeWidth={1} />
+        {/if}
         {#snippet overlay()}
           {#if hovered.datum}
             <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none">
               <div class="tip-label">{config.title}</div>
               <div class="tip-date">{hovered.datum.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
               <div class="tip-val">{format(config.format)(hovered.datum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></div>
+              {#each hovered.priors as p}
+                <div class="tip-row">
+                  <span class="tip-swatch tip-swatch-hollow" style="border-color:{config.color ?? 'black'}"></span>
+                  <span class="tip-prior-date">{p.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  <span class="tip-val tip-prior-val">{format(config.format)(p.value)}</span>
+                </div>
+              {/each}
             </div>
           {/if}
         {/snippet}
