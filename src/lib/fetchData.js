@@ -389,3 +389,59 @@ export async function loadSubSeries(config) {
     rows: allRows.filter(d => Object.entries(sub.filters).every(([k, v]) => d[k] === v))
   }));
 }
+
+// How many prior years the hover tooltip looks back for a seasonal
+// comparison (e.g. hovering Oct 2026 also shows Oct 2025, Oct 2024, ...).
+export const PRIOR_YEARS = 5;
+
+// Typical spacing between consecutive rows, in ms. Memoized per rows array
+// since it's needed on every pointer move.
+const spacingCache = new WeakMap();
+function typicalSpacing(rows) {
+  if (spacingCache.has(rows)) return spacingCache.get(rows);
+  const gaps = [];
+  for (let i = 1; i < rows.length; i++) gaps.push(rows[i].date - rows[i - 1].date);
+  gaps.sort((a, b) => a - b);
+  const median = gaps.length ? gaps[Math.floor(gaps.length / 2)] : 0;
+  spacingCache.set(rows, median);
+  return median;
+}
+
+// Index of the row nearest `t` in date-sorted rows (binary search).
+function nearestIndex(rows, t) {
+  let lo = 0, hi = rows.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (rows[mid].date.getTime() < t) lo = mid + 1; else hi = mid;
+  }
+  if (lo > 0 && t - rows[lo - 1].date.getTime() < rows[lo].date.getTime() - t) return lo - 1;
+  return lo;
+}
+
+// For a hovered row, the row at the same point in the calendar for each of
+// the previous `years` years, where the series has one. A match must fall
+// within half the series' typical spacing of the exact anniversary, so a
+// weekly series matches the same week (±3 days) and a monthly series the
+// same month, never a neighbouring period. Annual-or-coarser series return
+// [] — the "same time last year" is just the previous point.
+//
+// Returns [{ row, date, value, yearsAgo }], most recent year first.
+export function priorYearRows(rows, datum, valueKey, years = PRIOR_YEARS) {
+  if (!datum || rows.length < 2) return [];
+  const spacing = typicalSpacing(rows);
+  if (!spacing || spacing > 300 * 864e5) return [];
+  const tolerance = spacing / 2;
+  const out = [];
+  for (let k = 1; k <= years; k++) {
+    const target = new Date(datum.date);
+    target.setFullYear(target.getFullYear() - k);
+    const t = target.getTime();
+    if (t < rows[0].date.getTime() - tolerance) break;
+    const row = rows[nearestIndex(rows, t)];
+    if (Math.abs(row.date.getTime() - t) > tolerance) continue;
+    const value = +row[valueKey];
+    if (isNaN(value)) continue;
+    out.push({ row, date: row.date, value, yearsAgo: k });
+  }
+  return out;
+}

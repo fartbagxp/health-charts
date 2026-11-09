@@ -712,6 +712,32 @@ main { flex: 1; }
 
 .tip-row .tip-val { font-size: 0.9rem; }
 
+/* same-period-in-prior-years rows/columns: dimmer than the hovered value so
+   the current point stays the headline. */
+.tip-row .tip-prior-val {
+  font-weight: 500;
+  opacity: 0.75;
+  text-align: right;
+}
+
+.tip-prior-date {
+  opacity: 0.75;
+  font-size: 0.78rem;
+}
+
+.tip-year {
+  opacity: 0.6;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.tip-swatch-hollow {
+  background: transparent;
+  border: 1.5px solid;
+  box-sizing: border-box;
+}
+
 /* home page — compact header */
 .home-header {
   background: var(--white);
