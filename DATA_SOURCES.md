@@ -17,6 +17,7 @@ center that runs it, how often it refreshes, and what it contains.
 | System (program) | CDC center | How it's collected | Frequency | Contains |
 | ---------------- | ---------- | ------------------ | --------- | -------- |
 | **NHSN**, National Healthcare Safety Network (Hospital Respiratory Data) | NCEZID, Div. of Healthcare Quality Promotion | Mandatory electronic reporting from acute-care hospitals | Weekly | COVID/flu/RSV new admissions, inpatient/ICU census, bed occupancy |
+| **WHO/NREVSS (FluView)**, clinical laboratories | NCIRD, Influenza Division | Weekly test counts from participating clinical labs | Weekly | Influenza specimens tested and percent positive (A/B) |
 | **RESP-NET** (COVID-NET, RSV-NET, FluSurv-NET) | NCIRD respiratory surveillance programs | Population-based surveillance: lab-confirmed hospitalizations via EIP/IHSP catchment labs plus medical-record review | Weekly (seasonal) | Lab-confirmed flu/COVID/RSV hospitalization rates |
 | **NVSS**, National Vital Statistics System (Rapid Release) | NCHS, Div. of Vital Statistics | Death and birth certificates filed by state vital-records offices | Weekly to quarterly (provisional) | Provisional mortality rates, % deaths from COVID/flu/RSV, birth indicators, monthly deaths by cause, life expectancy |
 | **WONDER**, over NVSS and NNDSS | NCHS (platform) | Vital records and notifiable-disease case counts, as a query system | Annual (long runs) | Births since 1995, deaths by cause since 1979, maternal mortality, Lyme/tick-borne cases |
@@ -42,6 +43,7 @@ center that runs it, how often it refreshes, and what it contains.
 | Chart series | System | Dataset / file |
 | ------------ | ------ | -------------- |
 | Flu / COVID / RSV hospitalizations | NHSN | `ua7e-t2fy` → `resp/respiratory-combined.csv` |
+| Flu test positivity (national + Census regions) | WHO/NREVSS (FluView) | Delphi `fluview_clinical` → `processed/grasp/flu_percent_positive.csv` |
 | COVID-19 hospitalizations (legacy) | COVID-NET | `7dk4-g6vg` (archived) |
 | RSV hospitalization rate | RSV-NET | `29hc-w46k` |
 | Respiratory death % | NVSS | `4bc2-bbpq` → `resp_deaths_pct.csv` |

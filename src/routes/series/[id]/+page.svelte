@@ -37,6 +37,15 @@
 
   const normRows = $derived(rows.map(d => ({ date: d.date, value: +d[config.valueKey] })));
 
+  // svelteplot's auto domain doesn't reliably span every Line in a
+  // multi-series plot (peaks get clipped), so take the max across all
+  // sub-series explicitly.
+  const multiYDomain = $derived.by(() => {
+    if (config.yDomain) return config.yDomain;
+    const vals = subData.flatMap(s => s.rows.map(d => +d[config.valueKey])).filter(v => !isNaN(v));
+    return [0, vals.length ? Math.max(...vals) : 1];
+  });
+
   // Vertical reference lines + labels for series with an `annotations`
   // config (e.g. measles-annual's vaccine/elimination dates). Dates are
   // parsed with the series' own dateFormat so they land on the right x
@@ -201,8 +210,8 @@
       onpointermove={onChartMoveMulti}
       onpointerleave={() => { hoveredDatum = null; multiDatum = null; }}
     >
-      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={config.yDomain ? { domain: config.yDomain } : undefined} style="width:100%">
-        <RuleY y={config.yDomain ? config.yDomain[0] : 0} />
+      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={{ domain: multiYDomain, nice: true }} style="width:100%">
+        <RuleY y={multiYDomain[0]} />
         <GridY strokeOpacity={0.2} />
         <AxisX tickSpacing={90} tickFormat={(d) => d instanceof Date ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : String(d)} />
         <AxisY />
