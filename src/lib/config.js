@@ -2,6 +2,7 @@ const RAW_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/r
 const WONDER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wonder';
 const CDC_OPEN_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/cdc_open';
 const CDC_OPEN_PROCESSED_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/processed/cdc_open';
+const GRASP_PROCESSED_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/processed/grasp';
 const WISQARS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/wisqars';
 const SEER_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/seer';
 const DQS_BASE = 'https://raw.githubusercontent.com/fartbagxp/health/main/data/raw/dqs';
@@ -39,6 +40,30 @@ export const SERIES_CONFIG = {
     frequency: 'Weekly',
     category: 'Influenza',
     subSeries: [
+      { key: 'west',      label: 'West',      color: '#e63946', filters: { region: 'West' } },
+      { key: 'south',     label: 'South',     color: '#f4a261', filters: { region: 'South' } },
+      { key: 'midwest',   label: 'Midwest',   color: '#2a9d8f', filters: { region: 'Midwest' } },
+      { key: 'northeast', label: 'Northeast', color: '#1a6faf', filters: { region: 'Northeast' } }
+    ]
+  },
+  // Share of clinical-lab flu tests that come back positive (WHO/NREVSS via
+  // FluView). Census regions are rolled up from the nine divisions by
+  // health's grasp.export, summing specimens and positives before dividing.
+  'flu-pct-positive': {
+    id: 'flu-pct-positive',
+    title: 'Flu Test Positivity',
+    description: 'Weekly percent of clinical-lab specimens testing positive for influenza, national and by U.S. Census region (2016-17 season to present)',
+    csvUrl: `${GRASP_PROCESSED_BASE}/flu_percent_positive.csv`,
+    dateKey: 'week_end',
+    valueKey: 'percent_positive',
+    unit: '% positive',
+    format: '.1f',
+    source: 'CDC FluView (WHO/NREVSS)',
+    sourceUrl: 'https://www.cdc.gov/fluview/index.html',
+    frequency: 'Weekly',
+    category: 'Influenza',
+    subSeries: [
+      { key: 'national',  label: 'National',  color: '#264653', filters: { region: 'National' } },
       { key: 'west',      label: 'West',      color: '#e63946', filters: { region: 'West' } },
       { key: 'south',     label: 'South',     color: '#f4a261', filters: { region: 'South' } },
       { key: 'midwest',   label: 'Midwest',   color: '#2a9d8f', filters: { region: 'Midwest' } },
@@ -1124,7 +1149,7 @@ export const CATEGORIES = [
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year', 'drug-overdose-rate-by-type'] },
   { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
-  { name: 'Influenza', series: ['flu', 'flu-region', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
+  { name: 'Influenza', series: ['flu', 'flu-region', 'flu-pct-positive', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid', 'wastewater-covid-percentile'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
 ];

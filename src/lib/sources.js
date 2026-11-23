@@ -33,6 +33,15 @@ export const DATA_SOURCES = [
     url: 'https://www.cdc.gov/resp-net/dashboard/index.html'
   },
   {
+    system: 'WHO/NREVSS (FluView)',
+    program: 'U.S. WHO Collaborating Laboratories and National Respiratory and Enteric Virus Surveillance System',
+    collection: 'Weekly test counts from participating clinical laboratories',
+    center: 'NCIRD, Influenza Division',
+    frequency: 'Weekly',
+    contents: 'Influenza specimens tested and percent positive (A and B), national and by region',
+    url: 'https://www.cdc.gov/fluview/index.html'
+  },
+  {
     system: 'NVSS (Vital Statistics Rapid Release)',
     program: 'National Vital Statistics System, provisional mortality and natality',
     collection: 'Death and birth certificates filed by state and jurisdiction vital-records offices',
