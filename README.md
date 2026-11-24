@@ -4,9 +4,9 @@
 [![Last Commit](https://img.shields.io/github/last-commit/fartbagxp/health-charts?logo=git&logoColor=white&label=last%20commit)](https://github.com/fartbagxp/health-charts/commits/main)
 [![View Dashboard](https://img.shields.io/badge/view-dashboard-0057A8?logo=googlechrome&logoColor=white)](https://fartbagxp.github.io/health-charts)
 [![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
-[![Data Series](https://img.shields.io/badge/data%20series-52-4CAF50?logo=databricks&logoColor=white)](https://fartbagxp.github.io/health-charts)
+[![Data Series](https://img.shields.io/badge/data%20series-53-4CAF50?logo=databricks&logoColor=white)](https://fartbagxp.github.io/health-charts)
 
-A U.S. public health data dashboard built on CDC surveillance and federal health data. 52 series spanning hospitalizations, wastewater signals, vaccination rates, epidemic-trend nowcasts, mortality, injury, births, and foodborne illness.
+A U.S. public health data dashboard built on CDC surveillance and federal health data. 53 series spanning hospitalizations, wastewater signals, vaccination rates, epidemic-trend nowcasts, mortality, injury, births, and foodborne illness.
 
 **[View the dashboard →](https://fartbagxp.github.io/health-charts)**
 
@@ -58,6 +58,7 @@ pnpm run prepare-map-topology   # copies us-atlas county/state boundaries into p
 | --------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------- | ------------------ |
 | Hospitalizations      | [CDC NHSN](https://data.cdc.gov/d/ua7e-t2fy)                                                               | New admissions (flu/COVID/RSV)          | Weekly             |
 | Flu test positivity   | [CDC FluView (WHO/NREVSS)](https://www.cdc.gov/fluview/index.html)                                         | % clinical-lab specimens positive        | Weekly             |
+| Flu vaccine effectiveness | [CDC U.S. Flu VE Network](https://www.cdc.gov/flu-vaccines-work/php/effectiveness-studies/index.html) | Adjusted VE % with 95% CI, by season | Annual |
 | Respiratory mortality | [CDC Open Data](https://data.cdc.gov/d/4bc2-bbpq)                                                          | % of all deaths                         | Weekly             |
 | Vaccination coverage  | [CDC NIS-ACM](https://data.cdc.gov/d/5c6r-xi2t)                                                            | % adults up-to-date                     | Weekly             |
 | Nursing home vacc.    | [CDC NHSN](https://data.cdc.gov/d/tscn-ryh9)                                                               | % residents vaccinated                  | Weekly             |

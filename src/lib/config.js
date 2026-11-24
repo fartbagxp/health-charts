@@ -70,6 +70,32 @@ export const SERIES_CONFIG = {
       { key: 'northeast', label: 'Northeast', color: '#1a6faf', filters: { region: 'Northeast' } }
     ]
   },
+  // Seasonal flu vaccine effectiveness from the U.S. Flu VE Network, scraped
+  // from CDC's HTML table by health's cdc_open.fetch_flu_ve. One estimate per
+  // season, drawn as a point with its 95% CI (`ci`) rather than a line: the
+  // estimates are independent studies, and 2020-21 has none. A CI that
+  // crosses 0 isn't statistically significant, so the y-axis goes negative.
+  'flu-ve': {
+    id: 'flu-ve',
+    title: 'Flu Vaccine Effectiveness',
+    description: 'Adjusted overall effectiveness of the seasonal flu vaccine against medically attended influenza, with 95% confidence intervals, by season (2004-05 to present; no estimate for 2020-21)',
+    color: '#1a6faf',
+    csvUrl: `${CDC_OPEN_BASE}/flu_vaccine_effectiveness.csv`,
+    dateKey: 'season_start_year',
+    dateFormat: 'year',
+    valueKey: 've_pct',
+    labelKey: 'season',
+    ci: ['ci_low', 'ci_high'],
+    // Plain-language explainer shown in the "?" next to the title (InfoTip).
+    info: 'Vaccine effectiveness (VE) is how much the flu vaccine lowered the risk of needing medical care for lab-confirmed flu that season. A VE of 40% means vaccinated people were 40% less likely to see a doctor for flu than unvaccinated people. CDC estimates it by comparing vaccination rates among patients with respiratory illness who tested positive vs. negative for flu. Bars show the 95% confidence interval; a bar that crosses 0 means the result isn\'t statistically significant.',
+    unit: '% VE',
+    format: '.0f',
+    source: 'CDC U.S. Flu VE Network',
+    sourceUrl: 'https://www.cdc.gov/flu-vaccines-work/php/effectiveness-studies/index.html',
+    frequency: 'Annual',
+    category: 'Influenza',
+    yDomain: [-60, 100]
+  },
   covid: {
     id: 'covid',
     title: 'COVID-19 Hospitalizations',
@@ -1149,7 +1175,7 @@ export const CATEGORIES = [
   { name: 'Injury & Overdose', series: ['injury-drug-od', 'injury-suicide', 'injury-homicide', 'injury-firearm', 'suicide-by-sex', 'drug-deaths-by-year', 'drug-overdose-rate-by-type'] },
   { name: 'Health Spending', series: ['health-spending-per-capita'] },
   { name: 'Foodborne Disease', series: ['beam-foodborne'] },
-  { name: 'Influenza', series: ['flu', 'flu-region', 'flu-pct-positive', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
+  { name: 'Influenza', series: ['flu', 'flu-region', 'flu-pct-positive', 'flu-ve', 'resp-deaths-flu', 'vacc-flu', 'nursing-flu', 'wastewater-flu'] },
   { name: 'COVID-19', series: ['covid', 'resp-deaths-covid', 'vacc-covid', 'nursing-covid', 'wastewater-covid', 'wastewater-covid-percentile'] },
   { name: 'Respiratory Syncytial Virus', series: ['rsv', 'resp-deaths-rsv', 'vacc-rsv', 'nursing-rsv', 'wastewater-rsv'] }
 ];

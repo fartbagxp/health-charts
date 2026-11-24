@@ -1,6 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, Dot, AxisX, AxisY, RuleX, RuleY, GridY } from 'svelteplot';
+  import InfoTip from '#lib/InfoTip.svelte';
   import { loadSeries, loadSubSeries, parseDate, multiTipDate, priorYearRows } from '#lib/fetchData.js';
 
   let { config } = $props();
@@ -59,6 +60,7 @@
   // in the series (rounded down to a friendly power-of-ten-ish step) rather
   // than 0.
   function yMin() {
+    if (config.yDomain) return config.yDomain[0];
     if (config.yScale !== 'log') return 0;
     const positive = rows.map(d => +d[config.valueKey]).filter(v => v > 0);
     const min = positive.length ? Math.min(...positive) : 1;
@@ -161,13 +163,26 @@
   const annotationDates = $derived(
     (config.annotations ?? []).map(a => parseDate(a.date, config.dateFormat))
   );
+
+  // Series with a `ci: [lowKey, highKey]` config (e.g. flu-ve) are separate
+  // point estimates, drawn as dots with confidence-interval whiskers.
+  const ciRows = $derived(
+    config.ci ? rows.filter(d => d[config.ci[0]] !== '' && d[config.ci[1]] !== '') : []
+  );
+
+  // Tooltip heading: the row's own label (e.g. season "2024-25") when the
+  // config names one, else the date.
+  function tipDate(d) {
+    if (config.labelKey && d[config.labelKey]) return d[config.labelKey];
+    return d.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 </script>
 
 <section id={config.id} class="chart-panel" bind:this={sectionEl}>
   <div class="panel-header">
     <div class="panel-title-group">
       <span class="panel-badge">{config.category}</span>
-      <h2 class="panel-title">{config.title}<a class="panel-anchor" href="#{config.id}" aria-label="Link to {config.title}">#</a></h2>
+      <h2 class="panel-title">{config.title}{#if config.info}<InfoTip text={config.info} label="What is {config.title}?" />{/if}<a class="panel-anchor" href="#{config.id}" aria-label="Link to {config.title}">#</a></h2>
       <span class="panel-meta">{config.frequency} · {config.source}</span>
     </div>
     <div class="panel-stat">
@@ -268,7 +283,12 @@
         {#if annotationDates.length}
           <RuleX data={annotationDates} x={(d) => d} stroke="var(--fg-muted)" strokeOpacity={0.5} strokeDasharray="3,3" />
         {/if}
-        <Line data={rows} x="date" y={config.valueKey} stroke={config.color ?? 'black'} strokeWidth={2} />
+        {#if config.ci}
+          <RuleX data={ciRows} x="date" y1={config.ci[0]} y2={config.ci[1]} stroke={config.color ?? 'black'} strokeOpacity={0.5} strokeWidth={2} />
+          <Dot data={rows} x="date" y={config.valueKey} r={3} fill={config.color ?? 'black'} />
+        {:else}
+          <Line data={rows} x="date" y={config.valueKey} stroke={config.color ?? 'black'} strokeWidth={2} />
+        {/if}
         {#if hovered.datum}
           <Dot data={hovered.priors} x="date" y="value" r={3} fill="var(--white)" stroke={config.color ?? 'black'} strokeWidth={1.5} />
           <Dot data={[hovered.datum]} x="date" y={config.valueKey} r={3.5} fill={config.color ?? 'black'} stroke="var(--white)" strokeWidth={1} />
@@ -277,8 +297,11 @@
           {#if hovered.datum}
             <div class="tip-box" style="position:fixed; {hovered.flipLeft ? `right:${window.innerWidth - hovered.clientX + 14}px` : `left:${hovered.clientX + 14}px`}; top:{hovered.clientY}px; transform:translateY(-50%); pointer-events:none">
               <div class="tip-label">{config.title}</div>
-              <div class="tip-date">{hovered.datum.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              <div class="tip-date">{tipDate(hovered.datum)}</div>
               <div class="tip-val">{format(config.format)(hovered.datum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></div>
+              {#if config.ci && hovered.datum[config.ci[0]] !== ''}
+                <div class="tip-date">95% CI {hovered.datum[config.ci[0]]} to {hovered.datum[config.ci[1]]}{hovered.datum.preliminary === 'True' ? ' · preliminary' : ''}</div>
+              {/if}
               {#each hovered.priors as p}
                 <div class="tip-row">
                   <span class="tip-swatch tip-swatch-hollow" style="border-color:{config.color ?? 'black'}"></span>
