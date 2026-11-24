@@ -1,6 +1,7 @@
 <script>
   import { format } from 'd3-format';
   import { Plot, Line, Dot, AxisX, AxisY, RuleX, RuleY, GridY, Text } from 'svelteplot';
+  import InfoTip from '#lib/InfoTip.svelte';
   import { loadSeries, loadSubSeries, parseDate, formatISODate, multiTipDate, priorYearRows } from '#lib/fetchData.js';
 
   let { data } = $props();
@@ -54,6 +55,20 @@
     (config.annotations ?? []).map(a => ({ date: parseDate(a.date, config.dateFormat), label: a.label }))
   );
   const values = $derived(rows.map(d => +d[config.valueKey]));
+
+  // Point estimates with confidence intervals (see ChartPanel's ciRows).
+  const ciRows = $derived(
+    config.ci ? rows.filter(d => d[config.ci[0]] !== '' && d[config.ci[1]] !== '') : []
+  );
+  const singleY = $derived(
+    config.yScale === 'log' ? { type: 'log', domain: [yMinLog, Math.max(...values, 1)] }
+    : config.ci && config.yDomain ? { domain: config.yDomain }
+    : undefined
+  );
+  function tipDate(d) {
+    if (config.labelKey && d[config.labelKey]) return d[config.labelKey];
+    return d.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 
   // Log scale can't include 0, so the floor is the smallest positive value
   // in the series (rounded down to a friendly power-of-ten-ish step).
@@ -163,7 +178,11 @@
       a.click();
       URL.revokeObjectURL(url);
     } else {
-      const lines = ['Date,' + config.valueKey, ...rows.map(d => `${formatISODate(d.date)},${d[config.valueKey]}`)];
+      const extra = [config.labelKey, ...(config.ci ?? [])].filter(Boolean);
+      const lines = [
+        ['Date', config.valueKey, ...extra].join(','),
+        ...rows.map(d => [formatISODate(d.date), d[config.valueKey], ...extra.map(k => d[k])].join(','))
+      ];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = Object.assign(document.createElement('a'), { href: url, download: `${config.id}-data.csv` });
@@ -178,7 +197,7 @@
 <div class="series-main">
   <div class="series-header">
     <div>
-      <h1>{config.title}</h1>
+      <h1>{config.title}{#if config.info}<InfoTip text={config.info} label="What is {config.title}?" />{/if}</h1>
       <p class="series-desc">{config.description}</p>
       <div class="meta-pills">
         <span class="meta-pill">{config.frequency}</span>
@@ -261,7 +280,7 @@
       onpointermove={onChartMove}
       onpointerleave={() => { hoveredDatum = null; }}
     >
-      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={config.yScale === 'log' ? { type: 'log', domain: [yMinLog, Math.max(...values, 1)] } : undefined} style="width:100%">
+      <Plot height={420} marginLeft={MARGIN_LEFT} marginRight={MARGIN_RIGHT} x={{ type: 'time' }} y={singleY} style="width:100%">
         {#if config.yScale !== 'log'}
           <RuleY y={0} />
         {/if}
@@ -282,7 +301,12 @@
             textAnchor="start"
           />
         {/if}
-        <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
+        {#if config.ci}
+          <RuleX data={ciRows} x="date" y1={config.ci[0]} y2={config.ci[1]} stroke={config.color ?? 'black'} strokeOpacity={0.5} strokeWidth={2.5} />
+          <Dot data={normRows} x="date" y="value" r={4} fill={config.color ?? 'black'} />
+        {:else}
+          <Line data={normRows} x="date" y="value" stroke={config.color ?? 'black'} strokeWidth={2} />
+        {/if}
         {#if hoveredDatum}
           <Dot data={priors} x="date" y="value" r={3.5} fill="var(--white)" stroke={config.color ?? 'black'} strokeWidth={1.5} />
           <Dot data={[hoveredDatum]} x="date" y={config.valueKey} r={4} fill={config.color ?? 'black'} stroke="var(--white)" strokeWidth={1} />
@@ -291,8 +315,11 @@
           {#if hoveredDatum}
             <div class="tip-box" style="position:fixed; {flipLeft ? `right:${window.innerWidth - clientX + 14}px` : `left:${clientX + 14}px`}; top:{clientY}px; transform:translateY(-50%); pointer-events:none">
               <div class="tip-label">{config.title}</div>
-              <div class="tip-date">{hoveredDatum.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              <div class="tip-date">{tipDate(hoveredDatum)}</div>
               <div class="tip-val">{fmt(+hoveredDatum[config.valueKey])} <span style="font-size:0.72rem;opacity:0.7">{config.unit}</span></div>
+              {#if config.ci && hoveredDatum[config.ci[0]] !== ''}
+                <div class="tip-date">95% CI {hoveredDatum[config.ci[0]]} to {hoveredDatum[config.ci[1]]}{hoveredDatum.preliminary === 'True' ? ' · preliminary' : ''}</div>
+              {/if}
               {#each priors as p}
                 <div class="tip-row">
                   <span class="tip-swatch tip-swatch-hollow" style="border-color:{config.color ?? 'black'}"></span>

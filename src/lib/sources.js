@@ -42,6 +42,15 @@ export const DATA_SOURCES = [
     url: 'https://www.cdc.gov/fluview/index.html'
   },
   {
+    system: 'U.S. Flu VE Network',
+    program: 'U.S. Influenza Vaccine Effectiveness Network',
+    collection: 'Test-negative case-control studies of outpatients with acute respiratory illness at network sites',
+    center: 'NCIRD, Influenza Division',
+    frequency: 'Annual (per season)',
+    contents: 'Adjusted seasonal flu vaccine effectiveness with 95% confidence intervals',
+    url: 'https://www.cdc.gov/flu-vaccines-work/php/effectiveness-studies/index.html'
+  },
+  {
     system: 'NVSS (Vital Statistics Rapid Release)',
     program: 'National Vital Statistics System, provisional mortality and natality',
     collection: 'Death and birth certificates filed by state and jurisdiction vital-records offices',
